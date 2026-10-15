@@ -465,7 +465,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       <li>Mama merajut noken · EmaMukar · CC BY-SA 4.0</li>
     </ul>
   </details>
-  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.8.2, 15 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
+  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.8.3, 15 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
 </section>
 <div class="hint" id="hint" hidden><span>Geser layar ke kiri atau tekan <b>Lanjut</b>. Tekan <b>Bacakan</b> untuk mendengar isi layar.</span><button class="btn ghost" id="hint-ok">Mengerti</button></div>
 <div class="deck" data-mod="bls" data-cover="img/dermaga-sumano.webp" data-pos="center 55%" data-credit="Dermaga kecil, Kampung Sumano · Lefaan · CC BY-SA 4.0" data-n="1" data-title="Bantuan Hidup Dasar" data-desc="Menolong orang yang tiba-tiba tidak sadar dan tidak bernapas normal: periksa, panggil, tekan." hidden>
@@ -713,21 +713,44 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 <section class="slide" data-key="bls-08" hidden data-say="Napas buatan. Sudah dilatih dan bersedia? Tiga puluh tekanan, lalu dua napas, cukup sampai dada terangkat. Belum dilatih atau tidak bersedia? Tekan terus tanpa berhenti. Itu tetap menolong.">
   <p class="eyebrow"><span class="n">Langkah 3</span> · Tekan</p>
   <h2>30 tekanan, 2 napas, atau tekan terus</h2>
-  <figure class="ill"><svg aria-describedby="cap-bls-08" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Pada orang dewasa, kepala ditengadahkan dan dagu diangkat, bagian lunak hidung dijepit, lalu mulut penolong menutup mulut korban untuk memberi napas hingga dada mulai naik.">
-<style>.ill-bls08-line{fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}.ill-bls08-body{fill:var(--pulse-soft,#FBE5E8);stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}.ill-bls08-accent{fill:none;stroke:var(--pulse,#C3122D);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}</style>
-<path class="ill-bls08-line" d="M17 177h286"/>
-<path class="ill-bls08-body" d="M26 154c-11-17-5-42 12-51 10-6 22-5 31-2l9-15 8 10 15 1 3 8 10 3-3 9 4 8c-7 12-14 16-24 18l11 10 39-15c28-10 52-11 82-2l65 17v24H43c-8-5-14-12-17-23Z"/>
-<path class="ill-bls08-line" d="m91 143-11-11m62 8c12 12 16 22 17 35M50 153c7 3 14 3 20 0"/>
-<path class="ill-bls08-body" d="M113 20c-22-6-43 4-47 23-3 15 5 28 15 33l12 14 9-2-6 12 11 4 5 13 10-6 7-12-6-15c15-4 26-18 23-32-3-12-16-29-33-32Z"/>
-<path class="ill-bls08-line" d="m128 22 21-9m-4 55 25-5m-58 17-7-3"/>
-<path class="ill-bls08-body" d="M18 51 55 65l17 13 14 10c5 4 2 10-3 9l-11-7-5 10c-2 5-8 5-10 1l-3-11-13-8-23-8Z"/>
-<path class="ill-bls08-line" d="m66 85 8-4m-14 7 4-10"/>
-<path class="ill-bls08-body" d="m170 96-25 24-19 9-8 9-15 7c-5 2-9-3-5-7l12-10-7 2c-5 2-8-3-4-6l18-8 16-9 24-25"/>
-<path class="ill-bls08-line" d="m110 128 13-7"/>
-<path class="ill-bls08-accent" d="M107 104q7 4 5 13m-11 12c-7 12-19 20-33 21m8-7-8 7 10 2"/>
-<path class="ill-bls08-accent" d="M218 121V96m-8 10 8-10 8 10M189 131q32-20 65-1"/>
-<path class="ill-bls08-line" d="m275 43 8 8 17-20"/>
-</svg><figcaption id="cap-bls-08">Bila sudah dilatih, buka jalan napas dan berikan napas sampai dada mulai naik.</figcaption></figure>
+  <figure class="ill"><svg aria-describedby="cap-bls-08" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Dua langkah napas buatan pada orang dewasa yang terlentang. Kiri: satu tangan di dahi menengadahkan kepala sambil menjepit bagian lunak hidung, jari tangan lain mengangkat tulang dagu. Kanan: mulut penolong menutup rapat mulut korban, hidung tetap dijepit, dan dada korban terangkat.">
+<style>
+.c08 .ln{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.c08 .bd{fill:var(--pulse-soft,#FBE5E8);stroke:currentColor;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.c08 .hd{fill:var(--bg,#F3F5F8);stroke:currentColor;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.c08 .ac{fill:none;stroke:var(--pulse,#C3122D);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.c08 .tb{fill:none;stroke:currentColor;stroke-width:11;stroke-linecap:round;stroke-linejoin:round}
+.c08 .ti{fill:none;stroke:var(--bg,#F3F5F8);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.c08 .ft{opacity:.45}
+</style>
+<g class="c08">
+<path class="ln ft" d="M6 186H154M166 186H314M160 24V178" stroke-width="2"/>
+<!-- KIRI: tengadahkan kepala, angkat dagu, jepit hidung -->
+<path class="hd" d="M86 70Q98 62 110 68L150 132H112L92 92Z"/>
+<circle class="hd" cx="80" cy="52" r="17"/>
+<path class="tb" d="M94 80L60 92 32 118"/><path class="ti" d="M94 80L60 92 32 118"/>
+<path class="bd" d="M54 150Q64 156 74 152Q84 140 100 134L156 130V186H40Z"/>
+<circle class="bd" cx="40" cy="160" r="26"/>
+<path class="bd" d="M31 135.6C29.5 130 28.5 125 29.5 120.5C33 121.5 37.5 128 40.5 132.5Q43 130.5 45 131.5Q46 133.6 47 133.8Q48.5 131.8 50.5 132.2Q54 132 56.5 134Q59.5 137 60.2 143"/>
+<path class="ln" d="M24 158Q29 154 30 161M29.5 143Q33.5 145.5 37 143.5M84 162Q120 168 156 167"/>
+<path class="hd" d="M27 115Q34 113 35.5 118L33.5 121.5Q35 120 36.8 121.5Q38 124 35 126L28 132Q20 136 15 131Q12 127 15 122Z"/>
+<path class="tb" d="M100 84L98 116 72 136"/><path class="ti" d="M100 84L98 116 72 136"/>
+<path class="hd" d="M76 131Q67 134 61 138Q57.5 140.5 59.5 143Q62 144.5 66 142L78 138Z"/>
+<path class="ac" d="M10 134Q3 150 9 166M4 160L9 166 15 161"/>
+<!-- KANAN: tiup sampai dada naik, hidung tetap dijepit -->
+<g transform="translate(162 0)">
+<path class="hd" d="M68 104Q82 82 110 70Q126 66 126 80L124 132H104L106 98Q96 102 88 110Q76 112 68 104Z"/>
+<path class="tb" d="M88 94L60 90 32 118"/><path class="ti" d="M88 94L60 90 32 118"/>
+<path class="bd" d="M54 150Q64 156 74 152Q84 140 100 134L156 130V186H40Z"/>
+<circle class="bd" cx="40" cy="160" r="26"/>
+<path class="bd" d="M31 135.6C29.5 130 28.5 125 29.5 120.5C33 121.5 37.5 128 40.5 132.5Q43 130.5 45 131.5Q46 133.6 47 133.8Q48.5 131.8 50.5 132.2Q54 132 56.5 134Q59.5 137 60.2 143"/>
+<path class="ln" d="M24 158Q29 154 30 161M29.5 143Q33.5 145.5 37 143.5M84 162Q120 168 156 167"/>
+<circle class="hd" cx="57" cy="117" r="18"/>
+<path class="hd" d="M27 115Q34 113 35.5 118L33.5 121.5Q35 120 36.8 121.5Q38 124 35 126L28 132Q20 136 15 131Q12 127 15 122Z"/>
+<path class="ac" d="M42.5 133.5Q47.5 138 53 134M136 124V106M131 111L136 106 141 111M150 123V105M145 110L150 105 155 110"/>
+</g>
+</g>
+</svg><figcaption id="cap-bls-08">Kiri: tangan di dahi menengadahkan kepala dan menjepit bagian lunak hidung; jari tangan lain mengangkat tulang dagu. Kanan: rapatkan mulut menutupi mulut korban, tiup sekitar 1 detik sampai dada terlihat naik, lalu lepaskan. Dua kali, lalu lanjut 30 tekanan. Hanya bila sudah dilatih; kalau belum, tekan dada terus.</figcaption></figure>
   <div class="box key">
     <ol class="list">
       <li><b>Sudah dilatih dan bersedia:</b> 30 tekanan, lalu 2 napas buatan, cukup sampai dada terangkat.</li>
