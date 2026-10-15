@@ -465,7 +465,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       <li>Mama merajut noken · EmaMukar · CC BY-SA 4.0</li>
     </ul>
   </details>
-  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.8.4, 15 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
+  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.8.5, 15 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
 </section>
 <div class="hint" id="hint" hidden><span>Geser layar ke kiri atau tekan <b>Lanjut</b>. Tekan <b>Bacakan</b> untuk mendengar isi layar.</span><button class="btn ghost" id="hint-ok">Mengerti</button></div>
 <div class="deck" data-mod="bls" data-cover="img/dermaga-sumano.webp" data-pos="center 55%" data-credit="Dermaga kecil, Kampung Sumano · Lefaan · CC BY-SA 4.0" data-n="1" data-title="Bantuan Hidup Dasar" data-desc="Menolong orang yang tiba-tiba tidak sadar dan tidak bernapas normal: periksa, panggil, tekan." hidden>
@@ -576,18 +576,43 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   <p class="eyebrow"><span class="n">Langkah 1</span> · Periksa napas, sambil menunggu telepon diangkat</p>
   <h2>Bernapas normal atau tidak?</h2>
   <p class="lead">Lihat dadanya sebentar. Napas <b>megap-megap, satu-satu, atau seperti ikan di darat</b> bukan napas normal. Kalau ragu, anggap jantungnya berhenti dan mulai tekan dada.</p>
-  <figure class="ill"><svg aria-describedby="cap-bls-05" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Penolong mengamati naik turun dada orang yang terbaring; garis putus-putus menunjukkan arah pengamatan dan panah menunjukkan gerak dada." class="ill-bls05" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M18 178H302"/>
-  <path d="M88 146C102 130 132 127 163 136L224 151 287 158Q297 160 294 170H89" fill="var(--pulse-soft,#FBE5E8)"/>
-  <path d="M84 146Q91 157 86 169H66C48 170 30 159 31 144 31 129 43 120 57 122L67 124 70 118 76 129 83 133 80 140Z"/>
-  <path d="M120 148L155 158 198 162M224 152L236 167 281 171"/>
-  <circle cx="99" cy="61" r="20"/>
-  <path d="M115 45L146 34 187 44 227 69M120 69L150 58 177 68 199 92M187 44L197 27M150 58L162 97 172 123 182 120 177 93 173 68M172 123L168 133 183 138 188 131 182 120"/>
-  <path d="M114 78L145 111" stroke="var(--pulse,#C3122D)" stroke-dasharray="4 7"/>
-  <path d="M112 124Q135 114 157 124" stroke="var(--pulse,#C3122D)" stroke-dasharray="5 6"/>
-  <path d="M146 91V114M139 98L146 91 153 98M139 107L146 114 153 107" stroke="var(--pulse,#C3122D)"/>
-  <path d="M227 69L245 101 270 120M199 92L223 117 249 130M249 130L268 134Q278 136 275 143H243"/>
-</svg><figcaption id="cap-bls-05">Lihat dada dan perut: naik-turun teratur berarti bernapas normal. Megap-megap, napas berhenti-henti, atau tidak jelas: anggap tidak normal, mulai tekan dada.</figcaption></figure>
+  <figure class="ill"><svg aria-describedby="cap-bls-05" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Perbandingan dua orang tidak sadar yang terlentang. Kiri, tanda centang: mulut tertutup, dada naik turun teratur seperti orang tidur, garis napas bergelombang rata; ini napas normal. Kanan, tanda silang: mulut terbuka, dada hampir tidak bergerak, garis napas datar dengan satu tarikan sesekali; ini megap-megap, bukan napas normal.">
+<style>
+.c05 .ln{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.c05 .bd{fill:var(--pulse-soft,#FBE5E8);stroke:currentColor;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.c05 .ac{fill:none;stroke:var(--pulse,#C3122D);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.c05 .hr{fill:currentColor;opacity:.6}
+.c05 .sc .ln,.c05 .sc .bd{stroke-width:2.1}
+.c05 .ft{opacity:.45}
+</style>
+<g class="c05">
+<path class="ln ft" d="M6 186H154M166 186H314M160 24V178" stroke-width="2"/>
+<!-- KIRI: napas normal -->
+<path class="bd" d="M100 142Q112 132 128 130L156 129V186H90Z"/>
+<g class="sc" transform="matrix(1.45 0 0 1.45 -16.65 -83.7)">
+<path class="bd" d="M86 149Q80 146 77 140Q74 133 70 132Q66 131.5 63.5 133Q62 135.5 60.5 135.5Q59.5 133.5 58.5 133Q57 133 56 134Q53 130.5 50.5 129.5Q47 128.5 47 131.5Q47 134.5 49 137.5Q46 140 43 145Q37 153 37 165Q38 179 50 183Q64 186 74 179L86 171"/>
+<path class="hr" d="M37.5 163Q38 179 50 183Q64 186 74 179L72 174Q60 180 50 176Q42 172 41.5 161Q41 152 45.5 145.5Q38 153 37.5 163Z"/>
+<path class="ln" d="M48.5 145.5Q52.5 149 57 146M48 141.5Q52 139.5 56 141"/>
+</g>
+<path class="ln" d="M112 166Q134 172 156 171"/>
+<path class="ln" d="M138 100V124M132 106L138 100 144 106M132 118L138 124 144 118"/>
+<path class="ln" d="M70 70Q78 56 86 70T102 70T118 70T134 70T150 70"/>
+<path class="ln" d="M14 44L22 52 36 36" stroke-width="4"/>
+<!-- KANAN: megap-megap -->
+<g transform="translate(162 0)">
+<path class="bd" d="M100 142Q112 132 128 130L156 129V186H90Z"/>
+<g class="sc" transform="matrix(1.45 0 0 1.45 -16.65 -83.7)">
+<path class="bd" d="M86 149Q80 146 77 140Q74 135 70 135.5Q66 137 64.5 139.5L58.5 136Q57 133 56 134Q53 130.5 50.5 129.5Q47 128.5 47 131.5Q47 134.5 49 137.5Q46 140 43 145Q37 153 37 165Q38 179 50 183Q64 186 74 179L86 171"/>
+<ellipse cx="61.5" cy="136" rx="4.4" ry="3" transform="rotate(30 61.5 136)" fill="var(--pulse,#C3122D)" stroke="currentColor" stroke-width="1.6"/>
+<path class="hr" d="M37.5 163Q38 179 50 183Q64 186 74 179L72 174Q60 180 50 176Q42 172 41.5 161Q41 152 45.5 145.5Q38 153 37.5 163Z"/>
+<path class="ln" d="M48.5 145.5Q52.5 149 57 146M48 141.5Q52 139.5 56 141"/>
+</g>
+<path class="ln" d="M112 166Q134 172 156 171"/>
+<path class="ac" d="M70 74H98Q104 74 106 58Q108 74 114 74H152"/>
+<path class="ac" d="M15 37L33 55M33 37L15 55" stroke-width="4"/>
+</g>
+</g>
+</svg><figcaption id="cap-bls-05">Kiri: napas normal. Mulut tertutup, dada naik-turun teratur seperti orang tidur. Kanan: bukan napas normal. Mulut terbuka, napas megap-megap satu-satu, dada hampir tidak bergerak. Ragu? Anggap tidak normal dan mulai tekan dada.</figcaption></figure>
   <div class="box quiz" data-id="napas1">
     <p class="q">Dada naik turun teratur, tidak ada suara aneh.</p>
     <div class="pair">
