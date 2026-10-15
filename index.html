@@ -69,16 +69,12 @@ button{cursor:pointer}
 .menu.sos{border-color:var(--sos);color:var(--sos)}
 [inert]{pointer-events:none}
 .slide h2:focus{outline:none}
-/* Layar sempit atau huruf besar: merek satu baris, bilah bawah dua baris, tanpa baris bintang di dalam modul. */
 .brand{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media (max-width:400px){
-  .top-in{padding:.4rem 12px;gap:.45rem}
-  .menu{padding:.3rem .6rem;font-size:.85rem;min-height:42px}
-  .brand small{display:none}
-  :root[data-mod] .scores{display:none}
-  .nav-in{grid-template-columns:1fr 1fr;gap:.5rem .6rem;padding:.45rem 12px}
-  .nav-in .prog{grid-column:1/-1;order:-1;min-height:36px;padding:.1rem .3rem}
-}
+/* Ilustrasi prosedur (SVG inline): mengikuti warna tema lewat currentColor/--pulse; keterangan di HTML supaya ikut A++ dan dibacakan. */
+.ill{margin:.6rem 0 1rem;max-width:26rem}
+.ill svg{width:100%;height:auto;display:block;color:var(--ink)}
+.ill figcaption{font-size:.92rem;color:var(--muted);margin-top:.4rem;line-height:1.45}
+.ill figcaption ol{margin:.2rem 0 .3rem 1.2rem;padding:0}
 .sos-list{display:grid;gap:.6rem;margin-top:.6rem}
 .sos-list .btn,.sos-list a.btn{display:flex;align-items:center;justify-content:space-between;text-decoration:none;min-height:56px;font-size:1.1rem}
 .sos-list .btn.danger{background:#C3122D;border-color:#C3122D;color:#fff}
@@ -362,6 +358,16 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   .box,.opt{border-color:#999;box-shadow:none}
   .kader-note{border-top:1px dashed #999;padding-top:.5rem;font-size:.85rem;color:#333}
 }
+/* Layar sempit atau huruf besar: merek satu baris, bilah bawah dua baris, tanpa baris bintang di dalam modul.
+   Ditaruh di akhir supaya tidak tertimpa aturan umum dengan spesifisitas sama. */
+@media (max-width:400px){
+  .top-in{padding:.4rem 12px;gap:.45rem}
+  .menu{padding:.3rem .6rem;font-size:.85rem;min-height:42px}
+  .brand small{display:none}
+  :root[data-mod] .scores{display:none}
+  .nav-in{grid-template-columns:1fr 1fr;gap:.5rem .6rem;padding:.45rem 12px}
+  .nav-in .prog{grid-column:1/-1;order:-1;min-height:36px;padding:.1rem .3rem}
+}
 </style>
 
 </head><body><header class="top">
@@ -459,7 +465,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       <li>Mama merajut noken · EmaMukar · CC BY-SA 4.0</li>
     </ul>
   </details>
-  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.8.0, 15 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
+  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.8.1, 15 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
 </section>
 <div class="hint" id="hint" hidden><span>Geser layar ke kiri atau tekan <b>Lanjut</b>. Tekan <b>Bacakan</b> untuk mendengar isi layar.</span><button class="btn ghost" id="hint-ok">Mengerti</button></div>
 <div class="deck" data-mod="bls" data-cover="img/dermaga-sumano.webp" data-pos="center 55%" data-credit="Dermaga kecil, Kampung Sumano · Lefaan · CC BY-SA 4.0" data-n="1" data-title="Bantuan Hidup Dasar" data-desc="Menolong orang yang tiba-tiba tidak sadar dan tidak bernapas normal: periksa, panggil, tekan." hidden>
@@ -508,6 +514,19 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   <p class="eyebrow"><span class="n">Langkah 1</span> · Periksa</p>
   <h2>Sadar atau tidak?</h2>
   <p class="lead">Tepuk bahunya dan panggil dengan keras: <b>“Bapa! Mama! Bisa dengar saya?”</b></p>
+  <figure class="ill"><svg aria-describedby="cap-bls-03" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Penolong menyentuh bahu orang yang terbaring sambil memanggil untuk memeriksa respons." class="ill-bls03" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M18 177H302"/>
+  <path d="M87 145C102 128 133 124 164 134L225 150 287 157Q296 159 295 168H90" fill="var(--pulse-soft,#FBE5E8)"/>
+  <path d="M84 145Q91 156 87 166H66C48 169 30 158 31 143 31 128 43 119 57 121L67 123 70 117 76 128 83 132 80 139Z"/>
+  <path d="M118 143L153 154 199 159M224 151L235 164 282 169"/>
+  <circle cx="147" cy="43" r="18"/>
+  <path d="M153 62L181 81 212 106 238 119 224 136 194 123 172 99M175 76L197 65 223 81 244 107M197 65L190 48"/>
+  <path d="M162 75L133 99 113 128 122 135 144 112 176 92" fill="var(--pulse-soft,#FBE5E8)"/>
+  <path d="M113 128L104 129 99 136 104 142 112 139 122 135M108 132L104 139M113 134L109 140" stroke="var(--pulse,#C3122D)"/>
+  <path d="M89 115L96 120M85 129H94M95 106L100 116" stroke="var(--pulse,#C3122D)"/>
+  <path d="M118 42Q111 49 116 56M109 36Q97 49 107 63M100 29Q81 49 98 72" stroke="var(--pulse,#C3122D)"/>
+  <path d="M238 119L257 131Q263 136 258 142H224M244 107L267 115 281 127"/>
+</svg><figcaption id="cap-bls-03">Sentuh bahu dan panggil. Tidak merespons? Panggil bantuan segera.</figcaption></figure>
   <div class="box">
     <ol class="list">
       <li><b>Menjawab atau bergerak:</b> tanyakan apa yang terjadi, temani, dan cari bantuan bila perlu.</li>
@@ -557,6 +576,18 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   <p class="eyebrow"><span class="n">Langkah 1</span> · Periksa napas, sambil menunggu telepon diangkat</p>
   <h2>Bernapas normal atau tidak?</h2>
   <p class="lead">Lihat dadanya sebentar. Napas <b>megap-megap, satu-satu, atau seperti ikan di darat</b> bukan napas normal. Kalau ragu, anggap jantungnya berhenti dan mulai tekan dada.</p>
+  <figure class="ill"><svg aria-describedby="cap-bls-05" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Penolong mengamati naik turun dada orang yang terbaring; garis putus-putus menunjukkan arah pengamatan dan panah menunjukkan gerak dada." class="ill-bls05" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M18 178H302"/>
+  <path d="M88 146C102 130 132 127 163 136L224 151 287 158Q297 160 294 170H89" fill="var(--pulse-soft,#FBE5E8)"/>
+  <path d="M84 146Q91 157 86 169H66C48 170 30 159 31 144 31 129 43 120 57 122L67 124 70 118 76 129 83 133 80 140Z"/>
+  <path d="M120 148L155 158 198 162M224 152L236 167 281 171"/>
+  <circle cx="99" cy="61" r="20"/>
+  <path d="M115 45L146 34 187 44 227 69M120 69L150 58 177 68 199 92M187 44L197 27M150 58L162 97 172 123 182 120 177 93 173 68M172 123L168 133 183 138 188 131 182 120"/>
+  <path d="M114 78L145 111" stroke="var(--pulse,#C3122D)" stroke-dasharray="4 7"/>
+  <path d="M112 124Q135 114 157 124" stroke="var(--pulse,#C3122D)" stroke-dasharray="5 6"/>
+  <path d="M146 91V114M139 98L146 91 153 98M139 107L146 114 153 107" stroke="var(--pulse,#C3122D)"/>
+  <path d="M227 69L245 101 270 120M199 92L223 117 249 130M249 130L268 134Q278 136 275 143H243"/>
+</svg><figcaption id="cap-bls-05">Lihat dada dan perut: naik-turun teratur berarti bernapas normal. Megap-megap, napas berhenti-henti, atau tidak jelas: anggap tidak normal, mulai tekan dada.</figcaption></figure>
   <div class="box quiz" data-id="napas1">
     <p class="q">Dada naik turun teratur, tidak ada suara aneh.</p>
     <div class="pair">
@@ -616,7 +647,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     <li>Jangan berhenti lama di antara tekanan.</li>
   </ol>
   <p class="box tip">Di atas kasur empuk? Jangan buang waktu memindahkan. Mulai di situ dan tekan lebih dalam.</p>
-  <p class="box key"><b>Anak:</b> sepertiga tebal dada, satu tangan. <b>Bayi:</b> dua jari. Lihat layar <b>Anak dan bayi</b>.</p>
+  <p class="box key"><b>Anak:</b> sepertiga tebal dada, satu tangan. <b>Bayi:</b> dua ibu jari melingkari dada. Lihat layar <b>Anak dan bayi</b>.</p>
 </section>
 
 <section class="slide" data-key="bls-07" hidden data-say="Latihan irama. Kecepatan seratus sampai seratus dua puluh tekanan per menit. Taruh HP di samping manekin, nyalakan ketukan, dan tekan dada mengikuti bunyi. Lingkaran ketuk hanya untuk latihan. Saat kejadian nyata: pastikan orangnya tidak sadar dan tidak bernapas normal, suruh orang lain memanggil petugas dan menyiapkan kendaraan, baru nyalakan ketukan, taruh HP di samping, dan tekan dengan dua tangan.">
@@ -634,15 +665,32 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   </div>
   <div class="box trainer">
     <h3>Ketukan pemandu</h3>
-    <svg class="cpr" id="cpr-fig" viewBox="0 0 220 120" role="img" aria-label="Tangan menekan tengah dada mengikuti ketukan">
-      <path class="fig-ink" stroke-width="2" d="M6 112h208"/>
-      <circle class="fig-fill fig-ink" stroke-width="2.5" cx="30" cy="88" r="13"/>
-      <path class="fig-fill fig-ink" stroke-width="2.5" d="M46 80h120c14 0 22 6 22 15s-8 15-22 15H46z"/>
-      <g class="arms">
-        <path class="fig-ink" stroke-width="5" stroke-linecap="round" d="M74 8v62M88 8v62"/>
-        <rect x="66" y="66" width="30" height="10" rx="5" class="fig-pulse"/>
-      </g>
-    </svg>
+    <figure class="ill" style="max-width:20rem;margin:0 auto .5rem"><svg aria-describedby="cap-bls-07" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Dua tangan bertumpuk menekan tengah dada orang dewasa dengan lengan lurus; dada kembali mengembang penuh di antara tekanan." class="ill-bls07" id="cpr-fig" data-mode="metronome" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <style>
+    .ill-bls07 .ill-bls07-hands{animation:ill-bls07-press var(--ill-bls07-period,.545454545s) ease-in-out infinite}
+    .ill-bls07 .ill-bls07-chest{transform-origin:152px 168px;animation:ill-bls07-recoil var(--ill-bls07-period,.545454545s) ease-in-out infinite}
+    @keyframes ill-bls07-press{0%,100%{transform:translateY(0)}50%{transform:translateY(9px)}}
+    @keyframes ill-bls07-recoil{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.75)}}
+    .ill-bls07[data-mode="metronome"] .ill-bls07-hands,.ill-bls07[data-mode="metronome"] .ill-bls07-chest{animation:none;transition:transform .1s ease-out}
+    .ill-bls07[data-mode="metronome"].push .ill-bls07-hands{transform:translateY(9px)}
+    .ill-bls07[data-mode="metronome"].push .ill-bls07-chest{transform:scaleY(.75)}
+    .ill-bls07[data-motion="paused"] .ill-bls07-hands,.ill-bls07[data-motion="paused"] .ill-bls07-chest{animation:none;transition:none;transform:none}
+    @media(prefers-reduced-motion:reduce){.ill-bls07 .ill-bls07-hands,.ill-bls07 .ill-bls07-chest{animation:none!important;transition:none!important;transform:none!important}}
+    @media print{.ill-bls07 .ill-bls07-hands,.ill-bls07 .ill-bls07-chest{animation:none!important;transform:none!important}}
+  </style>
+  <path d="M18 179H302"/>
+  <path d="M85 147Q92 158 87 169H67C49 171 32 160 33 145 33 131 44 122 58 124L68 126 71 120 77 131 84 135 81 142Z"/>
+  <path d="M204 147L232 154 285 159Q295 161 294 170H88M226 153L240 168"/>
+  <path class="ill-bls07-chest" d="M89 148Q106 133 130 132H161Q181 134 204 147L211 168H88Z" fill="var(--pulse-soft,#FBE5E8)"/>
+  <path d="M110 159L153 166 192 167"/>
+  <g class="ill-bls07-hands">
+    <path d="M128 26L135 114M152 26L159 113" stroke-width="7"/>
+    <path d="M123 24H158L191 49 216 95 231 126 215 139 190 110 167 72M191 49L217 54 244 91 258 118M231 126L249 140H217M258 118L277 128 287 141"/>
+    <path d="M135 114L129 118 124 125Q122 130 129 132H158Q165 132 166 128L157 120 159 113" fill="var(--pulse,#C3122D)" stroke="var(--pulse,#C3122D)"/>
+    <path d="M137 115L141 121 156 121"/>
+  </g>
+  <path d="M109 110V127M103 116L109 110 115 116M103 121L109 127 115 121" stroke="var(--pulse,#C3122D)"/>
+</svg><figcaption id="cap-bls-07">Latihan pada manekin dewasa: lengan lurus, tangan bertumpuk, dada kembali mengembang.</figcaption></figure>
     <div class="metro">
       <div class="bpm"><span id="bpm-v">110</span> <small>per menit</small></div>
       <span class="beat" id="beat" aria-hidden="true"></span>
@@ -665,6 +713,21 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 <section class="slide" data-key="bls-08" hidden data-say="Napas buatan. Sudah dilatih dan bersedia? Tiga puluh tekanan, lalu dua napas, cukup sampai dada terangkat. Belum dilatih atau tidak bersedia? Tekan terus tanpa berhenti. Itu tetap menolong.">
   <p class="eyebrow"><span class="n">Langkah 3</span> · Tekan</p>
   <h2>30 tekanan, 2 napas, atau tekan terus</h2>
+  <figure class="ill"><svg aria-describedby="cap-bls-08" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Pada orang dewasa, kepala ditengadahkan dan dagu diangkat, bagian lunak hidung dijepit, lalu mulut penolong menutup mulut korban untuk memberi napas hingga dada mulai naik.">
+<style>.ill-bls08-line{fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}.ill-bls08-body{fill:var(--pulse-soft,#FBE5E8);stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}.ill-bls08-accent{fill:none;stroke:var(--pulse,#C3122D);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}</style>
+<path class="ill-bls08-line" d="M17 177h286"/>
+<path class="ill-bls08-body" d="M26 154c-11-17-5-42 12-51 10-6 22-5 31-2l9-15 8 10 15 1 3 8 10 3-3 9 4 8c-7 12-14 16-24 18l11 10 39-15c28-10 52-11 82-2l65 17v24H43c-8-5-14-12-17-23Z"/>
+<path class="ill-bls08-line" d="m91 143-11-11m62 8c12 12 16 22 17 35M50 153c7 3 14 3 20 0"/>
+<path class="ill-bls08-body" d="M113 20c-22-6-43 4-47 23-3 15 5 28 15 33l12 14 9-2-6 12 11 4 5 13 10-6 7-12-6-15c15-4 26-18 23-32-3-12-16-29-33-32Z"/>
+<path class="ill-bls08-line" d="m128 22 21-9m-4 55 25-5m-58 17-7-3"/>
+<path class="ill-bls08-body" d="M18 51 55 65l17 13 14 10c5 4 2 10-3 9l-11-7-5 10c-2 5-8 5-10 1l-3-11-13-8-23-8Z"/>
+<path class="ill-bls08-line" d="m66 85 8-4m-14 7 4-10"/>
+<path class="ill-bls08-body" d="m170 96-25 24-19 9-8 9-15 7c-5 2-9-3-5-7l12-10-7 2c-5 2-8-3-4-6l18-8 16-9 24-25"/>
+<path class="ill-bls08-line" d="m110 128 13-7"/>
+<path class="ill-bls08-accent" d="M107 104q7 4 5 13m-11 12c-7 12-19 20-33 21m8-7-8 7 10 2"/>
+<path class="ill-bls08-accent" d="M218 121V96m-8 10 8-10 8 10M189 131q32-20 65-1"/>
+<path class="ill-bls08-line" d="m275 43 8 8 17-20"/>
+</svg><figcaption id="cap-bls-08">Bila sudah dilatih, buka jalan napas dan berikan napas sampai dada mulai naik.</figcaption></figure>
   <div class="box key">
     <ol class="list">
       <li><b>Sudah dilatih dan bersedia:</b> 30 tekanan, lalu 2 napas buatan, cukup sampai dada terangkat.</li>
@@ -699,6 +762,19 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   <p class="eyebrow">Kalau napasnya normal</p>
   <h2>Miringkan dan awasi</h2>
   <p class="lead">Bernapas normal tetapi tidak sadar? <b>Jangan tekan dada.</b> Baringkan miring (posisi pemulihan) supaya jalan napas tetap terbuka.</p>
+  <figure class="ill"><svg aria-describedby="cap-bls-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Orang yang tidak sadar tetapi bernapas normal berbaring miring, dengan punggung tangan di bawah pipi, kepala sedikit menengadah, serta kaki atas ditekuk agar posisi stabil.">
+<style>.ill-bls10-line{fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}.ill-bls10-body{fill:var(--pulse-soft,#FBE5E8);stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}.ill-bls10-accent{fill:none;stroke:var(--pulse,#C3122D);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}</style>
+<path class="ill-bls10-line" d="M18 168h285"/>
+<path class="ill-bls10-body" d="m164 94 32 6 38 24 57 13c11 2 12 12 3 15l-63-9-47-22-27-3Z"/>
+<path class="ill-bls10-body" d="M102 82c19-8 51-7 70 0 12 4 21 14 19 26-2 13-14 25-27 25l-51-4-28-19Z"/>
+<path class="ill-bls10-body" d="M167 119c14-2 26 7 37 15l23 16 22-24c8-9 15-9 21-5l10 11c6 7 1 14-6 10l-9-6-26 31c-5 5-10 7-16 4l-49-25-19-12"/>
+<path class="ill-bls10-body" d="M106 95 89 118 72 146 39 140c-9-2-12 8-3 11l37 8c5 1 9-1 12-5l30-36"/>
+<path class="ill-bls10-body" d="M86 76c-8-10-20-14-31-11-14 3-23 15-22 29l-7 9 7 7 2 12 10 4 5 8c14 0 28-8 33-22l15-6Z"/>
+<path class="ill-bls10-body" d="M127 91 111 108 95 135c-3 5-8 7-14 5l-23-10-9-1-5-7 7-5 13 3 19 6 17-32"/>
+<path class="ill-bls10-line" d="m50 122 12 3m-26-22 10 2m6 28 12-4m60-37c7 7 9 16 8 25m91 34 10 7"/>
+<path class="ill-bls10-accent" d="M25 78c-11 12-12 30-2 43m-1-10 1 10-10-2M149 68c12-6 25-6 36 1m-10-5 10 5-8 7"/>
+<path class="ill-bls10-line" d="m254 59 9 9 22-26"/>
+</svg><figcaption id="cap-bls-10">Untuk orang tidak sadar yang bernapas normal, sesuai penilaian dan latihan pertolongan pertama. Pantau napas.</figcaption></figure>
   <ol class="list">
     <li>Miringkan badannya ke arahmu.</li>
     <li>Tangan atas menopang pipi, lutut atas ditekuk supaya tidak terguling.</li>
@@ -708,15 +784,31 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   <p class="box tip">Tetap antar ke Puskesmas. Tidak sadar bisa karena malaria berat, kejang, atau gula darah rendah. Jangan beri minum selama belum sadar penuh.</p>
 </section>
 
-<section class="slide" data-key="bls-11" hidden data-say="Anak dan bayi. Pada anak, jantung biasanya berhenti karena kehabisan napas: tenggelam, tersedak, atau sesak. Karena itu napas buatan lebih penting. Tidak sadar dan tidak bernapas normal? Panggil bantuan dengan pengeras suara. Bila sudah dilatih: beri lima napas buatan dulu, lalu tiga puluh tekanan dan dua napas. Belum dilatih: tekan dada terus. Tekan sepertiga tebal dada: anak dengan satu tangan, bayi dengan dua jari di tengah dada. Kecepatan sama, seratus sampai seratus dua puluh per menit. Sendirian tanpa HP? Lakukan satu menit dulu, baru cari bantuan.">
+<section class="slide" data-key="bls-11" hidden data-say="Anak dan bayi. Pada anak, jantung biasanya berhenti karena kehabisan napas: tenggelam, tersedak, atau sesak. Karena itu napas buatan lebih penting. Tidak sadar dan tidak bernapas normal? Panggil bantuan dengan pengeras suara. Bila sudah dilatih: beri lima napas buatan dulu, lalu tiga puluh tekanan dan dua napas. Belum dilatih: tekan dada terus. Tekan sepertiga tebal dada: anak dengan pangkal satu tangan; bayi dengan dua ibu jari di tengah dada, jari lain melingkari punggungnya. Tidak bisa melingkari dada bayi? Pakai pangkal satu tangan. Jangan pakai dua jari. Kecepatan sama, seratus sampai seratus dua puluh per menit. Sendirian tanpa HP? Lakukan satu menit dulu, baru cari bantuan.">
   <p class="eyebrow">Keadaan khusus</p>
   <h2>Anak dan bayi</h2>
   <p class="lead">Pada anak, jantung biasanya berhenti karena <b>kehabisan napas</b>: tenggelam, tersedak, atau sesak berat. Karena itu napas buatan lebih penting daripada pada orang dewasa.</p>
+  <figure class="ill"><svg aria-describedby="cap-bls-11" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-label="Anak terlentang ditekan dengan satu tangan dan lengan lurus, sedangkan dada bayi dilingkari kedua tangan dengan dua ibu jari pada bagian bawah tulang dada.">
+<style>.ill-bls11-line{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.ill-bls11-body{fill:var(--pulse-soft,#FBE5E8);stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.ill-bls11-accent{fill:none;stroke:var(--pulse,#C3122D);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}</style>
+<g class="ill-bls11-line"><rect x="13" y="12" width="137" height="216" rx="17"/><rect x="170" y="12" width="137" height="216" rx="17"/></g>
+<g class="ill-bls11-body"><path d="M49 48c0-14 7-23 19-23s19 9 19 23-7 23-19 23-19-9-19-23Z"/><path d="M57 70v8l-13 6c-8 5-10 18-13 30l-5 24c-2 9 8 12 12 4l10-27-3 35 5 34 1 25c0 8 11 9 13 1l4-34 4 34c2 8 13 7 13-1l1-25 5-34-3-35 10 27c4 8 14 5 12-4l-5-24c-3-12-5-25-13-30l-13-6v-8"/><path d="M218 52c0-16 9-26 23-26s23 10 23 26-9 26-23 26-23-10-23-26Z"/><path d="M231 77v5l-13 7c-9 5-12 14-16 26l-4 11c-3 8 8 11 12 4l10-17-2 32 9 13-6 16c-3 9 4 15 10 12l10-23 10 23c6 3 13-3 10-12l-6-16 9-13-2-32 10 17c4 7 15 4 12-4l-4-11c-4-12-7-21-16-26l-13-7v-5"/></g>
+<g class="ill-bls11-line"><path d="M49 151h38M221 144q20 12 40 0M232 145l9 18 9-18M68 87v28M241 90v37"/></g>
+<ellipse cx="68" cy="112" rx="11" ry="8" fill="var(--pulse,#C3122D)"/>
+<path class="ill-bls11-body" d="m129 22-42 76-12 4-18 4c-5 1-5 7 0 8l17 3c7 1 12-1 17-6l8-10 44-71"/>
+<path class="ill-bls11-line" d="m77 104 9 4m-22 2 12 1"/>
+<path class="ill-bls11-accent" d="m104 76-11 20m-2-9 2 9 9-3"/>
+<g class="ill-bls11-body"><path d="m177 100 23 1q10-4 21 1l12 6q5 2 5 8v5q-1 5-6 3l-6-5-4-5 1 20q-2 11-12 12l-34-10"/><path d="m303 100-23 1q-10-4-21 1l-12 6q-5 2-5 8v5q1 5 6 3l6-5 4-5-1 20q2 11 12 12l34-10"/></g>
+<g class="ill-bls11-line"><path d="m206 119 16 8m-18 0 17 8m-15 0 10 6m58-22-16 8m18 0-17 8m15 0-10 6"/></g>
+<path class="ill-bls11-accent" d="m233 115 1 5m13-5-1 5"/>
+<path class="ill-bls11-line" stroke-dasharray="4 5" d="M241 118h55v77"/>
+<g class="ill-bls11-line"><rect x="177" y="195" width="124" height="29" rx="6"/><ellipse cx="217" cy="210" rx="25" ry="10"/></g>
+<path class="ill-bls11-accent" d="M261 200h10m-5 0v7m-5 0h10"/>
+</svg><figcaption id="cap-bls-11">Kiri: anak, pangkal satu tangan di tengah dada, lengan lurus. Kanan: bayi, dua ibu jari berdampingan di tengah dada dan jari lain melingkari punggung. Kotak kecil: tekan sekitar sepertiga tebal dada. Tangan tidak bisa melingkari dada bayi? Pakai pangkal satu tangan.</figcaption></figure>
   <div class="grid2">
     <div class="box key"><h3>Anak, 1 tahun sampai remaja</h3>
       <ol class="list"><li>Tidak sadar, tidak bernapas normal: panggil bantuan dengan pengeras suara.</li><li>Sudah dilatih: <b>5 napas buatan dulu</b>, lalu 30 tekanan dan 2 napas.</li><li>Tekan <b>sepertiga tebal dada</b> dengan tumit satu tangan (anak besar: dua tangan).</li></ol></div>
     <div class="box key"><h3>Bayi, di bawah 1 tahun</h3>
-      <ol class="list"><li>Sama: panggil bantuan, 5 napas buatan dulu bila dilatih. Mulut penolong menutup hidung dan mulut bayi.</li><li>Tekan <b>sepertiga tebal dada</b> dengan <b>dua jari</b> di tengah dada, tepat di bawah garis puting.</li><li>Jangan pakai dua tangan dan jangan sedalam 5–6 cm.</li></ol></div>
+      <ol class="list"><li>Sama: panggil bantuan, 5 napas buatan dulu bila dilatih. Mulut penolong menutup hidung dan mulut bayi.</li><li>Lingkari dada bayi dengan kedua tangan: <b>dua ibu jari</b> berdampingan di tengah dada tepat di bawah garis puting, jari lain menyangga punggung. Tekan <b>sepertiga tebal dada</b>.</li><li>Tangan tidak bisa melingkari dadanya? Tekan dengan pangkal satu tangan. <b>Jangan</b> dua jari (terlalu dangkal), jangan dua tangan, jangan sedalam 5–6 cm.</li></ol></div>
   </div>
   <ol class="list">
     <li>Kecepatan sama untuk semua umur: <b>100–120 per menit</b>. Biarkan dada naik penuh.</li>
@@ -726,8 +818,8 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   <div class="box quiz" data-id="anakbayi">
     <p class="q">Bayi 8 bulan tidak sadar dan tidak bernapas normal. Bagaimana menekan dadanya?</p>
     <div class="opts">
-      <button class="opt" data-ok="1" data-fb="Benar. Dua jari di tengah dada, sepertiga tebal dada, 100–120 per menit; 5 napas buatan dulu bila sudah dilatih.">Dua jari di tengah dada, sepertiga tebal dada</button>
-      <button class="opt" data-ok="0" data-fb="Dua tangan dan 5–6 cm itu untuk orang dewasa. Pada bayi cukup dua jari, sepertiga tebal dada.">Dua tangan, sedalam 5–6 cm seperti dewasa</button>
+      <button class="opt" data-ok="1" data-fb="Benar. Dua ibu jari melingkari dada, sepertiga tebal dada, 100–120 per menit; 5 napas buatan dulu bila sudah dilatih.">Dua ibu jari melingkari dada, sepertiga tebal dada</button>
+      <button class="opt" data-ok="0" data-fb="Dua tangan dan 5–6 cm itu untuk orang dewasa. Pada bayi: dua ibu jari melingkari dada, sepertiga tebal dada.">Dua tangan, sedalam 5–6 cm seperti dewasa</button>
       <button class="opt" data-ok="0" data-fb="Menunggu membuang waktu. Tekan dada dan beri napas buatan sambil orang lain memanggil bantuan.">Jangan ditekan, tunggu bidan datang</button>
     </div>
     <p class="fb" aria-live="polite"></p>
@@ -735,15 +827,31 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   <p class="muted">Keterampilan ini dilatih dengan manekin bayi dan anak, dinilai bidan atau perawat.</p>
 </section>
 
-<section class="slide" data-key="bls-12" hidden data-say="Tenggelam. Tolong dari darat dulu: ulurkan kayu, tali, atau jeriken kosong. Jangan ikut terjun kalau tidak pandai berenang. Setelah di darat, baringkan di tempat datar dan periksa napas. Tidak bernapas normal? Bila sudah dilatih, beri lima napas buatan dulu, lalu tiga puluh tekanan dan dua napas. Belum dilatih? Tekan dada terus. Anak: tekan sepertiga tebal dada, satu tangan; bayi dengan dua jari. Jangan gantung terbalik dan jangan tekan perutnya untuk mengeluarkan air. Yang sudah sadar kembali tetap dibawa ke Puskesmas.">
+<section class="slide" data-key="bls-12" hidden data-say="Tenggelam. Tolong dari darat dulu: ulurkan kayu, tali, atau jeriken kosong. Jangan ikut terjun kalau tidak pandai berenang. Setelah di darat, baringkan di tempat datar dan periksa napas. Tidak bernapas normal? Bila sudah dilatih, beri lima napas buatan dulu, lalu tiga puluh tekanan dan dua napas. Belum dilatih? Tekan dada terus. Anak: tekan sepertiga tebal dada dengan satu tangan; bayi dengan dua ibu jari melingkari dada. Jangan gantung terbalik dan jangan tekan perutnya untuk mengeluarkan air. Yang sudah sadar kembali tetap dibawa ke Puskesmas.">
   <p class="eyebrow">Keadaan khusus</p>
   <h2>Tenggelam: yang dibutuhkan udara</h2>
   <p class="lead">Orang tenggelam kehabisan udara. Jangan buang waktu mencoba mengeluarkan air.</p>
+  <figure class="ill"><svg aria-describedby="cap-bls-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Penolong tetap rendah di darat yang stabil dan mengulurkan tongkat kepada orang sadar di air, sedangkan masuk atau terjun ke air tanpa pelatihan penyelamatan dilarang.">
+<style>.ill-bls12-line{fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}.ill-bls12-body{fill:var(--pulse-soft,#FBE5E8);stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}.ill-bls12-accent{fill:none;stroke:var(--pulse,#C3122D);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}</style>
+<path class="ill-bls12-body" d="M12 145h145l-13 43H12"/>
+<path class="ill-bls12-line" d="M152 164q10 9 20 0t20 0 20 0 20 0 20 0 20 0 20 0 20 0M158 183q10 9 20 0t20 0 20 0 20 0 20 0 20 0 20 0"/>
+<path class="ill-bls12-body" d="M43 121 23 130l-6 12 32-1 31-9 17 9h40c8 0 10-10 2-12l-31-3-23-15Z"/>
+<path class="ill-bls12-body" d="M45 112c16-6 36-15 51-16l15 21c-16 9-35 14-54 14Z"/>
+<path class="ill-bls12-body" d="M116 77c12 0 21 9 20 21-1 12-10 19-21 17-11-2-19-11-17-22 1-10 8-16 18-16Z"/>
+<path class="ill-bls12-accent" d="m116 129 130-24"/>
+<path class="ill-bls12-body" d="m94 108 20 13 26-7c6-2 9 5 4 8l-32 13-30-13"/>
+<path class="ill-bls12-line" d="m135 119 2 6"/>
+<path class="ill-bls12-body" d="M249 144c0-10 7-17 17-17s17 7 17 17c0 11-7 18-17 18s-17-7-17-18Z"/>
+<path class="ill-bls12-body" d="m249 162-10-16-3-29-4-4c-5-5-1-10 4-8l8 4 7 30 9 8m16 15 10-12 12-3c6-1 7 6 2 9l-10 6"/>
+<path class="ill-bls12-line" d="m236 112 9 1M22 43l9 9 18-23"/>
+<g class="ill-bls12-line"><circle cx="260" cy="45" r="31"/><circle cx="246" cy="39" r="6"/><path d="m252 43 11 8 12-10m-13 9-5 12m-5-19 11-11 13-1m-19 31 11 3"/></g>
+<path class="ill-bls12-accent" d="m238 23 44 44m0-44-44 44"/>
+</svg><figcaption id="cap-bls-12">Utamakan keselamatan penolong. Ulurkan alat dari posisi stabil di darat; jangan ikut masuk ke air tanpa pelatihan.</figcaption></figure>
   <ol class="list">
     <li><b>Tolong dari darat dulu:</b> ulurkan kayu, tali, atau jeriken kosong. Jangan ikut terjun bila tidak pandai berenang.</li>
     <li>Setelah di darat, baringkan di tempat datar. Periksa sadar dan napas.</li>
     <li>Tidak bernapas normal: bila sudah dilatih, <b>5 napas buatan dulu</b>, lalu 30 tekanan dan 2 napas. Belum dilatih: tekan dada terus.</li>
-    <li>Anak: tekan sepertiga tebal dadanya dengan satu tangan; bayi dengan dua jari (lihat layar Anak dan bayi).</li>
+    <li>Anak: tekan sepertiga tebal dadanya dengan satu tangan; bayi dengan dua ibu jari melingkari dada (lihat layar Anak dan bayi).</li>
     <li>Muntah? Miringkan sebentar, bersihkan mulut, lalu lanjutkan.</li>
   </ol>
   <p class="box key"><b>Jangan</b> menggantung korban terbalik, mengguncang, atau menekan perutnya untuk mengeluarkan air.</p>
@@ -817,7 +925,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   </div>
 </section>
 
-<section class="slide" data-key="bls-16" hidden data-say="Selesai. Ingat tiga langkah: periksa, panggil, tekan. Tekan lima sampai enam sentimeter, seratus sampai seratus dua puluh per menit.">
+<section class="slide" data-key="bls-16" hidden data-say="Selesai. Ingat tiga langkah: periksa, panggil, tekan. Dewasa dan remaja: tekan lima sampai enam sentimeter, seratus sampai seratus dua puluh per menit. Anak dan bayi: lima napas dulu bila terlatih, tekan sepertiga tebal dada; anak dengan satu tangan, bayi dengan dua ibu jari melingkari dada.">
   <p class="eyebrow">Selesai</p>
   <h2>Periksa · Panggil · Tekan</h2>
   <div class="board"></div>
@@ -829,7 +937,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       <li>Tengah dada, 5–6 cm, 100–120 per menit, dada naik penuh.</li>
       <li>30:2 bila terlatih; kalau tidak, tekan terus.</li>
       <li>Tenggelam: tolong dari darat, 5 napas dulu bila terlatih, jangan keluarkan air.</li>
-      <li>Anak dan bayi: 5 napas dulu bila terlatih; tekan sepertiga tebal dada (anak satu tangan, bayi dua jari).</li>
+      <li>Anak dan bayi: 5 napas dulu bila terlatih; tekan sepertiga tebal dada (anak satu tangan, bayi dua ibu jari melingkari dada).</li>
     </ol>
   </div>
   <p class="box tip"><b>Wajib:</b> latihan dengan manekin dan dinilai bidan atau perawat sebelum dianggap mampu.</p>
@@ -921,13 +1029,27 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   </div>
 </section>
 
-<section class="slide" data-key="kespro-04" hidden data-say="Tanda bahaya kehamilan. Perdarahan, kejang, atau air ketuban keluar sebelum waktunya: panggil bantuan dan berangkat sekarang. Bengkak di wajah dan tangan dengan sakit kepala hebat, demam atau menggigil, muntah terus, atau bayi kurang bergerak: ke bidan atau Puskesmas hari ini juga, jangan tunggu besok.">
+<section class="slide" data-key="kespro-04" hidden data-say="Tanda bahaya kehamilan. Perdarahan, kejang, air ketuban keluar sebelum waktunya, atau sakit kepala hebat dengan bengkak di wajah dan tangan atau pandangan kabur: panggil bantuan dan berangkat sekarang. Demam atau menggigil, muntah terus, atau bayi kurang bergerak: ke bidan atau Puskesmas hari ini juga, jangan tunggu besok.">
   <p class="eyebrow">Hamil</p>
   <h2>Tanda bahaya kehamilan</h2>
+  <figure class="ill"><svg aria-describedby="cap-kespro-04" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-label="Enam contoh tanda bahaya kehamilan: perdarahan, kejang, ketuban keluar, sakit kepala dengan bengkak, demam, dan gerak bayi berkurang; baca keterangan di bawah gambar.">
+<style>.ill-kespro04-line{fill:none;stroke:currentColor;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}.ill-kespro04-soft{fill:var(--pulse-soft,#FBE5E8);stroke:none}.ill-kespro04-accent{fill:none;stroke:var(--pulse,#C3122D);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}.ill-kespro04-fill{fill:var(--pulse,#C3122D);stroke:none}</style>
+<g class="ill-kespro04-soft"><rect x="4" y="6" width="98" height="108" rx="14"/><rect x="111" y="6" width="98" height="108" rx="14"/><rect x="218" y="6" width="98" height="108" rx="14"/><rect x="4" y="126" width="98" height="108" rx="14"/><rect x="111" y="126" width="98" height="108" rx="14"/><rect x="218" y="126" width="98" height="108" rx="14"/></g>
+<g class="ill-kespro04-line">
+<circle cx="41" cy="25" r="10"/><path d="M34 38q-9 9-7 31l5 17m16-49q8 6 8 16c22-1 28 23 7 29H47m-1-37-2 22 16 5M32 86l-6 14m22-17 3 17"/>
+<circle cx="130" cy="61" r="10"/><path d="m141 63 19-10 17 8-8 14-19-3m-2-11-4-15 13-7m12 34 12 16 14-5m-29-10-11 15 7 12"/>
+<circle cx="255" cy="25" r="10"/><path d="M248 38q-9 9-7 31l5 17m16-49q8 6 8 16c22-1 28 23 7 29h-16m-1-37-2 22 16 5M246 86l-6 14m22-17 3 17"/>
+<path d="M45 147c-17-1-19 30-3 33 20 3 23-31 3-33Zm-15 45c2-13 28-17 36 0l4 27M29 177l-7 15 9 8m32-48 8-8 5 5-4 7 8-3 4 5-8 6 8 2v6l-14 2-8-10"/>
+<circle cx="147" cy="156" r="13"/><path d="M126 213v-17c0-22 41-22 41 0v17m17-62v37a11 11 0 1 0 15 0v-37a7.5 7.5 0 0 0-15 0Z"/>
+<circle cx="254" cy="145" r="10"/><path d="M246 158q-8 9-7 31l4 27m18-58q8 6 8 17c26 0 31 32 4 36h-17m-1-43-2 20 20 9m-29 20-4 10m18-14 4 13"/>
+</g>
+<g class="ill-kespro04-fill"><path d="M69 88c0 0-8 10-8 14a8 8 0 0 0 16 0c0-4-8-14-8-14Z"/><path d="M191 177v17a5 5 0 1 0 1 0v-17Z"/></g>
+<g class="ill-kespro04-accent"><path d="m119 38 5-9 5 8m40-5 5-9 5 8m15 35 7-4 1 9M278 89l-3 8m13-7-2 10m-16 4q12 5 26-1M18 151l-6-5m7 15-9 1m10 8-7 6M140 178q7 5 14 0m29-15h4m-60-14-5-7m5 18-7 1"/><path d="M277 181q8 4 7 12m5-15q10 7 9 18" stroke-dasharray="2 7"/><path d="m280 211 14-14m-14 0 14 14"/></g>
+</svg><figcaption id="cap-kespro-04"><ol class="list"><li>Keluar darah dari jalan lahir: <b>berangkat sekarang</b></li><li>Kejang: <b>berangkat sekarang</b></li><li>Air ketuban keluar sebelum waktunya: <b>berangkat sekarang</b></li><li>Sakit kepala hebat dengan bengkak wajah dan tangan: <b>berangkat sekarang</b></li><li>Demam atau menggigil: periksa hari ini</li><li>Gerak bayi berkurang: periksa hari ini</li></ol><p>Urutan ikon: kiri ke kanan, baris atas lalu bawah. Warna ikon tidak membedakan tingkat kegawatan.</p></figcaption></figure>
   <div class="box stop"><h3>Berangkat SEKARANG, panggil bantuan</h3>
-    <ol class="list"><li>Keluar darah dari jalan lahir</li><li>Kejang</li><li>Air ketuban keluar sebelum waktunya</li></ol></div>
+    <ol class="list"><li>Keluar darah dari jalan lahir</li><li>Kejang</li><li>Air ketuban keluar sebelum waktunya</li><li>Sakit kepala hebat dengan bengkak di wajah dan tangan, atau pandangan kabur</li></ol></div>
   <div class="box key"><h3>Ke bidan HARI INI, jangan tunggu besok</h3>
-    <ol class="list"><li>Bengkak di wajah dan tangan dengan sakit kepala hebat atau pandangan kabur</li><li>Demam atau menggigil (bisa malaria)</li><li>Muntah terus dan tidak bisa makan</li><li>Bayi dalam perut kurang bergerak dibanding biasanya</li></ol></div>
+    <ol class="list"><li>Demam atau menggigil (bisa malaria)</li><li>Muntah terus dan tidak bisa makan</li><li>Bayi dalam perut kurang bergerak dibanding biasanya</li></ol></div>
   <div class="box quiz" data-id="bahaya1">
     <p class="q">Demam dan menggigil setiap malam pada bulan ke-7.</p>
     <div class="pair">
@@ -958,6 +1080,17 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   <p class="eyebrow">Menjelang melahirkan</p>
   <h2>Susun rencana persalinan</h2>
   <p class="lead">Rencana disepakati jauh sebelum waktunya, ditulis di stiker rencana persalinan (P4K), lalu ditempel di rumah.</p>
+  <figure class="ill"><svg aria-describedby="cap-kespro-05" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Lima bagian rencana persalinan: penolong terampil, fasilitas kesehatan, pendamping, kendaraan dan sopir, serta calon donor darah. Biaya atau JKN tetap disiapkan bersama keluarga dan bidan.">
+<style>.ill-kespro05-line{fill:none;stroke:currentColor;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}.ill-kespro05-soft{fill:var(--pulse-soft,#FBE5E8);stroke:none}.ill-kespro05-accent{fill:none;stroke:var(--pulse,#C3122D);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}.ill-kespro05-fill{fill:var(--pulse,#C3122D);stroke:none}</style>
+<g class="ill-kespro05-soft"><rect x="5" y="6" width="96" height="88" rx="13"/><rect x="112" y="6" width="96" height="88" rx="13"/><rect x="219" y="6" width="96" height="88" rx="13"/><rect x="58" y="105" width="96" height="88" rx="13"/><rect x="166" y="105" width="96" height="88" rx="13"/></g>
+<g class="ill-kespro05-line"><circle cx="53" cy="28" r="12"/><path d="M29 79V65c0-12 11-18 24-18s24 6 24 18v14m-31-31v14m14-14v14m-14 0c0 11 14 11 14 0m-7 8v4c0 10 17 10 17 0v-9"/><circle cx="70" cy="63" r="4"/>
+<path d="m128 39 32-19 32 19v40h-64V39Zm24 40V58h16v21m-27-36h8v8h-8Zm30 0h8v8h-8Z"/>
+<circle cx="250" cy="32" r="11"/><circle cx="282" cy="32" r="11"/><path d="M231 79V64c0-12 14-18 23-12m10 27V66m37 13V64c0-12-14-18-23-12m-10 27V66m-27-7 16 13 16-13"/>
+<path d="M72 164v-25c0-5 4-9 9-9h43l15 15v19H72Zm51-34v17h16m-58-9h16v12H81Zm23 0h12v12h-12Z"/><circle cx="86" cy="167" r="8"/><circle cx="125" cy="167" r="8"/>
+<path d="m180 169 11-13 13 3 18-6c7-2 10 4 4 8l-14 7h13l17-11c6-4 11 2 6 7l-22 17h-28l-8 7"/></g>
+<g class="ill-kespro05-accent"><path d="m35 84 10 0m95 0h39m69 0h36m-54 91h-22"/></g>
+<path class="ill-kespro05-fill" d="M217 116c0 0-11 14-11 21a11 11 0 0 0 22 0c0-7-11-21-11-21Z"/>
+</svg><figcaption id="cap-kespro-05">Sepakati penolong, tempat, pendamping, transportasi, dan calon donor. Tulis juga biaya atau JKN pada rencana keluarga.</figcaption></figure>
   <div class="box pick" data-id="p4k" data-ok-fb="Benar, lengkap. Rencana ini yang menyelamatkan ibu saat malam atau hujan.">
     <p class="q">Ketuk semua yang termasuk rencana persalinan, lalu periksa.</p>
     <div class="opts">
@@ -995,9 +1128,22 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   <p class="box tip">Saat ibu berdarah banyak atau kejang, keluarga pasti takut dan memikirkan banyak hal. Berdoa dan berembuk bisa dilakukan sambil berangkat. Perdarahan dan kejang tidak bisa menunggu.</p>
 </section>
 
-<section class="slide" data-key="kespro-07" hidden data-say="Bayi baru lahir. Hangatkan di dada ibu, susui dalam satu jam pertama, jaga tali pusat bersih dan kering tanpa diberi apa pun. Bayi tidak mau menyusu, kejang, atau lemas: berangkat sekarang. Napas cepat atau merintih, demam atau badan dingin, kuning di hari pertama atau sampai telapak kaki, tali pusat merah, bernanah, atau berbau: ke bidan hari ini juga.">
+<section class="slide" data-key="kespro-07" hidden data-say="Bayi baru lahir. Hangatkan di dada ibu, susui dalam satu jam pertama, jaga tali pusat bersih dan kering tanpa diberi apa pun. Bayi tidak mau menyusu, kejang, lemas, sesak atau bibir biru, atau kuning di hari pertama atau kuning sampai telapak tangan dan kaki: berangkat sekarang. Napas cepat atau merintih, demam atau badan dingin, kuning yang muncul di hari kedua atau sesudahnya, tali pusat merah, bernanah, atau berbau: ke bidan hari ini juga.">
   <p class="eyebrow">Bayi baru lahir</p>
   <h2>Hangat, menyusu, tali pusat kering</h2>
+  <figure class="ill"><svg aria-describedby="cap-kespro-07" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-label="Dada dan perut bayi menempel langsung pada dada ibu; punggung bayi menghadap pengamat dan kepala menoleh ke samping. Wajah terbuka, hidung dan mulut bebas dari selimut. Lingkaran kanan memperlihatkan tali pusat di atas lipatan popok.">
+<style>.ill-kespro07-line{fill:none;stroke:currentColor;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}.ill-kespro07-soft{fill:var(--pulse-soft,#FBE5E8);stroke:currentColor;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}.ill-kespro07-accent{fill:none;stroke:var(--pulse,#C3122D);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}</style>
+<g class="ill-kespro07-line"><path d="M89 16c-11 10-10 29 0 38 9 9 23 9 32 0 10-9 11-28 0-38-8-7-24-7-32 0Z"/><path d="m91 57-1 12m29-12 1 12M90 65C55 69 37 91 32 122l-7 94m95-151c31 3 52 23 59 52l12 79M64 80c-11 19-14 47-13 67m98-64c13 17 17 35 16 55"/><path d="m85 72 19 14 20-14"/></g>
+<path class="ill-kespro07-soft" d="M105 104c-12 7-17 23-13 38 2 12 10 19 22 22 14 2 27-8 31-21 4-14-1-29-13-36l-27-3Z"/>
+<path class="ill-kespro07-soft" d="M106 101c-11-9-12-26-1-34 11-8 26-2 29 10l-1 7 8 6-7 4c0 9-8 15-17 13l-11-6Z"/>
+<path class="ill-kespro07-line" d="m133 96-5 1m-24 12-16 13 7 14m39-22 18 13-12 13m-36 15-10 15 10 9m27-24 12 14-9 12"/>
+<path class="ill-kespro07-accent" d="M101 72c7-9 21-9 29 1M99 76l31-1m-22 40c-7 10-7 22-2 30"/>
+<path class="ill-kespro07-soft" d="M53 140c24 17 67 37 111 2l11 75H44l9-77Z"/>
+<g class="ill-kespro07-line"><path d="M32 135c5 13 15 27 30 37l33 19c9 5 22 3 24-3 2-5-9-7-16-9l-29-18-10-19m115-14c-2 18-15 34-26 44l-29 20c-5 3-6 10-1 12 7 2 13-4 19-7l28-20"/><path d="M57 207c32-8 75-6 104 0"/></g>
+<g class="ill-kespro07-accent"><path d="M154 81c7-4 12 4 19 0m-17 12c7-4 12 4 19 0"/><path d="m187 130 28 8" stroke-dasharray="4 7"/></g>
+<circle class="ill-kespro07-soft" cx="264" cy="158" r="45"/>
+<g class="ill-kespro07-line"><path d="M241 131c-6 12-7 28-5 42m51-42c6 12 7 28 5 42M238 175q26 11 51 0m-48 7q23 7 45 0"/><path d="M260 161c-7-1-9-8-5-12l5-5 5 4-3 6 7 1c3 5-2 9-9 6Z"/><path d="m258 149 5 4"/></g>
+</svg><figcaption id="cap-kespro-07">Dada dan perut bayi bersentuhan langsung dengan dada ibu; wajah dan jalan napas terlihat. Inset: tali pusat bersih dan kering.</figcaption></figure>
   <div class="grid2">
     <div class="box"><h3>Rawat</h3>
       <ol class="list">
@@ -1008,9 +1154,9 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       </ol></div>
     <div class="box key"><h3>Tanda bahaya</h3>
       <p><b>Berangkat sekarang:</b></p>
-      <ol class="list"><li>Tidak mau menyusu</li><li>Kejang</li><li>Lemas, tidak bergerak</li><li>Sesak, bibir biru</li></ol>
+      <ol class="list"><li>Tidak mau menyusu</li><li>Kejang</li><li>Lemas, tidak bergerak</li><li>Sesak, bibir biru</li><li>Kuning di hari pertama, atau kuning sampai telapak tangan dan kaki</li></ol>
       <p><b>Ke bidan hari ini:</b></p>
-      <ol class="list"><li>Napas cepat atau merintih</li><li>Demam, atau badan teraba dingin</li><li>Kuning di hari pertama, atau sampai telapak kaki</li><li>Tali pusat merah, bernanah, atau berbau</li></ol></div>
+      <ol class="list"><li>Napas cepat atau merintih</li><li>Demam, atau badan teraba dingin</li><li>Kuning yang muncul di hari kedua atau sesudahnya</li><li>Tali pusat merah, bernanah, atau berbau</li></ol></div>
   </div>
   <div class="box quiz" data-id="bayi">
     <p class="q">Bayi umur 2 hari tampak kuning dan malas menyusu.</p>
@@ -1022,17 +1168,23 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   </div>
 </section>
 
-<section class="slide" data-key="kespro-08" hidden data-say="Masa nifas. Ibu dan bayi diperiksa bidan dalam dua hari pertama, lalu beberapa kali lagi sampai enam minggu. Tanda bahaya ibu: perdarahan banyak, cairan berbau, demam atau menggigil, sakit kepala atau kejang, payudara merah dan nyeri, atau sedih terus sampai tidak mau mengurus bayi.">
+<section class="slide" data-key="kespro-08" hidden data-say="Masa nifas. Ibu dan bayi diperiksa bidan dalam dua hari pertama, lalu beberapa kali lagi sampai enam minggu. Perdarahan banyak, kejang, atau sakit kepala hebat dengan bengkak: panggil bantuan dan berangkat sekarang. Cairan dari jalan lahir berbau, demam atau menggigil, payudara merah dan nyeri, atau sedih terus sampai tidak mau mengurus bayi: ke bidan hari ini juga.">
   <p class="eyebrow">Setelah melahirkan</p>
   <h2>Masa nifas: 6 minggu yang rawan</h2>
   <p class="lead">Ibu dan bayi diperiksa bidan <b>dalam 2 hari pertama</b>, lalu beberapa kali lagi sampai 6 minggu.</p>
-  <div class="box key">
-    <h3>Tanda bahaya ibu nifas</h3>
+  <div class="box stop">
+    <h3>Berangkat SEKARANG, panggil bantuan</h3>
     <ol class="list">
       <li>Perdarahan banyak dari jalan lahir</li>
+      <li>Kejang</li>
+      <li>Sakit kepala hebat dengan bengkak di wajah dan tangan, atau pandangan kabur</li>
+    </ol>
+  </div>
+  <div class="box key">
+    <h3>Ke bidan HARI INI, jangan tunggu besok</h3>
+    <ol class="list">
       <li>Cairan dari jalan lahir berbau</li>
       <li>Demam atau menggigil; di Momiwaren periksa malaria hari itu</li>
-      <li>Sakit kepala hebat, bengkak, atau kejang</li>
       <li>Payudara merah, bengkak, dan nyeri</li>
       <li>Sedih terus sampai tidak mau makan atau mengurus bayi</li>
     </ol>
@@ -1076,14 +1228,14 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     ["Hubungi sopir yang sudah disepakati dan berangkat sekarang; keluarga berdoa dan berembuk sambil jalan",1,"Benar. Rencana persalinan dipakai sekarang, dan doa keluarga tetap menyertai."],
     ["Minum ramuan supaya cepat lahir",0,"Ramuan tidak mengatasi tanda bahaya."]]},
   {"t":"Bayi lahir di Puskesmas. Hari kedua di rumah, bayi malas menyusu dan badannya panas.","q":"Apa yang dilakukan?","o":[
-    ["Bawa bayi ke bidan hari itu juga",1,"Benar. Malas menyusu dan demam pada bayi adalah tanda bahaya."],
-    ["Kompres dan tunggu beberapa hari",0,"Bayi baru lahir bisa memburuk cepat. Bawa hari itu juga."]]}
+    ["Berangkat ke bidan sekarang, jangan tunggu",1,"Benar. Malas menyusu dan demam pada bayi baru lahir adalah tanda gawat: berangkat sekarang."],
+    ["Kompres dan tunggu beberapa hari",0,"Bayi baru lahir bisa memburuk dalam hitungan jam. Berangkat sekarang."]]}
  ]}
 </script>
   </div>
 </section>
 
-<section class="slide" data-key="kespro-11" hidden data-say="Selesai. Ingat: periksa hamil ke bidan sejak awal, minimal enam kali. Susun rencana persalinan. Bersalin ditolong bidan. Tanda bahaya: berangkat hari itu juga.">
+<section class="slide" data-key="kespro-11" hidden data-say="Selesai. Ingat: periksa hamil ke bidan sejak awal, minimal enam kali. Susun rencana persalinan. Bersalin ditolong bidan. Tanda gawat seperti perdarahan, kejang, atau ketuban pecah: berangkat sekarang. Tanda bahaya lain: periksa hari itu juga.">
   <p class="eyebrow">Selesai</p>
   <h2>Ibu selamat, bayi selamat</h2>
   <div class="board"></div>
@@ -1093,7 +1245,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       <li>Tahu hamil? Ke bidan sejak awal, minimal 6 kali periksa.</li>
       <li>Tablet tambah darah setiap hari, minimal 90 tablet.</li>
       <li>Rencana persalinan disusun dan ditempel di rumah.</li>
-      <li>Bersalin ditolong bidan; tanda bahaya berarti berangkat hari itu juga.</li>
+      <li>Bersalin ditolong bidan. Perdarahan, kejang, ketuban pecah: berangkat sekarang; tanda bahaya lain: periksa hari itu juga.</li>
       <li>Bayi: hangat, menyusu, tali pusat kering tanpa diberi apa pun.</li>
     </ol>
   </div>
@@ -1382,6 +1534,18 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 <section class="slide" data-key="gizi-03" hidden data-say="Isi piring anak satu tahun. Ketuk makanan yang baik untuk sekali makan, lalu periksa.">
   <p class="eyebrow">Permainan</p>
   <h2>Isi piring anak 1 tahun</h2>
+  <figure class="ill"><svg aria-describedby="cap-gizi-03" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Contoh ragam makanan anak satu tahun: makanan pokok, lauk hewani berupa telur, sayur matang, dan potongan buah lunak. Ukuran kelompok pada gambar bukan takaran porsi.">
+<style>.ill-gizi03-line{fill:none;stroke:currentColor;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}.ill-gizi03-soft{fill:var(--pulse-soft,#FBE5E8);stroke:currentColor;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}.ill-gizi03-accent{fill:none;stroke:var(--pulse,#C3122D);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}.ill-gizi03-fill{fill:var(--pulse,#C3122D);stroke:none}</style>
+<g class="ill-gizi03-line"><ellipse cx="160" cy="100" rx="109" ry="87"/><ellipse cx="160" cy="100" rx="99" ry="77"/><path d="M30 31v43m-9-43v28c0 9 18 9 18 0V31M30 74v96m259-92v92"/><ellipse cx="289" cy="57" rx="12" ry="23"/></g>
+<path class="ill-gizi03-soft" d="M77 91c0-10 5-16 12-19 0-12 11-20 22-16 5-13 24-11 28 0 13-1 22 10 20 21 6 3 10 8 10 14-30 12-62 12-92 0Z"/>
+<g class="ill-gizi03-line"><path d="m93 83 6-3m7-13 6 3m11-12 5 3m9 13 6-2m-26 13 6-3m23 9 6-2m-48 8 5-2"/></g>
+<ellipse class="ill-gizi03-soft" cx="211" cy="72" rx="25" ry="29"/>
+<circle class="ill-gizi03-accent" cx="211" cy="74" r="11"/>
+<g class="ill-gizi03-soft"><path d="M89 130c-11-19 10-27 25-10-11 2-15 5-25 10Z"/><path d="M117 139c-9-17 8-29 25-16-10 5-16 9-25 16Z"/><path d="M93 149c8-21 24-11 28 4-11-3-16-2-28-4Z"/></g>
+<g class="ill-gizi03-line"><path d="m88 131 31 19m-2-10 20-11m-44 21 29 7"/></g>
+<g class="ill-gizi03-soft"><rect x="178" y="123" width="18" height="14" rx="5" transform="rotate(-12 187 130)"/><rect x="205" y="119" width="20" height="15" rx="5" transform="rotate(10 215 127)"/><rect x="191" y="147" width="19" height="15" rx="5" transform="rotate(8 200 154)"/><rect x="222" y="141" width="18" height="14" rx="5" transform="rotate(-15 231 148)"/></g>
+<g class="ill-gizi03-accent"><path d="m183 129 6-1m22-2 7 1m-22 27 7 1m25-8 6-1"/></g>
+</svg><figcaption id="cap-gizi-03">Kiri atas: makanan pokok. Kanan atas: telur. Kiri bawah: sayur matang. Kanan bawah: potongan buah lunak.</figcaption></figure>
   <div class="box pick" data-id="piring" data-need-groups="hewani" data-ok-fb="Benar. Makanan pokok, lauk hewani (ikan atau telur), sayur, dan buah. Makanan manis dan mi instan bukan untuk makan utama anak.">
     <p class="q">Ketuk makanan untuk sekali makan anak 1 tahun, lalu periksa. Harus ada makanan pokok, lauk hewani, dan sayur.</p>
     <div class="opts">
@@ -1424,6 +1588,19 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 <section class="slide" data-key="gizi-06" hidden data-say="Sikat gigi dua kali sehari: pagi setelah sarapan dan malam sebelum tidur, dengan pasta gigi berfluoride. Anak di bawah tiga tahun: sebesar butir beras. Tiga sampai enam tahun: sebesar kacang polong. Orang tua membantu menyikat gigi anak.">
   <p class="eyebrow">Gigi</p>
   <h2>Sikat gigi pagi dan malam</h2>
+  <figure class="ill"><svg aria-describedby="cap-gizi-06" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Pada dua sikat anak berukuran sama, pasta gigi kiri berupa olesan tipis sebesar butir beras untuk usia di bawah tiga tahun, kanan sebesar kacang polong untuk usia tiga sampai enam tahun." class="ill-gizi06">
+<g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M160 25v150" opacity=".22"/>
+<path d="M28 111h52q10 0 17 6h40a6 6 0 0 1 0 12H95q-8-6-15-6H28a6 6 0 0 1 0-12z" fill="var(--pulse-soft,#FBE5E8)"/>
+<path d="M31 109V94m8 15V94m8 15V94m8 15V94m8 15V94m8 15V94m8 15V94M31 93h48"/>
+<path d="M48 90q7-7 14-3q4 3-3 5H48z" fill="var(--pulse,#C3122D)" stroke="var(--pulse,#C3122D)"/>
+<path d="M188 111h52q10 0 17 6h40a6 6 0 0 1 0 12h-42q-8-6-15-6h-52a6 6 0 0 1 0-12z" fill="var(--pulse-soft,#FBE5E8)"/>
+<path d="M191 109V94m8 15V94m8 15V94m8 15V94m8 15V94m8 15V94m8 15V94M191 93h48"/>
+<path d="M205 91q-3-18 10-18t10 18z" fill="var(--pulse,#C3122D)" stroke="var(--pulse,#C3122D)"/>
+<ellipse cx="55" cy="42" rx="9" ry="4" transform="rotate(-30 55 42)" fill="var(--pulse-soft,#FBE5E8)"/>
+<circle cx="215" cy="42" r="10" fill="var(--pulse-soft,#FBE5E8)"/>
+<path d="M55 58v14m-5-5 5 5 5-5M215 59v8m-4-4 4 4 4-4"/>
+</g></svg><figcaption id="cap-gizi-06">Di bawah 3 tahun: olesan tipis sebesar butir beras. Umur 3 sampai 6 tahun: sebesar kacang polong. Orang tua yang menyikatkan.</figcaption></figure>
   <ol class="list">
     <li>Sikat gigi <b>2 kali sehari</b>: pagi setelah sarapan dan malam sebelum tidur.</li>
     <li>Pakai pasta gigi berfluoride.</li>
@@ -1493,11 +1670,11 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   </div>
 </section>
 
-<section class="slide" data-key="gizi-09" hidden data-say="Ke Puskesmas hari itu juga bila sakit gigi disertai pipi atau leher bengkak, demam, sulit membuka mulut, atau sulit menelan. Jangan ditunda dengan kumur air garam, karena infeksi gigi bisa menyebar. Sulit bernapas: berangkat sekarang. Periksakan juga anak yang tidak mau makan karena sakit gigi, dan luka di mulut yang tidak sembuh dua minggu. Puskesmas Momiwaren belum punya dokter gigi; perawat atau dokter Puskesmas akan memeriksa dan merujuk.">
+<section class="slide" data-key="gizi-09" hidden data-say="Ke Puskesmas hari itu juga bila sakit gigi disertai pipi atau leher bengkak, atau demam. Jangan ditunda dengan kumur air garam, karena infeksi gigi bisa menyebar. Sulit membuka mulut, sulit menelan, atau sulit bernapas: panggil bantuan dan berangkat sekarang, karena bengkaknya bisa menutup jalan napas. Periksakan juga anak yang tidak mau makan karena sakit gigi, dan luka di mulut yang tidak sembuh dua minggu. Puskesmas Momiwaren belum punya dokter gigi; perawat atau dokter Puskesmas akan memeriksa dan merujuk.">
   <p class="eyebrow">Tanda bahaya</p>
   <h2>Kapan sakit gigi harus diperiksa</h2>
   <div class="box key"><h3>Hari itu juga bila sakit gigi disertai</h3>
-    <ol class="list"><li>Pipi atau leher bengkak</li><li>Demam</li><li>Sulit membuka mulut atau sulit menelan</li><li>Sulit bernapas: <b>berangkat sekarang</b></li></ol>
+    <ol class="list"><li>Pipi atau leher bengkak</li><li>Demam</li><li>Sulit membuka mulut, sulit menelan, atau sulit bernapas: <b>berangkat SEKARANG</b>, bengkaknya bisa menutup jalan napas</li></ol>
     <p>Jangan ditunda dengan kumur air garam atau obat sendiri. Infeksi gigi bisa menyebar.</p></div>
   <ol class="list">
     <li>Anak tidak mau makan karena sakit gigi</li>
@@ -1810,7 +1987,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   </div>
 </section>
 
-<section class="slide" data-key="remaja-13" hidden data-say="Selesai. Ingat: perubahan tubuh itu wajar. Tidak berarti tidak. Kekerasan tidak pernah salah korban. Tunda menikah sampai minimal sembilan belas tahun. HIV bisa dicegah, dan tes di Puskesmas gratis dan rahasia. Perasaanmu penting.">
+<section class="slide" data-key="remaja-13" hidden data-say="Selesai. Ingat: perubahan tubuh itu wajar. Tidak berarti tidak. Kekerasan tidak pernah salah korban: cerita, datang ke Puskesmas sekarang, lewat tiga hari pun tetap datang, lapor ke SAPA seratus dua puluh sembilan. Tunda menikah sampai minimal sembilan belas tahun. HIV bisa dicegah, dan tes di Puskesmas gratis dan rahasia. Perasaanmu penting.">
   <p class="eyebrow">Selesai</p>
   <h2>Tubuhmu, keputusanmu, masa depanmu</h2>
   <div class="board"></div>
@@ -1818,7 +1995,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     <h3>Yang diingat</h3>
     <ol class="list">
       <li>Perubahan tubuh itu wajar; haid tidak memalukan.</li>
-      <li>Tidak berarti tidak. Kekerasan tidak pernah salah korban: cerita, ke Puskesmas dalam 3 hari, lapor ke SAPA 129.</li>
+      <li>Tidak berarti tidak. Kekerasan tidak pernah salah korban: cerita, ke Puskesmas <b>sekarang</b> (obat pencegah HIV paling berguna dalam 3 hari, pencegah kehamilan sampai 5 hari; lewat pun tetap datang), lapor ke SAPA 129.</li>
       <li>Tunda menikah sampai minimal 19 tahun.</li>
       <li>HIV bisa dicegah; tes di Puskesmas gratis dan rahasia.</li>
       <li>Perasaanmu penting: Healing119, telepon 119 lalu tekan 8.</li>
@@ -1832,7 +2009,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 
 <div class="deck" data-mod="tanda" data-cover="img/perahu-sumano.webp" data-pos="center 70%" data-credit="Perahu di Sungai Sumano · Lefaan · CC BY-SA 4.0" data-n="Kartu" data-alt data-title="Kartu Tanda Bahaya" data-desc="Kapan harus ke Puskesmas hari itu juga, hitung napas anak, malaria, diare, gigitan ular, dan nomor penting." hidden>
 
-<section class="slide" data-key="tanda-00" data-say="Kartu Tanda Bahaya. Ada dua tingkat. Tanda gawat: panggil bantuan dan berangkat sekarang, jangan tunggu. Perdarahan banyak, kejang, tidak sadar atau sulit dibangunkan, tidak bernapas normal atau sesak berat, bayi baru lahir tidak mau menyusu atau lemas, anak tidak bisa minum, ketuban pecah sebelum waktunya, digigit ular, tenggelam. Tanda lain: periksa ke Puskesmas hari ini juga, jangan tunggu besok. Demam diperiksa darah malaria, batuk dua minggu, bercak mati rasa, bayi kuning, napas cepat.">
+<section class="slide" data-key="tanda-00" data-say="Kartu Tanda Bahaya. Ada dua tingkat. Tanda gawat: panggil bantuan dan berangkat sekarang, jangan tunggu. Perdarahan banyak, kejang, tidak sadar atau sulit dibangunkan, tidak bernapas normal atau sesak berat, ibu hamil atau nifas dengan sakit kepala hebat dan bengkak atau pandangan kabur, bayi baru lahir tidak mau menyusu, lemas, atau kuning di hari pertama, anak tidak bisa minum, dinding dada tertarik ke dalam, atau diare dengan mata cekung dan cubitan kulit yang sangat lambat kembali, ketuban pecah sebelum waktunya, digigit ular, tenggelam. Tanda lain: periksa ke Puskesmas hari ini juga, jangan tunggu besok. Demam diperiksa darah malaria, ibu hamil muntah terus atau bayi kurang bergerak, bayi napas cepat atau kuning di hari kedua, anak napas cepat, batuk dua minggu, bercak mati rasa, luka yang tidak sembuh dua minggu.">
   <p class="eyebrow">Dipakai semua kader</p>
   <h2>Berangkat sekarang, atau periksa hari ini?</h2>
   <p class="lead">Dua tingkat. <b>Sekarang</b> berarti panggil bantuan dan berangkat saat itu juga. <b>Hari ini</b> berarti periksa ke Puskesmas hari ini, jangan tunggu besok.</p>
@@ -1843,8 +2020,10 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       <li>Kejang</li>
       <li>Tidak sadar, atau sulit dibangunkan</li>
       <li>Tidak bernapas normal, sesak berat, bibir atau lidah biru</li>
-      <li>Bayi baru lahir tidak mau menyusu, lemas, atau kejang</li>
+      <li>Ibu hamil atau nifas: sakit kepala hebat dengan bengkak di wajah dan tangan, atau pandangan kabur</li>
+      <li>Bayi baru lahir tidak mau menyusu, lemas, kejang, atau kuning di hari pertama</li>
       <li>Anak tidak bisa minum, atau memuntahkan semua</li>
+      <li>Anak: dinding dada bawah tertarik ke dalam saat bernapas; diare dengan mata cekung <b>dan</b> cubitan kulit perut kembali sangat lambat</li>
       <li>Air ketuban pecah sebelum waktunya, hijau, atau berbau</li>
       <li>Digigit ular; tenggelam, walau sudah sadar</li>
     </ol>
@@ -1854,9 +2033,9 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     <h3>Periksa HARI INI, jangan tunggu besok</h3>
     <ol class="list">
       <li>Demam, siapa pun: periksa darah malaria</li>
-      <li>Ibu hamil: bengkak wajah dan tangan, sakit kepala hebat, muntah terus, bayi kurang bergerak</li>
-      <li>Bayi: napas cepat atau merintih, demam atau badan dingin, kuning, tali pusat bernanah</li>
-      <li>Anak: napas cepat atau dinding dada tertarik ke dalam, diare dengan mata cekung</li>
+      <li>Ibu hamil: muntah terus sampai tidak bisa makan, bayi dalam perut kurang bergerak</li>
+      <li>Bayi: napas cepat atau merintih, demam atau badan dingin, kuning yang muncul di hari kedua atau sesudahnya, tali pusat bernanah</li>
+      <li>Anak: napas cepat; diare dengan mata cekung atau cubitan kulit lambat (satu tanda saja)</li>
       <li>Batuk 2 minggu atau lebih: periksa dahak</li>
       <li>Bercak kulit mati rasa; luka atau sariawan yang tidak sembuh 2 minggu</li>
     </ol>
@@ -1867,6 +2046,29 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 <section class="slide" data-key="tanda-01" hidden data-say="Hitung napas anak. Periksa dulu. Anak sulit dibangunkan, kejang, bibirnya kebiruan, dada bawah tertarik ke dalam saat bernapas, atau tidak mau minum? Jangan hitung, langsung antar ke Puskesmas sekarang. Kalau tidak ada, hitung saat anak tenang atau tidur. Tekan mulai, lalu ketuk lingkaran setiap kali perut atau dadanya naik, selama enam puluh detik. Napas cepat: umur di bawah dua bulan enam puluh kali atau lebih, dua sampai sebelas bulan lima puluh kali atau lebih, dua belas bulan sampai lima tahun empat puluh kali atau lebih.">
   <p class="eyebrow">Alat bantu</p>
   <h2>Hitung napas anak 60 detik</h2>
+  <figure class="ill"><svg aria-describedby="cap-tanda-01" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Saat menarik napas, dada normal di kiri bergerak keluar, sedangkan dada bawah anak di kanan tertarik ke dalam." class="ill-tanda01">
+<style>
+.ill-tanda01-in{animation:ill-tanda01-in 2s steps(1,end) infinite}.ill-tanda01-out{opacity:0;animation:ill-tanda01-out 2s steps(1,end) infinite}@keyframes ill-tanda01-in{0%,49.99%{opacity:1}50%,100%{opacity:0}}@keyframes ill-tanda01-out{0%,49.99%{opacity:0}50%,100%{opacity:1}}
+.ill-tanda01[data-motion="paused"] *{animation:none!important}.ill-tanda01[data-motion="paused"] .ill-tanda01-out{opacity:0}.ill-tanda01[data-motion="paused"] .ill-tanda01-in{opacity:1}
+@media(prefers-reduced-motion:reduce){.ill-tanda01 *{animation:none!important}.ill-tanda01-out{opacity:0}.ill-tanda01-in{opacity:1}}@media print{.ill-tanda01 *{animation:none!important}.ill-tanda01-out{opacity:0}.ill-tanda01-in{opacity:1}}
+</style>
+<g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M160 20V180" opacity=".22"/>
+<g class="ill-tanda01-in">
+<path d="M66 24V38L43 46Q30 54 27 79L23 117M94 24V38L117 46Q130 54 133 79L137 117M43 57Q48 77 42 99Q40 111 46 125L48 174H112L114 125Q120 111 118 99Q112 77 117 57" fill="var(--pulse-soft,#FBE5E8)"/>
+<path d="M57 81Q65 89 80 89Q95 89 103 81M53 95Q64 106 80 106Q96 106 107 95M80 139v3"/>
+<g stroke="var(--pulse,#C3122D)"><path d="M52 112H31M38 105l-7 7 7 7M108 112h21m-7-7 7 7-7 7"/></g>
+<path d="M226 24V38L203 46Q190 54 187 79L183 117M254 24V38L277 46Q290 54 293 79L297 117M203 57Q209 78 207 91Q207 105 217 114Q206 126 208 145V174H272V145Q274 126 263 114Q273 105 273 91Q271 78 277 57" fill="var(--pulse-soft,#FBE5E8)"/>
+<path d="M217 81Q226 89 240 89Q254 89 263 81M240 139v3"/>
+<path d="M216 101Q225 112 240 112Q255 112 264 101M202 115h20m-7-7 7 7-7 7M278 115h-20m7-7-7 7 7 7" stroke="var(--pulse,#C3122D)"/>
+</g>
+<g class="ill-tanda01-out">
+<path d="M66 24V38L43 46Q30 54 27 79L23 117M94 24V38L117 46Q130 54 133 79L137 117M43 57Q50 82 48 105L48 174H112L112 105Q110 82 117 57" fill="var(--pulse-soft,#FBE5E8)"/>
+<path d="M57 81Q65 89 80 89Q95 89 103 81M55 98Q66 106 80 106Q94 106 105 98M80 139v3"/>
+<path d="M226 24V38L203 46Q190 54 187 79L183 117M254 24V38L277 46Q290 54 293 79L297 117M203 57Q210 82 208 105L208 174H272L272 105Q270 82 277 57" fill="var(--pulse-soft,#FBE5E8)"/>
+<path d="M217 81Q225 89 240 89Q255 89 263 81M215 98Q226 106 240 106Q254 106 265 98M240 139v3"/>
+</g>
+</g></svg><figcaption id="cap-tanda-01">Kiri: dada bergerak keluar saat menarik napas. Kanan: bagian bawah dada tertarik ke dalam. Amati saat anak tenang.</figcaption></figure>
   <div class="box stop" id="nt-gate">
     <h3>Periksa dulu sebelum menghitung</h3>
     <p>Jangan hitung. <b>Langsung antar ke Puskesmas sekarang</b> bila anak:</p>
@@ -1884,12 +2086,12 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       <tbody>
         <tr><td>Di bawah 2 bulan</td><td>60 kali atau lebih per menit</td></tr>
         <tr><td>2–11 bulan</td><td>50 kali atau lebih per menit</td></tr>
-        <tr><td>12 bulan–5 tahun</td><td>40 kali atau lebih per menit</td></tr>
+        <tr><td>12–59 bulan (1 sampai 5 tahun)</td><td>40 kali atau lebih per menit</td></tr>
       </tbody>
     </table></div>
     <div class="box">
       <label for="nt-age">Umur anak
-        <select id="nt-age"><option value="" selected>Pilih umur anak dulu</option><option value="60">Di bawah 2 bulan</option><option value="50">2–11 bulan</option><option value="40">12 bulan sampai 5 tahun</option></select>
+        <select id="nt-age"><option value="" selected>Pilih umur anak dulu</option><option value="60">Di bawah 2 bulan</option><option value="50">2–11 bulan</option><option value="40">12–59 bulan (1 sampai 5 tahun)</option></select>
       </label>
       <div class="row"><button class="btn" id="nt-start">Mulai hitung 60 detik</button><span class="bpm" id="nt-time">60</span></div>
       <button class="pad" id="nt-pad" type="button" hidden aria-label="Ketuk setiap kali dada atau perut anak naik"><span><span class="big" id="nt-taps">0</span><br>ketuk setiap kali dada atau perut naik</span></button>
@@ -1924,9 +2126,36 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   </div>
 </section>
 
-<section class="slide" data-key="tanda-03" hidden data-say="Diare pada anak. Teruskan ASI dan makan. Larutkan satu bungkus oralit dalam air matang sesuai takaran di bungkusnya, biasanya satu gelas dua ratus mililiter. Beri sedikit-sedikit setiap habis buang air cair: anak di bawah dua tahun seperempat sampai setengah gelas, dua tahun ke atas setengah sampai satu gelas. Zinc dari petugas diminum sepuluh hari berturut-turut walau diare sudah berhenti. Berangkat sekarang bila anak lemas atau sulit dibangunkan, tidak bisa minum, atau muntah terus. Periksa hari ini bila mata cekung, cubitan kulit perut kembali lambat, ada darah di tinja, atau diare dua minggu atau lebih.">
+<section class="slide" data-key="tanda-03" hidden data-say="Diare pada anak. Teruskan ASI dan makan. Larutkan satu bungkus oralit dalam air matang sesuai takaran di bungkusnya, biasanya satu gelas dua ratus mililiter. Beri sedikit-sedikit setiap habis buang air cair: anak di bawah dua tahun seperempat sampai setengah gelas, dua tahun ke atas setengah sampai satu gelas. Zinc dari petugas diminum sepuluh hari berturut-turut walau diare sudah berhenti. Berangkat sekarang bila anak lemas atau sulit dibangunkan, tidak bisa minum, muntah terus, atau mata cekung bersama cubitan kulit perut yang kembali sangat lambat. Periksa hari ini bila hanya ada satu tanda seperti mata cekung atau cubitan kulit lambat, ada darah di tinja, atau diare dua minggu atau lebih.">
   <p class="eyebrow">Diare</p>
   <h2>Diare: oralit, zinc, terus menyusu</h2>
+  <figure class="ill"><svg aria-describedby="cap-tanda-03" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-label="Larutkan seluruh sachet oralit sesuai takaran air pada kemasannya; perhatikan lipatan kulit perut yang lambat kembali setelah dilepas dan mata yang tampak cekung." class="ill-tanda03">
+<style>
+.ill-tanda03-fold{transform-origin:160px 191px;animation:ill-tanda03-return 5s linear infinite;vector-effect:non-scaling-stroke}@keyframes ill-tanda03-return{0%,48%{transform:scaleY(1)}88%,99.99%{transform:scaleY(.08)}100%{transform:scaleY(1)}}
+.ill-tanda03[data-motion="paused"] *{animation:none!important}.ill-tanda03[data-motion="paused"] .ill-tanda03-fold{transform:none}
+@media(prefers-reduced-motion:reduce){.ill-tanda03 *{animation:none!important}.ill-tanda03-fold{transform:none}}@media print{.ill-tanda03 *{animation:none!important}.ill-tanda03-fold{transform:none}}
+</style>
+<g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M107 18V222M213 18V222" opacity=".22"/>
+<path d="M22 25l39 7-8 48-39-7z" fill="var(--pulse-soft,#FBE5E8)"/>
+<path d="m20 37 38 7M28 47l18 3-3 15-18-3zM31 55l10 2M22 25l8 5 5-3 6 5 6-2 6 5 8-3"/>
+<path d="M53 85l5 7m2-12 5 7m-1 9 5 7" stroke="var(--pulse,#C3122D)"/>
+<path d="M22 112h61l-6 83H28z" fill="var(--pulse-soft,#FBE5E8)"/>
+<path d="M27 140q12-7 25 0t26 0M72 150h8m-9 14h8m-9 14h8M84 102l-19 60"/>
+<ellipse cx="63" cy="169" rx="5" ry="10" transform="rotate(18 63 169)"/>
+<path d="M16 208q19 10 38 0m-7-5 7 5-7 5" stroke="var(--pulse,#C3122D)"/>
+<path d="M124 96q13-14 25-8q12 6 23 0q14-6 26 8M127 111q33 16 66 0M160 110v3"/>
+<path d="M134 43l5 29q1 7 10 9l4-5-4-21M187 46l-11 19q-3 5-8 7l-2 8 7 4q9-3 13-10l10-18" fill="var(--pulse-soft,#FBE5E8)"/>
+<path d="M143 91q10-4 10-10q7-8 14 0q0 6 10 10" stroke="var(--pulse,#C3122D)"/>
+<path d="M160 127v13m-6-6 6 6 6-6"/>
+<path d="M123 191h15m44 0h16M125 207q35 12 70 0M160 209v3"/>
+<path d="M137 191C145 191 146 164 160 164S175 191 183 191" class="ill-tanda03-fold" fill="var(--pulse-soft,#FBE5E8)" stroke="var(--pulse,#C3122D)"/>
+<path d="M140 192h40" stroke-dasharray="3 5" opacity=".35"/>
+<path d="M228 83q13-13 29-5M275 78q16-8 29 5M232 107q12-14 24 0q-12 11-24 0M276 107q12-14 24 0q-12 11-24 0"/>
+<circle cx="244" cy="106" r="4" fill="currentColor"/><circle cx="288" cy="106" r="4" fill="currentColor"/>
+<path d="M234 88q-12 7-12 20q0 22 22 24q19-2 20-23q-1-15-13-21M281 88q-13 7-14 21q1 21 21 23q21-2 21-24q-1-13-12-20" opacity=".4"/>
+<path d="M244 151v-12m-4 4 4-4 4 4M288 151v-12m-4 4 4-4 4 4" stroke="var(--pulse,#C3122D)"/>
+</g></svg><figcaption id="cap-tanda-03">Kiri: satu bungkus oralit dilarutkan dengan air matang sesuai takaran di kemasan. Tengah: cubitan kulit perut yang kembali lambat. Kanan: mata cekung. Satu tanda: periksa hari ini; dua tanda bersama atau anak lemas: berangkat sekarang.</figcaption></figure>
   <div class="box"><h3>Di rumah</h3>
     <ol class="list">
       <li>Teruskan ASI dan makan seperti biasa.</li>
@@ -1936,15 +2165,43 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       <li>Cuci tangan pakai sabun; minum air yang sudah dimasak.</li>
     </ol></div>
   <div class="box stop"><h3>Berangkat sekarang bila</h3>
-    <ol class="list"><li>Lemas, sulit dibangunkan</li><li>Tidak mau atau tidak bisa minum, atau muntah terus</li></ol></div>
+    <ol class="list"><li>Lemas, sulit dibangunkan</li><li>Tidak mau atau tidak bisa minum, atau muntah terus</li><li>Mata cekung <b>dan</b> cubitan kulit perut kembali sangat lambat (dua tanda bersama)</li></ol></div>
   <div class="box key"><h3>Periksa hari ini bila</h3>
-    <ol class="list"><li>Mata cekung</li><li>Kulit perut yang dicubit kembali sangat lambat</li><li>Ada darah di tinja</li><li>Diare 2 minggu atau lebih</li></ol></div>
+    <ol class="list"><li>Mata cekung, atau cubitan kulit perut kembali lambat (salah satu saja)</li><li>Ada darah di tinja</li><li>Diare 2 minggu atau lebih</li></ol></div>
   <p class="muted">Oralit dan zinc tersedia gratis di posyandu, bidan, atau Puskesmas. Simpan beberapa bungkus oralit di rumah.</p>
 </section>
 
 <section class="slide" data-key="tanda-04" hidden data-say="Digigit ular. Jauhi ularnya. Tenangkan korban dan jangan biarkan dia berjalan, gotong ke kendaraan. Pasang bidai supaya bagian yang digigit tidak bergerak. Jangan ikat kencang, jangan sayat, jangan isap, jangan pijat. Langsung ke Puskesmas. Kelopak mata turun, sulit menelan, atau napas melemah berarti sangat gawat. Berhenti bernapas? Beri napas buatan bila dilatih, dan tekan dada.">
   <p class="eyebrow">Gigitan ular</p>
   <h2>Digigit ular: diam, bidai, gotong</h2>
+  <figure class="ill"><svg aria-describedby="cap-tanda-04" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-label="Tungkai yang digigit ular ditopang bidai dan korban digotong; jangan memasang ikatan kencang, menyayat, atau mengisap luka." class="ill-tanda04">
+<g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M20 38h88q10 0 10 12v23l19 12q9 5 5 12H99l-9-17H20" fill="var(--pulse-soft,#FBE5E8)"/>
+<path d="M22 105h121v9H22z"/>
+<path d="M43 38h13v67H43zM80 38h13v67H80z" fill="var(--pulse-soft,#FBE5E8)"/>
+<path d="M45 54h9M82 54h9"/>
+<circle cx="104" cy="66" r="2" fill="var(--pulse,#C3122D)" stroke="none"/><circle cx="111" cy="70" r="2" fill="var(--pulse,#C3122D)" stroke="none"/>
+<path d="M151 71h15m-6-6 6 6-6 6" stroke="var(--pulse,#C3122D)"/>
+<circle cx="181" cy="32" r="9"/><path d="M180 43l-4 27 10 17M177 53l14 16h10M176 69l-7 38m9-21 12 20"/>
+<circle cx="300" cy="32" r="9"/><path d="M299 43l4 27-10 17M302 53l-14 16h-10M303 69l7 38m-9-21-12 20"/>
+<path d="M191 82h99M197 87h87"/>
+<circle cx="209" cy="66" r="8"/>
+<path d="M220 66h30l21 10h9v6h-35l-14-7h-13z" fill="var(--pulse-soft,#FBE5E8)"/>
+<path d="M245 83h34M254 74v9M269 77v6" stroke="var(--pulse,#C3122D)"/>
+<path d="M18 132h284" opacity=".22"/>
+<g transform="translate(53 184)">
+<path d="M-26-15h52M-26 16h52M-5-17V18M2-17V18M-12-25 16-19M1-17l5-5"/>
+<circle r="37" stroke="var(--pulse,#C3122D)"/><path d="m-26-26 52 52" stroke="var(--pulse,#C3122D)" stroke-width="4"/>
+</g>
+<g transform="translate(160 184)">
+<path d="M-26 16h52M-26 25h52M-5 9 12-12 19-6 2 12zM12-12l6-8 7 6-6 8" fill="var(--pulse-soft,#FBE5E8)"/>
+<circle r="37" stroke="var(--pulse,#C3122D)"/><path d="m-26-26 52 52" stroke="var(--pulse,#C3122D)" stroke-width="4"/>
+</g>
+<g transform="translate(267 184)">
+<path d="M-26 17h52M-26 27h52M-18-10q9-12 18-5q9-7 18 5q-18 16-36 0M-18-10h36M-4 4v4m8-4v4"/>
+<circle r="37" stroke="var(--pulse,#C3122D)"/><path d="m-26-26 52 52" stroke="var(--pulse,#C3122D)" stroke-width="4"/>
+</g>
+</g></svg><figcaption id="cap-tanda-04">Kurangi gerakan dan segera antar. Jangan memasang ikatan kencang, menyayat, atau mengisap luka.</figcaption></figure>
   <div class="grid2">
     <div class="box"><h3>Lakukan</h3>
       <ol class="list">
@@ -2002,7 +2259,8 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       <a class="btn danger" href="tel:112">Telepon 112 <small>panggilan darurat</small></a>
       <a class="btn danger" href="tel:119">Telepon 119 <small>gawat darurat kesehatan</small></a>
       <a class="btn danger" id="sos-jaga" href="#" hidden>Telepon nomor jaga Puskesmas <small id="sos-jaga-n"></small></a>
-      <button class="btn" id="sos-cpr">Tidak sadar, tidak bernapas normal <small>buka ketukan tekan dada</small></button>
+      <button class="btn" id="sos-cpr">Dewasa atau remaja: tidak sadar, tidak bernapas normal <small>buka cara tekan dada</small></button>
+      <button class="btn" id="sos-cpr-anak">Anak atau bayi: tidak sadar, tidak bernapas normal <small>buka layar Anak dan bayi</small></button>
       <button class="btn ghost" id="sos-tanda">Kartu Tanda Bahaya <small>kapan harus ke Puskesmas</small></button>
     </div>
   </div>
@@ -2072,15 +2330,16 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   /* Satu bintang per kegiatan per sesi. "Ulangi modul" tidak menambah bintang lagi,
      supaya catatan "kegiatan selesai" untuk Puskesmas tidak membengkak. */
   function award(key){
+    var s=sess();/* sesi dulu (bisa saja hari sudah berganti), baru bintang; kalau tidak, bintang pertama hari baru ikut terhapus */
     if(st.done[key]){toast('Bintang kegiatan ini sudah dihitung di sesi ini');return}
-    st.done[key]=true;st.stars=num(st.stars)+1;sess().act++;
+    st.done[key]=true;st.stars=num(st.stars)+1;s.act++;
     persist();renderScores();toast(st.mode==='group'?'+1 bintang bersama':'+1 bintang');
     var s=$('scores').firstChild;if(s){s.classList.remove('pop');void s.offsetWidth;s.classList.add('pop')}
   }
   /* "Selesai" berarti setiap layar modul benar-benar pernah dibuka (dicatat satu per satu),
      bukan sekadar pernah melompat ke layar terakhir. Posisi terjauh (seen) hanya untuk bilah kemajuan. */
   function visited(m){return Array.isArray(st.vis[m])?st.vis[m]:(st.vis[m]=[])}
-  function visCount(m,n){return visited(m).filter(function(x){return x>=0&&x<n}).length}
+  function visCount(m,n){var seen={},c=0;visited(m).forEach(function(x){if(x===Math.floor(x)&&x>=0&&x<n&&!seen[x]){seen[x]=1;c++}});return c}
   function finished(d){var m=d.getAttribute('data-mod'),n=all('.slide',d).length;return visCount(m,n)>=n}
   /* Hanya modul bernomor yang dihitung; Kartu Tanda Bahaya (data-alt) adalah alat bantu, bukan modul. */
   var mainDecks=decks.filter(function(d){return !d.hasAttribute('data-alt')});
@@ -2100,7 +2359,10 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   function archive(){
     if(used(st.sess)){st.log=(st.log||[]).concat([st.sess]).slice(-100)}
     st.sess=newSess();if(cur)st.sess.mods[cur]=1;
-    st.done={};st.stars=0;renderScores();
+    /* Bintang, tanda "sudah dihitung", layar yang dibuka, dan tampilan kuis mulai dari nol; posisi terakhir (Lanjutkan) tetap. */
+    st.done={};st.stars=0;st.vis={};st.seen={};
+    try{decks.forEach(resetDeck);renderMods()}catch(e){}
+    renderScores();
   }
   function sess(){
     if(!st.sess)st.sess=newSess();else if(st.sess.d!==today()){archive();persist()}
@@ -2114,20 +2376,26 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       ' · dibuka: '+names(s.mods)+' · selesai: '+names(s.fin)+' · Bacakan '+s.say+'x · kegiatan selesai '+s.act+
       ' · tanpa sinyal: '+(s.off?'ya':'tidak');
   }
+  /* Pratinjau dan yang dikirim memakai pemilihan yang sama: 20 sesi terbaru, yang terbaru di atas.
+     Bila terlalu panjang untuk satu pesan, dipotong di batas sesi (yang terbaru tetap ikut) dan jumlahnya disebut. */
+  var LOG_N=20,LOG_MAX=3500;
+  function logRows(){var semua=(st.log||[]).concat(used(st.sess)?[st.sess]:[]);return {rows:semua.slice(-LOG_N).reverse(),total:semua.length}}
   function renderLog(){
-    var rows=(st.log||[]).concat(used(st.sess)?[st.sess]:[]).slice(-20).reverse(),box=$('log-list');
-    box.innerHTML=rows.length?rows.map(function(s){return '<p>'+esc(sessLine(s))+'</p>'}).join(''):'<p class="muted">Belum ada sesi.</p>';
+    var r=logRows(),box=$('log-list');
+    box.innerHTML=r.rows.length?r.rows.map(function(s){return '<p>'+esc(sessLine(s))+'</p>'}).join('')+(r.total>r.rows.length?'<p class="muted">'+(r.total-r.rows.length)+' sesi lebih lama tidak ditampilkan dan tidak ikut dikirim.</p>':''):'<p class="muted">Belum ada sesi.</p>';
   }
-  function logText(){
-    var rows=(st.log||[]).concat(used(st.sess)?[st.sess]:[]);
-    return 'Catatan sesi Literasi Kesehatan Kader Momiwaren (tanpa nama)\n'+rows.map(sessLine).join('\n');
+  function logText(max){
+    var r=logRows(),out='Catatan sesi Literasi Kesehatan Kader Momiwaren (tanpa nama), '+r.rows.length+' sesi terbaru'+(r.total>r.rows.length?' dari '+r.total:'')+'\n',n=0;
+    for(var i=0;i<r.rows.length;i++){var line=sessLine(r.rows[i])+'\n';if(max&&(out+line).length>max)break;out+=line;n++}
+    if(n<r.rows.length)out+='('+(r.rows.length-n)+' sesi lebih lama tidak muat dalam satu pesan)\n';
+    return out.replace(/\n$/,'');
   }
   /* Kirim ringkasan: memakai menu berbagi bawaan HP (WhatsApp, SMS, dll.) bila ada; kalau tidak, membuka
      WhatsApp dengan ringkasan terisi. Kader memilih sendiri penerimanya (bidan koordinator), lalu pesan
      terkirim begitu ada sinyal. Lebih mudah daripada salin-tempel. */
   function waOpen(t){try{window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank')}catch(e){toast('WhatsApp tidak bisa dibuka')}}
   $('log-wa').onclick=function(){
-    var t=logText();if(t.length>3500)t=t.slice(0,3500)+'\n…';
+    var t=logText(LOG_MAX);
     if(navigator.share){
       navigator.share({title:'Catatan sesi kader',text:t}).catch(function(e){if(!e||e.name!=='AbortError')waOpen(t)});
     }else waOpen(t);
@@ -2166,12 +2434,14 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
      Jadi tombol Kembali bawaan Android membawa ke menu, bukan keluar dari aplikasi. */
   function setHash(h){try{history.replaceState(history.state,'',h)}catch(e){}}
   function inDeckEntry(){try{return !!(history.state&&history.state.deck)}catch(e){return false}}
+  /* Setiap perpindahan beranda/modul menaikkan navGen; timer lama yang masih hidup diabaikan bila konteksnya sudah berganti. */
+  var navGen=0;
   function goHome(){
-    if(inDeckEntry()){try{history.back()}catch(e){}setTimeout(function(){if(cur)showHome()},350)}
+    if(inDeckEntry()){var g=++navGen,was=cur;try{history.back()}catch(e){}setTimeout(function(){if(navGen===g&&cur===was&&cur)showHome()},350)}
     else showHome();
   }
   function showHome(){
-    stopAll();
+    navGen++;stopAll();
     if(cur){st.last=(st.pos[cur]||0)<slides.length-1?cur:null}
     decks.forEach(function(d){d.hidden=true});home.hidden=false;$('hint').hidden=true;
     document.documentElement.removeAttribute('data-mod');
@@ -2179,10 +2449,11 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     $('brand-t').textContent='Literasi Kesehatan Kader';$('brand-s').textContent='Puskesmas Momiwaren';
     cur=null;st.cur=null;persist();renderMods();renderLog();
     try{history.replaceState(null,'','#beranda')}catch(e){}window.scrollTo(0,0);
+    var h1=home.querySelector('h1');if(h1){h1.setAttribute('tabindex','-1');try{h1.focus({preventScroll:true})}catch(e){}}
   }
   function openDeck(m,i,fromHistory){
     var d=deckBy[m];if(!d)return showHome();
-    if(!st.mode)setMode('solo');
+    navGen++;if(!st.mode)setMode('solo');
     if(!fromHistory&&!cur){try{history.pushState({deck:1},'','#'+m+'-'+(i==null?num(st.pos[m]):i))}catch(e){}}
     home.hidden=true;decks.forEach(function(x){x.hidden=x!==d});
     cur=m;st.cur=m;slides=all('.slide',d);buildSegs();$('segs').hidden=false;
@@ -2193,6 +2464,8 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     $('brand-t').textContent=d.getAttribute('data-title');
     $('brand-s').textContent=d.getAttribute('data-sub')||'Literasi Kesehatan Kader Momiwaren';
     go(i==null?num(st.pos[m]):i,true);
+    /* Fokus ke judul layar yang dibuka, supaya pembaca layar mengumumkan konteks baru. */
+    var hh=slides[num(st.pos[m])]&&slides[num(st.pos[m])].querySelector('h2');if(hh){hh.setAttribute('tabindex','-1');try{hh.focus({preventScroll:true})}catch(e){}}
   }
   function go(i,opening){
     if(!cur)return;
@@ -2202,7 +2475,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     if(!opening&&i!==from){var sl=slides[i];sl.classList.add(i>from?'in-next':'in-prev');setTimeout(function(){sl.classList.remove('in-next','in-prev')},300)}
     st.pos[cur]=i;st.seen[cur]=Math.max(st.seen[cur]||0,i+1);
     var vs=visited(cur);if(vs.indexOf(i)<0)vs.push(i);
-    clearTimeout(fbT);persist();
+    clearTimeout(fbT);if(finished(deckBy[cur]))sess().fin[cur]=1;persist();
     $('prog-t').textContent=(i+1)+' dari '+slides.length+' · peta';updateSegs(i);
     all('[data-count]',slides[i]).forEach(countUp);
     $('prog-b').style.width=((i+1)/slides.length*100)+'%';
@@ -2451,7 +2724,11 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     stopAll();closeMap();openSheet('sos');
   }
   $('sos-btn').onclick=openSos;$('sos-bd').onclick=closeMap;$('sos-close').onclick=closeMap;
-  $('sos-cpr').onclick=function(){closeMap();var k=all('.slide',deckBy.bls).map(slideKey).indexOf('bls-07');openDeck('bls',k<0?0:k);setTimeout(function(){if($('metro-btn')&&!timer)$('metro-btn').click()},150)};
+  /* Pintu darurat dibedakan umur, karena teknik dewasa berbeda dengan anak/bayi. Metronom tidak dinyalakan otomatis:
+     kader mulai menekan dulu; ketukan bisa dinyalakan dari layar itu bila membantu. */
+  function sosGo(key){closeMap();var k=all('.slide',deckBy.bls).map(slideKey).indexOf(key);openDeck('bls',k<0?0:k)}
+  $('sos-cpr').onclick=function(){sosGo('bls-06')};
+  $('sos-cpr-anak').onclick=function(){sosGo('bls-11')};
   $('sos-tanda').onclick=function(){closeMap();openDeck('tanda',0)};
   /* Healing119: nomornya 119 lalu tekan 8; diingatkan tepat sebelum layar berpindah ke telepon. */
   all('a.h119').forEach(function(a){a.addEventListener('click',function(){toast('Setelah tersambung ke 119, tekan angka 8')})});
@@ -2467,6 +2744,8 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 
   /* ---------- mode & kelompok ---------- */
   function setMode(m){
+    /* Ganti mode setelah ada kegiatan: sesi lama diarsipkan dengan modenya sendiri, bukan ditulis ulang. */
+    if(st.sess&&st.sess.mode&&st.sess.mode!==m&&used(st.sess)){archive();toast('Catatan sesi sebelumnya disimpan')}
     st.mode=m;sess().mode=m;persist();
     $('m-group').setAttribute('aria-pressed',m==='group');
     $('m-solo').setAttribute('aria-pressed',m==='solo');
@@ -2632,7 +2911,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
           if(o[1]){
             [].forEach.call(opts.children,function(x){x.disabled=true});
             var n=document.createElement('button');n.className='btn';n.textContent=i===data.steps.length-1?'Lihat akhir cerita':'Lanjut cerita';
-            n.onclick=function(){render(i+1)};stage.appendChild(n);
+            n.onclick=function(){stopSpeak();render(i+1)};stage.appendChild(n);
           }
         };
         opts.appendChild(b);
@@ -2768,10 +3047,12 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     };
     /* pointerdown dipakai supaya cepat; click tetap dihitung untuk teknologi bantu yang tidak mengirim pointerdown
        (dicegah ganda bila baru saja ada pointerdown). Tombol yang ditahan (autorepeat) tidak dihitung berulang. */
-    var padPD=0;
-    $('pad').addEventListener('keydown',function(e){if((e.key===' '||e.key==='Enter')&&!e.repeat){e.preventDefault();padPD=performance.now();padTap()}});
-    $('pad').addEventListener('pointerdown',function(e){e.preventDefault();padPD=performance.now();padTap()});
-    $('pad').addEventListener('click',function(){if(performance.now()-padPD>400)padTap()});
+    var padPD=false;
+    $('pad').addEventListener('keydown',function(e){if((e.key===' '||e.key==='Enter')&&!e.repeat){e.preventDefault();padTap()}});
+    $('pad').addEventListener('pointerdown',function(e){e.preventDefault();padPD=true;padTap()});
+    $('pad').addEventListener('pointercancel',function(){padPD=false});
+    /* click hanya dihitung bila gesturnya tidak diawali pointerdown (teknologi bantu); benderanya dipakai sekali, bukan jendela waktu. */
+    $('pad').addEventListener('click',function(){if(padPD){padPD=false;return}padTap()});
   }
 
   /* ---------- hitung napas anak ---------- */
@@ -2822,18 +3103,24 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       var p=$('nt-pad');p.classList.add('tap');setTimeout(function(){p.classList.remove('tap')},120);
       if(st.sfx!==false&&audio())beep(1200,.03,.08);
     };
-    var ntPD=0;
-    $('nt-pad').addEventListener('pointerdown',function(e){e.preventDefault();ntPD=performance.now();ntTap()});
-    $('nt-pad').addEventListener('click',function(){if(performance.now()-ntPD>400)ntTap()});
-    $('nt-pad').addEventListener('keydown',function(e){if((e.key===' '||e.key==='Enter')&&!e.repeat){e.preventDefault();ntPD=performance.now();ntTap()}});
+    var ntPD=false;
+    $('nt-pad').addEventListener('pointerdown',function(e){e.preventDefault();ntPD=true;ntTap()});
+    $('nt-pad').addEventListener('pointercancel',function(){ntPD=false});
+    $('nt-pad').addEventListener('click',function(){if(ntPD){ntPD=false;return}ntTap()});
+    $('nt-pad').addEventListener('keydown',function(e){if((e.key===' '||e.key==='Enter')&&!e.repeat){e.preventDefault();ntTap()}});
     $('nt-check').onclick=function(){
-      var n=parseInt($('nt-count').value,10),lim=+$('nt-age').value,low=NT_LOW[lim]||20,fb=$('nt-fb');
+      var raw=String($('nt-count').value||'').trim(),lim=+$('nt-age').value,low=NT_LOW[lim]||20,fb=$('nt-fb');
       if(!lim){fb.textContent='Pilih umur anak dulu.';fb.className='fb no';$('nt-age').focus();return}
-      if(isNaN(n)){fb.textContent='Isi dulu jumlah napas yang dihitung.';fb.className='fb no';return}
+      if(raw===''){fb.textContent='Isi dulu jumlah napas yang dihitung.';fb.className='fb no';return}
+      /* Hanya bilangan bulat yang diterima; "1e2", "39.9", atau "-1" diminta diperbaiki, bukan ditafsirkan. */
+      if(!/^\d{1,3}$/.test(raw)){fb.textContent='Tulis angka bulat saja, misalnya 38. Yang terisi: "'+raw.slice(0,12)+'".';fb.className='fb no';return}
+      var n=parseInt(raw,10);
       if(n>150){fb.textContent='Angka '+n+' terlalu besar untuk 60 detik. Periksa lagi angka yang diketik. Napasnya memang sangat cepat? Antar sekarang.';fb.className='fb no';return}
       if(n<10){fb.textContent='Napas sangat lambat atau berhenti: ini gawat. Panggil bantuan dan antar sekarang. Anak tidak bernapas normal? Napas buatan dan tekan dada sesuai umur anak (Modul 1, layar Anak dan bayi).';fb.className='fb no';return}
       if(n<low){fb.textContent=n+' napas per menit: lebih lambat dari biasanya untuk umur ini. Hitung ulang saat anak tenang. Anak lemas, sulit dibangunkan, atau napasnya berhenti-henti? Antar ke Puskesmas sekarang.';fb.className='fb no';return}
-      if(n>=lim){fb.textContent=n+' napas per menit: napas cepat untuk umur ini (batas '+lim+'). Antar ke Puskesmas hari ini.';fb.className='fb no'}
+      /* Bayi di bawah 2 bulan (IMCI bayi muda): hitung ulang sekali; tetap 60 atau lebih berarti sangat berisiko, antar sekarang. */
+      if(n>=lim&&lim===60){fb.textContent=n+' napas per menit: cepat untuk bayi di bawah 2 bulan. Hitung sekali lagi 60 detik. Tetap 60 atau lebih? Bayi muda cepat memburuk: antar ke Puskesmas sekarang.';fb.className='fb no'}
+      else if(n>=lim){fb.textContent=n+' napas per menit: napas cepat untuk umur ini (batas '+lim+'). Antar ke Puskesmas hari ini.';fb.className='fb no'}
       else{fb.textContent=n+' napas per menit: tidak termasuk napas cepat (batas '+lim+'). Ini tidak berarti anak sehat. Anak tetap demam, lemas, tidak mau minum atau menyusu, atau keluarga cemas? Antar ke Puskesmas hari ini. Demam di Momiwaren: periksa darah malaria.';fb.className='fb'}
     };
   }
@@ -2920,17 +3207,26 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   }
   /* Rekaman dinilai dari yang benar-benar tersimpan di HP, bukan dari daftar. */
   function recCached(){
-    var urls=allRecUrls();if(!urls.length||!window.caches)return Promise.resolve({n:0,total:urls.length});
-    return Promise.all(urls.map(function(u){return caches.match(new URL(u,location.href).href).then(function(r){return r?1:0}).catch(function(){return 0})}))
-      .then(function(a){return {n:a.reduce(function(x,y){return x+y},0),total:urls.length}}).catch(function(){return {n:0,total:urls.length}});
+    var urls=allRecUrls();if(!urls.length||!window.caches)return Promise.resolve({});
+    return Promise.all(urls.map(function(u){return caches.match(new URL(u,location.href).href).then(function(r){return [u,r?1:0]}).catch(function(){return [u,0]})}))
+      .then(function(a){var o={};a.forEach(function(p){if(p[1])o[p[0]]=1});return o}).catch(function(){return {}});
   }
+  /* "Siap tanpa sinyal" hanya bila SETIAP layar punya jalan bersuara: rekaman tersimpan untuk suara terpilih
+     (atau cadangannya), atau suara mesin yang tersimpan di HP untuk layar yang belum direkam. */
   function checkVoice(){
     var nP=recCount('papua'),nI=recCount('id'),total=audioKeys.length,papua=st.voice==='papua';
     if(!nP&&!nI){var r=machineStatus(papua?'Suara logat Papua belum direkam. ':'');setStatus('st-voice',r[0],r[1]);return}
-    recCached().then(function(c){
-      var ok=c.n>=c.total&&c.total>0;
+    var mv=machineStatus(''),ttsLocal=mv[0]===true;
+    recCached().then(function(has){
+      var urls=allRecUrls(),saved=urls.filter(function(u){return has[u]}).length;
+      var covered=audioKeys.filter(function(k){return recUrls(k).some(function(u){return has[u]})}).length;
       var head=papua&&nP?'Suara logat Papua: '+nP+' dari '+total+' layar direkam':papua?'Suara logat Papua belum direkam; memakai rekaman bahasa Indonesia':'Suara: rekaman bahasa Indonesia untuk '+nI+' dari '+total+' layar';
-      setStatus('st-voice',ok,head+'. Tersimpan di HP: '+c.n+' dari '+c.total+' file'+(ok?'; siap tanpa sinyal.':'; tekan "Simpan semua rekaman" saat ada sinyal.'));
+      var ok,msg;
+      if(covered>=total){ok=true;msg='Semua layar punya rekaman tersimpan; siap tanpa sinyal.'}
+      else if(ttsLocal){ok=true;msg='Rekaman tersimpan untuk '+covered+' dari '+total+' layar; layar lain memakai suara mesin yang tersimpan di HP.'}
+      else if(saved<urls.length){ok=false;msg='Tersimpan '+saved+' dari '+urls.length+' berkas; tekan "Simpan semua rekaman" saat ada sinyal.'}
+      else{ok=null;msg='Rekaman tersimpan untuk '+covered+' dari '+total+' layar; layar lain TIDAK bersuara tanpa sinyal. '+mv[1]}
+      setStatus('st-voice',ok,head+'. '+msg);
     });
   }
   if(canSpeak){try{speechSynthesis.addEventListener('voiceschanged',checkVoice)}catch(e){}}

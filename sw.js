@@ -1,7 +1,10 @@
 // Simpan aplikasi untuk dipakai tanpa sinyal setelah dibuka sekali.
 // Rekaman suara disimpan di cache tersendiri yang TIDAK dihapus saat aplikasi diperbarui.
-// Nomor versi APP diisi otomatis oleh build.py dari file VERSION.
-const APP = 'literasi-app-v0.8.0';
+// Nomor versi diisi otomatis oleh build.py dari file VERSION.
+// Nama cache memuat jalur pemasangan (scope), supaya dua pemasangan Literasi di satu origin
+// (misalnya /uji/ dan /resmi/) tidak saling menghapus cache.
+const SCOPE = (() => { try { return new URL(self.registration.scope).pathname.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '') || 'root'; } catch (e) { return 'root'; } })();
+const APP = 'literasi-app-' + SCOPE + '-v0.8.1';
 const AUDIO = 'literasi-audio-v1';
 const CORE = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png'];
 // Foto sampul: disimpan satu per satu (yang gagal tidak membatalkan pemasangan; halaman menghitung ulang yang tersimpan).
@@ -11,10 +14,11 @@ self.addEventListener('install', e => {
   e.waitUntil(caches.open(APP).then(c => c.addAll(CORE).then(() => Promise.all(IMG.map(u => c.add(u).catch(() => {}))))).then(() => self.skipWaiting()));
 });
 
-// Hanya cache milik aplikasi ini (awalan literasi-app-) yang dibersihkan; cache aplikasi lain di origin yang sama dibiarkan.
+// Yang dibersihkan: versi lama pada scope ini, dan nama lama tanpa scope (literasi-app-v…) dari rilis sebelum 0.8.1.
+// Cache aplikasi lain, cache rekaman, dan cache Literasi pada scope lain dibiarkan.
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys()
-    .then(ks => Promise.all(ks.filter(k => k.startsWith('literasi-app-') && k !== APP).map(k => caches.delete(k))))
+    .then(ks => Promise.all(ks.filter(k => k !== APP && (k.startsWith('literasi-app-' + SCOPE + '-') || /^literasi-app-v\d/.test(k))).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
 
@@ -38,21 +42,32 @@ function ranged(req, res) {
   });
 }
 
-// Rekaman: kunci cache memakai alamat lengkap termasuk ?v=<sidik jari>, jadi rekaman baru dengan nama sama
-// terunduh baru; versi lama dengan jalur sama dibuang. Permintaan "no-cache"/"reload" (tombol simpan ulang)
-// dilayani dari jaringan dulu.
+// Rekaman: kunci cache memakai alamat lengkap termasuk ?v=<sidik jari>, jadi rekaman baru dengan nama sama terunduh baru.
+// Berkas baru DISIMPAN DULU; versi lama di jalur yang sama baru dibuang bila penyimpanan berhasil, dan hanya pada
+// permintaan "simpan ulang" (cache no-cache/reload dari tombol Simpan semua rekaman, yang memakai daftar terbaru).
+// Pemutaran biasa tidak pernah menghapus apa pun, supaya tab lama tidak menyingkirkan versi baru atau sebaliknya.
 function audio(req) {
   const url = new URL(req.url), key = url.href, path = url.origin + url.pathname;
   const fresh = req.cache === 'no-cache' || req.cache === 'reload' || req.cache === 'no-store';
   return caches.open(AUDIO).then(c => {
     const fromNet = () => fetch(key).then(res => {
       if (res.status !== 200) return res;
-      return c.keys().then(ks => Promise.all(ks.filter(k => k.url.split('?')[0] === path && k.url !== key).map(k => c.delete(k))))
-        .then(() => c.put(key, res.clone())).catch(() => {}).then(() => ranged(req, res));
+      return c.put(key, res.clone())
+        .then(() => fresh ? c.keys().then(ks => Promise.all(ks.filter(k => k.url.split('?')[0] === path && k.url !== key).map(k => c.delete(k)))) : null)
+        .catch(() => {})
+        .then(() => ranged(req, res));
     });
     if (fresh) return fromNet().catch(() => c.match(key).then(hit => hit ? ranged(req, hit) : Response.error()));
     return c.match(key).then(hit => hit ? ranged(req, hit) : fromNet());
   });
+}
+
+// Daftar rekaman: jaringan dulu (daftar baru langsung terlihat saat ada sinyal), cache bila tidak ada sinyal.
+function manifestFirst(req) {
+  return fetch(req).then(res => {
+    if (res && res.status === 200) { const copy = res.clone(); caches.open(APP).then(c => c.put(req.url, copy)).catch(() => {}); }
+    return res;
+  }).catch(() => caches.match(req.url).then(hit => hit || Response.error()));
 }
 
 self.addEventListener('fetch', e => {
@@ -61,6 +76,7 @@ self.addEventListener('fetch', e => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
   if (url.pathname.indexOf('/audio/') !== -1 && /\.mp3$/i.test(url.pathname)) { e.respondWith(audio(req)); return; }
+  if (/\/audio\/daftar\.json$/.test(url.pathname)) { e.respondWith(manifestFirst(req)); return; }
 
   // Halaman dicocokkan tanpa parameter (?fbclid=… dari tautan yang dibagikan) dan selalu punya cadangan index.html.
   const nav = req.mode === 'navigate';

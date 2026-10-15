@@ -1,8 +1,7 @@
-# Literasi Kesehatan Kader Momiwaren v0.8.0, dirakit 15 Oktober 2026
+# Literasi Kesehatan Kader Momiwaren v0.8.1, dirakit 15 Oktober 2026
 # Verifikasi: sha256sum -c CHECKSUMS.txt   (atau: certutil -hashfile <berkas> SHA256 di Windows)
-2d850ea7645fc523c2420c7190091d0a303dd4b8784f0253a00072961c6f7858  index.html
-660aa50ce10ccc9d419c654c3916200d29d48a8fdcc9b371d769273954d2d649  literasi-kesehatan.html
-6dc95028aadf93018142256415f1b3dd5962c83b364420865fbabf728234aec6  sw.js
+21135790569fb5eb94bbc83ae227e1ba718e61e889c6cd63dc2b3525b859cc02  index.html
+23c61a149719ed25404999756f293131e1a6ea794012623f008cc8e87975b7e1  sw.js
 8e17964c4e89bf04d4fecb422f6fc14c009b4b67df758b666dce82061a3e7cbd  manifest.webmanifest
 9973b14acf7961da10b5f9c7aa8fef1c57bee992d56b28a77b164182c97cfe5f  audio/daftar.json
 819a5ff0b4e69c82dfa4fb84a341695cbe9cddb96e0e1c7d7f1771c2cc211d47  icons/icon-192.png
