@@ -4,7 +4,7 @@
 // Nama cache memuat jalur pemasangan (scope), supaya dua pemasangan Literasi di satu origin
 // (misalnya /uji/ dan /resmi/) tidak saling menghapus cache.
 const SCOPE = (() => { try { return new URL(self.registration.scope).pathname.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '') || 'root'; } catch (e) { return 'root'; } })();
-const APP = 'literasi-app-' + SCOPE + '-v0.8.1';
+const APP = 'literasi-app-' + SCOPE + '-v0.8.2';
 const AUDIO = 'literasi-audio-v1';
 const CORE = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png'];
 // Foto sampul: disimpan satu per satu (yang gagal tidak membatalkan pemasangan; halaman menghitung ulang yang tersimpan).
