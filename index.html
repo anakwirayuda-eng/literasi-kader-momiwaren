@@ -75,6 +75,8 @@ button{cursor:pointer}
 .ill svg{width:100%;height:auto;display:block;color:var(--ink)}
 .ill figcaption{font-size:.92rem;color:var(--muted);margin-top:.4rem;line-height:1.45}
 .ill figcaption ol{margin:.2rem 0 .3rem 1.2rem;padding:0}
+.boot-fail{max-width:46rem;margin:.75rem auto 0;padding:1rem 16px;border:2px solid var(--sos);border-radius:14px;background:var(--surface)}
+.boot-fail h2{font-size:1.2rem;margin:0 0 .4rem}.boot-fail p{margin:.4rem 0}.bf-calls{display:flex;flex-wrap:wrap;gap:.5rem}
 .sos-list{display:grid;gap:.6rem;margin-top:.6rem}
 .sos-list .btn,.sos-list a.btn{display:flex;align-items:center;justify-content:space-between;text-decoration:none;min-height:56px;font-size:1.1rem}
 .sos-list .btn.danger{background:#C3122D;border-color:#C3122D;color:#fff}
@@ -370,6 +372,21 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 }
 </style>
 
+<script>/* PENGAMAN-v1: berjalan sebelum aplikasi. Galat yang tidak tertangkap dicatat (tanpa data pribadi);
+bila aplikasi belum siap dalam 8 detik atau galat terjadi saat memuat, panel darurat cadangan ditampilkan. ?reset=1 menghapus
+simpanan luring aplikasi (bukan catatan, bukan rekaman) lalu memuat ulang. */
+(function(){var K='literasi-galat';window.__litOK=false;
+function log(m){try{var a=JSON.parse(localStorage.getItem(K)||'[]');if(!Array.isArray(a))a=[];a.push({t:new Date().toISOString(),v:'0.8.6',m:String(m).slice(0,240)});localStorage.setItem(K,JSON.stringify(a.slice(-20)))}catch(e){}}
+window.__litLog=log;
+function fail(){if(window.__litOK)return;var f=document.getElementById('boot-fail');if(f){f.hidden=false;f.setAttribute('data-sticky','1')}}
+window.addEventListener('error',function(e){if(e&&e.target&&e.target!==window&&!e.message)return;log((e.message||'galat')+' @'+String(e.filename||'').split('/').pop()+':'+(e.lineno||0));if(!window.__litOK)fail();else if(window.__litErr)window.__litErr()});
+window.addEventListener('unhandledrejection',function(e){var r=e&&e.reason;log('janji: '+((r&&r.message)||r))});
+setTimeout(fail,8000);
+if(/[?&]reset=1(&|$)/.test(location.search)){var back=function(){location.replace(location.pathname+'#beranda')};
+try{var jobs=[];if(navigator.serviceWorker&&navigator.serviceWorker.getRegistrations)jobs.push(navigator.serviceWorker.getRegistrations().then(function(rs){return Promise.all(rs.map(function(r){return r.unregister()}))}));
+if(window.caches)jobs.push(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k.indexOf('literasi-app-')===0}).map(function(k){return caches.delete(k)}))}));
+Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
+})();</script><noscript><style>#boot-fail[hidden]{display:block!important}</style></noscript>
 </head><body><header class="top">
   <div class="top-in">
     <button class="menu" id="home-btn" hidden>Menu</button>
@@ -397,9 +414,18 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       <label class="switch"><input type="checkbox" id="opt-auto"> Bacakan otomatis setiap pindah layar</label>
       <label class="switch"><input type="checkbox" id="opt-sfx" checked> Bunyi saat jawaban benar</label>
       <div class="row" id="print-row" hidden><button class="btn ghost" id="print-btn">Cetak modul ini sebagai lembar balik</button></div>
+      <div class="row"><a class="btn ghost" href="?reset=1" id="repair-link">Perbaiki aplikasi</a><span class="muted">Menghapus simpanan luring yang mungkin rusak lalu memuat ulang. Catatan sesi dan rekaman suara tetap. Butuh sinyal.</span></div>
     </div>
   </div>
 </header>
+<section class="boot-fail" id="boot-fail" hidden role="alert">
+  <h2>Aplikasi belum termuat penuh</h2>
+  <p>Untuk keadaan darurat, ini tetap bisa dipakai:</p>
+  <p class="bf-calls"><a class="btn danger" href="tel:112">Telepon 112</a> <a class="btn danger" href="tel:119">Telepon 119</a></p>
+  <p><b>Tidak sadar dan tidak bernapas normal:</b> panggil bantuan, tekan tengah dada 5–6 cm, 100–120 kali per menit, tanpa berhenti. Anak: sepertiga tebal dada, satu tangan. Bayi: dua ibu jari melingkari dada.</p>
+  <p><b>Berangkat sekarang bila:</b> perdarahan banyak, kejang, tidak sadar, sesak berat atau bibir biru, bayi tidak mau menyusu atau lemas, digigit ular, tenggelam.</p>
+  <p class="bf-calls"><a class="btn ghost" href="">Muat ulang</a> <a class="btn ghost" href="?reset=1">Perbaiki aplikasi</a> <button class="btn ghost" type="button" onclick="this.parentNode.parentNode.hidden=true">Tutup</button></p>
+</section>
 
 <main id="app">
 <section id="home" class="slide" data-say="Literasi Kesehatan Kader Momiwaren. Lima modul singkat untuk dipakai bersama di posyandu atau pertemuan kampung. Pilih cara belajar, lalu pilih modul.">
@@ -440,6 +466,8 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     <span id="st-voice"><i class="dot"></i><span>Memeriksa suara…</span></span>
     <div class="row" id="img-row" hidden><button class="btn ghost" id="img-retry">Simpan foto yang belum tersimpan</button></div>
     <div class="row" id="audio-row" hidden><button class="btn ghost" id="audio-save">Simpan semua rekaman suara di HP ini</button></div>
+    <p class="muted" id="st-err" hidden></p>
+    <div class="row" id="err-row" hidden><button class="btn ghost" id="err-copy">Salin laporan masalah</button><button class="btn ghost" id="err-clear">Hapus laporan</button></div>
     <p class="muted" id="st-store" hidden>Catatan tidak bisa disimpan di HP ini (penyimpanan penuh atau dibatasi). Aplikasi tetap bisa dipakai; catatan hilang saat ditutup.</p>
   </div>
   <details class="box" id="log-box">
@@ -465,7 +493,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       <li>Mama merajut noken · EmaMukar · CC BY-SA 4.0</li>
     </ul>
   </details>
-  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.8.5, 15 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
+  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.8.6, 15 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
 </section>
 <div class="hint" id="hint" hidden><span>Geser layar ke kiri atau tekan <b>Lanjut</b>. Tekan <b>Bacakan</b> untuk mendengar isi layar.</span><button class="btn ghost" id="hint-ok">Mengerti</button></div>
 <div class="deck" data-mod="bls" data-cover="img/dermaga-sumano.webp" data-pos="center 55%" data-credit="Dermaga kecil, Kampung Sumano · Lefaan · CC BY-SA 4.0" data-n="1" data-title="Bantuan Hidup Dasar" data-desc="Menolong orang yang tiba-tiba tidak sadar dan tidak bernapas normal: periksa, panggil, tekan." hidden>
@@ -514,19 +542,44 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   <p class="eyebrow"><span class="n">Langkah 1</span> · Periksa</p>
   <h2>Sadar atau tidak?</h2>
   <p class="lead">Tepuk bahunya dan panggil dengan keras: <b>“Bapa! Mama! Bisa dengar saya?”</b></p>
-  <figure class="ill"><svg aria-describedby="cap-bls-03" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Penolong menyentuh bahu orang yang terbaring sambil memanggil untuk memeriksa respons." class="ill-bls03" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M18 177H302"/>
-  <path d="M87 145C102 128 133 124 164 134L225 150 287 157Q296 159 295 168H90" fill="var(--pulse-soft,#FBE5E8)"/>
-  <path d="M84 145Q91 156 87 166H66C48 169 30 158 31 143 31 128 43 119 57 121L67 123 70 117 76 128 83 132 80 139Z"/>
-  <path d="M118 143L153 154 199 159M224 151L235 164 282 169"/>
-  <circle cx="147" cy="43" r="18"/>
-  <path d="M153 62L181 81 212 106 238 119 224 136 194 123 172 99M175 76L197 65 223 81 244 107M197 65L190 48"/>
-  <path d="M162 75L133 99 113 128 122 135 144 112 176 92" fill="var(--pulse-soft,#FBE5E8)"/>
-  <path d="M113 128L104 129 99 136 104 142 112 139 122 135M108 132L104 139M113 134L109 140" stroke="var(--pulse,#C3122D)"/>
-  <path d="M89 115L96 120M85 129H94M95 106L100 116" stroke="var(--pulse,#C3122D)"/>
-  <path d="M118 42Q111 49 116 56M109 36Q97 49 107 63M100 29Q81 49 98 72" stroke="var(--pulse,#C3122D)"/>
-  <path d="M238 119L257 131Q263 136 258 142H224M244 107L267 115 281 127"/>
-</svg><figcaption id="cap-bls-03">Sentuh bahu dan panggil. Tidak merespons? Panggil bantuan segera.</figcaption></figure>
+  <figure class="ill"><svg aria-describedby="cap-bls-03" xmlns="http://www.w3.org/2000/svg" viewBox="0 48 320 146" role="img" aria-label="Penolong berlutut di samping bahu orang yang terbaring, satu tangan menepuk bahunya dan mulut memanggil dengan keras ke arah wajahnya. Mata orang itu tertutup, tidak menjawab.">
+<style>
+.c03 .ln{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.c03 .bd{fill:var(--pulse-soft,#FBE5E8);stroke:currentColor;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.c03 .hd{fill:var(--bg,#F3F5F8);stroke:currentColor;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.c03 .ac{fill:none;stroke:var(--pulse,#C3122D);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.c03 .tb{fill:none;stroke:currentColor;stroke-width:11;stroke-linecap:round;stroke-linejoin:round}
+.c03 .ti{fill:none;stroke:var(--bg,#F3F5F8);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.c03 .hr{fill:currentColor;opacity:.6}
+.c03 .sc .ln,.c03 .sc .bd{stroke-width:4}
+.c03 .ft{opacity:.45}
+.c03 .rs{stroke:var(--accent,#1D5C86)}
+.c03 .vc{stroke:var(--muted,#556575)}
+.c03 .bd{fill:var(--bg,#F3F5F8)}
+.c03 .ti{stroke:var(--bg,#F3F5F8)}
+.c03 .hr.vc{fill:var(--muted,#556575);opacity:.7}
+.c03 .hr.rs{fill:var(--accent,#1D5C86);opacity:.7}
+/* DUAWARNA */
+</style>
+<g class="c03">
+<path class="ln ft" d="M10 182H310"/>
+<path class="hd rs" d="M90 102Q100 97 110 100Q132 106 150 118Q160 126 160 140L158 152H130L132 136Q118 128 104 118Q96 112 92 108Z"/>
+<circle class="hd rs" cx="82" cy="92" r="16"/>
+<path class="hr rs" d="M68.9 82.8Q74 75.5 82 76Q93 76.5 97 86.5Q94 85 92 87.5Q88 80 80 81Q74 82 71 86Z"/>
+<path class="bd vc" d="M64 156Q72 150 84 149L184 150Q196 151 200 158L284 161Q290 154 296 157V182H52Z"/>
+<g class="sc" transform="matrix(.75 0 0 .75 2.25 42.5)">
+<path class="bd vc" d="M86 149Q80 146 77 140Q74 133 70 132Q66 131.5 63.5 133Q62 135.5 60.5 135.5Q59.5 133.5 58.5 133Q57 133 56 134Q53 130.5 50.5 129.5Q47 128.5 47 131.5Q47 134.5 49 137.5Q46 140 43 145Q37 153 37 165Q38 179 50 183Q64 186 74 179L86 171"/>
+<path class="hr vc" d="M37.5 163Q38 179 50 183Q64 186 74 179L72 174Q60 180 50 176Q42 172 41.5 161Q41 152 45.5 145.5Q38 153 37.5 163Z"/>
+<path class="ln vc" d="M48.5 145.5Q52.5 149 57 146"/>
+</g>
+<path class="ln vc" d="M84 168Q130 173 182 170M200 158V181"/>
+<path class="tb rs" d="M102 110L98 130 90 142"/><path class="ti" d="M102 110L98 130 90 142"/>
+<path class="hd rs" d="M98 141Q88 138 80 141Q76 144 79 147Q86 149 98 148Z"/>
+<ellipse cx="69.5" cy="100" rx="3.4" ry="2.5" transform="rotate(-35 69.5 100)" fill="var(--pulse,#C3122D)" stroke="var(--accent,#1D5C86)" stroke-width="1.5"/>
+<path class="ac" d="M78 133L75 127M87 131V125M96 133L99 127"/>
+<path class="ac" d="M58.3 105.6A10 10 0 0 0 65.4 112.7M52.5 107.1A16 16 0 0 0 63.9 118.5M46.8 108.7A22 22 0 0 0 62.3 124.2"/>
+</g>
+</svg><figcaption id="cap-bls-03">Tepuk bahunya dan panggil dengan keras: “Bapa! Mama! Bisa dengar saya?” Tidak menjawab dan tidak bergerak? Langsung panggil bantuan.</figcaption></figure>
   <div class="box">
     <ol class="list">
       <li><b>Menjawab atau bergerak:</b> tanyakan apa yang terjadi, temani, dan cari bantuan bila perlu.</li>
@@ -584,30 +637,37 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 .c05 .hr{fill:currentColor;opacity:.6}
 .c05 .sc .ln,.c05 .sc .bd{stroke-width:2.1}
 .c05 .ft{opacity:.45}
+.c05 .rs{stroke:var(--accent,#1D5C86)}
+.c05 .vc{stroke:var(--muted,#556575)}
+.c05 .bd{fill:var(--bg,#F3F5F8)}
+.c05 .ti{stroke:var(--bg,#F3F5F8)}
+.c05 .hr.vc{fill:var(--muted,#556575);opacity:.7}
+.c05 .hr.rs{fill:var(--accent,#1D5C86);opacity:.7}
+/* DUAWARNA */
 </style>
 <g class="c05">
 <path class="ln ft" d="M6 186H154M166 186H314M160 24V178" stroke-width="2"/>
 <!-- KIRI: napas normal -->
-<path class="bd" d="M100 142Q112 132 128 130L156 129V186H90Z"/>
+<path class="bd vc" d="M100 142Q112 132 128 130L156 129V186H90Z"/>
 <g class="sc" transform="matrix(1.45 0 0 1.45 -16.65 -83.7)">
-<path class="bd" d="M86 149Q80 146 77 140Q74 133 70 132Q66 131.5 63.5 133Q62 135.5 60.5 135.5Q59.5 133.5 58.5 133Q57 133 56 134Q53 130.5 50.5 129.5Q47 128.5 47 131.5Q47 134.5 49 137.5Q46 140 43 145Q37 153 37 165Q38 179 50 183Q64 186 74 179L86 171"/>
-<path class="hr" d="M37.5 163Q38 179 50 183Q64 186 74 179L72 174Q60 180 50 176Q42 172 41.5 161Q41 152 45.5 145.5Q38 153 37.5 163Z"/>
-<path class="ln" d="M48.5 145.5Q52.5 149 57 146M48 141.5Q52 139.5 56 141"/>
+<path class="bd vc" d="M86 149Q80 146 77 140Q74 133 70 132Q66 131.5 63.5 133Q62 135.5 60.5 135.5Q59.5 133.5 58.5 133Q57 133 56 134Q53 130.5 50.5 129.5Q47 128.5 47 131.5Q47 134.5 49 137.5Q46 140 43 145Q37 153 37 165Q38 179 50 183Q64 186 74 179L86 171"/>
+<path class="hr vc" d="M37.5 163Q38 179 50 183Q64 186 74 179L72 174Q60 180 50 176Q42 172 41.5 161Q41 152 45.5 145.5Q38 153 37.5 163Z"/>
+<path class="ln vc" d="M48.5 145.5Q52.5 149 57 146M48 141.5Q52 139.5 56 141"/>
 </g>
-<path class="ln" d="M112 166Q134 172 156 171"/>
+<path class="ln vc" d="M112 166Q134 172 156 171"/>
 <path class="ln" d="M138 100V124M132 106L138 100 144 106M132 118L138 124 144 118"/>
 <path class="ln" d="M70 70Q78 56 86 70T102 70T118 70T134 70T150 70"/>
 <path class="ln" d="M14 44L22 52 36 36" stroke-width="4"/>
 <!-- KANAN: megap-megap -->
 <g transform="translate(162 0)">
-<path class="bd" d="M100 142Q112 132 128 130L156 129V186H90Z"/>
+<path class="bd vc" d="M100 142Q112 132 128 130L156 129V186H90Z"/>
 <g class="sc" transform="matrix(1.45 0 0 1.45 -16.65 -83.7)">
-<path class="bd" d="M86 149Q80 146 77 140Q74 135 70 135.5Q66 137 64.5 139.5L58.5 136Q57 133 56 134Q53 130.5 50.5 129.5Q47 128.5 47 131.5Q47 134.5 49 137.5Q46 140 43 145Q37 153 37 165Q38 179 50 183Q64 186 74 179L86 171"/>
-<ellipse cx="61.5" cy="136" rx="4.4" ry="3" transform="rotate(30 61.5 136)" fill="var(--pulse,#C3122D)" stroke="currentColor" stroke-width="1.6"/>
-<path class="hr" d="M37.5 163Q38 179 50 183Q64 186 74 179L72 174Q60 180 50 176Q42 172 41.5 161Q41 152 45.5 145.5Q38 153 37.5 163Z"/>
-<path class="ln" d="M48.5 145.5Q52.5 149 57 146M48 141.5Q52 139.5 56 141"/>
+<path class="bd vc" d="M86 149Q80 146 77 140Q74 135 70 135.5Q66 137 64.5 139.5L58.5 136Q57 133 56 134Q53 130.5 50.5 129.5Q47 128.5 47 131.5Q47 134.5 49 137.5Q46 140 43 145Q37 153 37 165Q38 179 50 183Q64 186 74 179L86 171"/>
+<ellipse cx="61.5" cy="136" rx="4.4" ry="3" transform="rotate(30 61.5 136)" fill="var(--pulse,#C3122D)" stroke="var(--muted,#556575)" stroke-width="1.6"/>
+<path class="hr vc" d="M37.5 163Q38 179 50 183Q64 186 74 179L72 174Q60 180 50 176Q42 172 41.5 161Q41 152 45.5 145.5Q38 153 37.5 163Z"/>
+<path class="ln vc" d="M48.5 145.5Q52.5 149 57 146M48 141.5Q52 139.5 56 141"/>
 </g>
-<path class="ln" d="M112 166Q134 172 156 171"/>
+<path class="ln vc" d="M112 166Q134 172 156 171"/>
 <path class="ac" d="M70 74H98Q104 74 106 58Q108 74 114 74H152"/>
 <path class="ac" d="M15 37L33 55M33 37L15 55" stroke-width="4"/>
 </g>
@@ -747,31 +807,38 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 .c08 .tb{fill:none;stroke:currentColor;stroke-width:11;stroke-linecap:round;stroke-linejoin:round}
 .c08 .ti{fill:none;stroke:var(--bg,#F3F5F8);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
 .c08 .ft{opacity:.45}
+.c08 .rs{stroke:var(--accent,#1D5C86)}
+.c08 .vc{stroke:var(--muted,#556575)}
+.c08 .bd{fill:var(--bg,#F3F5F8)}
+.c08 .ti{stroke:var(--bg,#F3F5F8)}
+.c08 .hr.vc{fill:var(--muted,#556575);opacity:.7}
+.c08 .hr.rs{fill:var(--accent,#1D5C86);opacity:.7}
+/* DUAWARNA */
 </style>
 <g class="c08">
 <path class="ln ft" d="M6 186H154M166 186H314M160 24V178" stroke-width="2"/>
 <!-- KIRI: tengadahkan kepala, angkat dagu, jepit hidung -->
-<path class="hd" d="M86 70Q98 62 110 68L150 132H112L92 92Z"/>
-<circle class="hd" cx="80" cy="52" r="17"/>
-<path class="tb" d="M94 80L60 92 32 118"/><path class="ti" d="M94 80L60 92 32 118"/>
-<path class="bd" d="M54 150Q64 156 74 152Q84 140 100 134L156 130V186H40Z"/>
-<circle class="bd" cx="40" cy="160" r="26"/>
-<path class="bd" d="M31 135.6C29.5 130 28.5 125 29.5 120.5C33 121.5 37.5 128 40.5 132.5Q43 130.5 45 131.5Q46 133.6 47 133.8Q48.5 131.8 50.5 132.2Q54 132 56.5 134Q59.5 137 60.2 143"/>
-<path class="ln" d="M24 158Q29 154 30 161M29.5 143Q33.5 145.5 37 143.5M84 162Q120 168 156 167"/>
-<path class="hd" d="M27 115Q34 113 35.5 118L33.5 121.5Q35 120 36.8 121.5Q38 124 35 126L28 132Q20 136 15 131Q12 127 15 122Z"/>
-<path class="tb" d="M100 84L98 116 72 136"/><path class="ti" d="M100 84L98 116 72 136"/>
-<path class="hd" d="M76 131Q67 134 61 138Q57.5 140.5 59.5 143Q62 144.5 66 142L78 138Z"/>
+<path class="hd rs" d="M86 70Q98 62 110 68L150 132H112L92 92Z"/>
+<circle class="hd rs" cx="80" cy="52" r="17"/>
+<path class="tb rs" d="M94 80L60 92 32 118"/><path class="ti" d="M94 80L60 92 32 118"/>
+<path class="bd vc" d="M54 150Q64 156 74 152Q84 140 100 134L156 130V186H40Z"/>
+<circle class="bd vc" cx="40" cy="160" r="26"/>
+<path class="bd vc" d="M31 135.6C29.5 130 28.5 125 29.5 120.5C33 121.5 37.5 128 40.5 132.5Q43 130.5 45 131.5Q46 133.6 47 133.8Q48.5 131.8 50.5 132.2Q54 132 56.5 134Q59.5 137 60.2 143"/>
+<path class="ln vc" d="M24 158Q29 154 30 161M29.5 143Q33.5 145.5 37 143.5M84 162Q120 168 156 167"/>
+<path class="hd rs" d="M27 115Q34 113 35.5 118L33.5 121.5Q35 120 36.8 121.5Q38 124 35 126L28 132Q20 136 15 131Q12 127 15 122Z"/>
+<path class="tb rs" d="M100 84L98 116 72 136"/><path class="ti" d="M100 84L98 116 72 136"/>
+<path class="hd rs" d="M76 131Q67 134 61 138Q57.5 140.5 59.5 143Q62 144.5 66 142L78 138Z"/>
 <path class="ac" d="M10 134Q3 150 9 166M4 160L9 166 15 161"/>
 <!-- KANAN: tiup sampai dada naik, hidung tetap dijepit -->
 <g transform="translate(162 0)">
-<path class="hd" d="M68 104Q82 82 110 70Q126 66 126 80L124 132H104L106 98Q96 102 88 110Q76 112 68 104Z"/>
-<path class="tb" d="M88 94L60 90 32 118"/><path class="ti" d="M88 94L60 90 32 118"/>
-<path class="bd" d="M54 150Q64 156 74 152Q84 140 100 134L156 130V186H40Z"/>
-<circle class="bd" cx="40" cy="160" r="26"/>
-<path class="bd" d="M31 135.6C29.5 130 28.5 125 29.5 120.5C33 121.5 37.5 128 40.5 132.5Q43 130.5 45 131.5Q46 133.6 47 133.8Q48.5 131.8 50.5 132.2Q54 132 56.5 134Q59.5 137 60.2 143"/>
-<path class="ln" d="M24 158Q29 154 30 161M29.5 143Q33.5 145.5 37 143.5M84 162Q120 168 156 167"/>
-<circle class="hd" cx="57" cy="117" r="18"/>
-<path class="hd" d="M27 115Q34 113 35.5 118L33.5 121.5Q35 120 36.8 121.5Q38 124 35 126L28 132Q20 136 15 131Q12 127 15 122Z"/>
+<path class="hd rs" d="M68 104Q82 82 110 70Q126 66 126 80L124 132H104L106 98Q96 102 88 110Q76 112 68 104Z"/>
+<path class="tb rs" d="M88 94L60 90 32 118"/><path class="ti" d="M88 94L60 90 32 118"/>
+<path class="bd vc" d="M54 150Q64 156 74 152Q84 140 100 134L156 130V186H40Z"/>
+<circle class="bd vc" cx="40" cy="160" r="26"/>
+<path class="bd vc" d="M31 135.6C29.5 130 28.5 125 29.5 120.5C33 121.5 37.5 128 40.5 132.5Q43 130.5 45 131.5Q46 133.6 47 133.8Q48.5 131.8 50.5 132.2Q54 132 56.5 134Q59.5 137 60.2 143"/>
+<path class="ln vc" d="M24 158Q29 154 30 161M29.5 143Q33.5 145.5 37 143.5M84 162Q120 168 156 167"/>
+<circle class="hd rs" cx="57" cy="117" r="18"/>
+<path class="hd rs" d="M27 115Q34 113 35.5 118L33.5 121.5Q35 120 36.8 121.5Q38 124 35 126L28 132Q20 136 15 131Q12 127 15 122Z"/>
 <path class="ac" d="M42.5 133.5Q47.5 138 53 134M136 124V106M131 111L136 106 141 111M150 123V105M145 110L150 105 155 110"/>
 </g>
 </g>
@@ -818,19 +885,26 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 .c10 .tb{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
 .c10 .ti{fill:none;stroke:var(--pulse-soft,#FBE5E8);stroke-linecap:round;stroke-linejoin:round}
 .c10 .th{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.c10 .rs{stroke:var(--accent,#1D5C86)}
+.c10 .vc{stroke:var(--muted,#556575)}
+.c10 .bd{fill:var(--bg,#F3F5F8)}
+.c10 .ti{stroke:var(--bg,#F3F5F8)}
+.c10 .hr.vc{fill:var(--muted,#556575);opacity:.7}
+.c10 .hr.rs{fill:var(--accent,#1D5C86);opacity:.7}
+/* DUAWARNA */
 </style>
 <g class="c10">
 <rect x="12" y="30" width="296" height="146" rx="14" class="ln" stroke-width="2" opacity=".3"/>
-<path class="tb" stroke-width="13" d="M102 115L106 63 76 57"/><path class="ti" stroke-width="7" d="M102 115L106 63 76 57"/>
-<path class="tb" stroke-width="20" d="M192 127L198 73 248 71"/><path class="ti" stroke-width="14" d="M192 127L198 73 248 71"/>
-<path class="bd" d="M76 136Q82 148 102 147L188 145Q206 143 212 133L286 131Q300 130 300 123Q300 116 286 116L212 115Q202 109 186 109L114 109Q94 107 80 113Z"/>
-<path class="ln" d="M212 132V116"/>
-<path class="tb" stroke-width="13" d="M96 131L98 85 84 100"/><path class="ti" stroke-width="7" d="M96 131L98 85 84 100"/>
-<path class="bd" d="M90 98Q80 92 70 98Q66 102 70 106Q76 109 88 105Z"/>
-<path class="th" d="M72 100.5L80 99"/>
-<path class="bd" d="M86 116Q80 113 77 107Q74 100 70 99Q66 98.5 63.5 100Q62 102.5 60.5 102.5Q59.5 100.5 58.5 100Q57 100 56 101Q52 96.5 49 93.5Q46.5 92 46.5 95Q47 100 49.5 104Q46 107 43 112Q37 120 37 132Q38 146 50 150Q64 153 74 146L86 138Z"/>
-<path d="M37.5 130Q38 146 50 150Q64 153 74 146L72 141Q60 147 50 143Q42 139 41.5 128Q41 119 45.5 112.5Q38 120 37.5 130Z" fill="currentColor" opacity=".6"/>
-<path class="ln" d="M49 113Q52.5 116 56.5 113.5"/>
+<path class="tb vc" stroke-width="13" d="M102 115L106 63 76 57"/><path class="ti" stroke-width="7" d="M102 115L106 63 76 57"/>
+<path class="tb vc" stroke-width="20" d="M192 127L198 73 248 71"/><path class="ti" stroke-width="14" d="M192 127L198 73 248 71"/>
+<path class="bd vc" d="M76 136Q82 148 102 147L188 145Q206 143 212 133L286 131Q300 130 300 123Q300 116 286 116L212 115Q202 109 186 109L114 109Q94 107 80 113Z"/>
+<path class="ln vc" d="M212 132V116"/>
+<path class="tb vc" stroke-width="13" d="M96 131L98 85 84 100"/><path class="ti" stroke-width="7" d="M96 131L98 85 84 100"/>
+<path class="bd vc" d="M90 98Q80 92 70 98Q66 102 70 106Q76 109 88 105Z"/>
+<path class="th vc" d="M72 100.5L80 99"/>
+<path class="bd vc" d="M86 116Q80 113 77 107Q74 100 70 99Q66 98.5 63.5 100Q62 102.5 60.5 102.5Q59.5 100.5 58.5 100Q57 100 56 101Q52 96.5 49 93.5Q46.5 92 46.5 95Q47 100 49.5 104Q46 107 43 112Q37 120 37 132Q38 146 50 150Q64 153 74 146L86 138Z"/>
+<path d="M37.5 130Q38 146 50 150Q64 153 74 146L72 141Q60 147 50 143Q42 139 41.5 128Q41 119 45.5 112.5Q38 120 37.5 130Z" class="hr vc"/>
+<path class="ln vc" d="M49 113Q52.5 116 56.5 113.5"/>
 <path class="ac" d="M58 92Q55 88 58 84M66 91Q63 87 66 83"/>
 </g>
 </svg><figcaption id="cap-bls-10">Dilihat dari atas. Orang berbaring miring menghadap ke depan: punggung tangan atas di bawah pipi, kepala sedikit menengadah, lutut atas ditekuk ke depan supaya tidak terguling, kaki bawah lurus. Awasi napasnya terus; kalau berubah tidak normal, telentangkan dan tekan dada.</figcaption></figure>
@@ -857,30 +931,37 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 .c11 .ti{fill:none;stroke:var(--pulse-soft,#FBE5E8);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
 .c11 .th{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 .c11 .ft{opacity:.45}
+.c11 .rs{stroke:var(--accent,#1D5C86)}
+.c11 .vc{stroke:var(--muted,#556575)}
+.c11 .bd{fill:var(--bg,#F3F5F8)}
+.c11 .ti{stroke:var(--bg,#F3F5F8)}
+.c11 .hr.vc{fill:var(--muted,#556575);opacity:.7}
+.c11 .hr.rs{fill:var(--accent,#1D5C86);opacity:.7}
+/* DUAWARNA */
 </style>
 <g class="c11">
 <path class="ln ft" d="M12 106H308"/>
-<path class="hd" d="M70 31L84 32Q100 40 114 60L117 70Q116 86 108 96L130 98V106H94Q93 94 96 86L100 76Q90 62 79 50L68 40Q65 36 66 33Z"/>
-<circle class="hd" cx="62" cy="24" r="11"/>
-<path class="bd" d="M54 96Q56 91 62 89Q70 86.5 80 87Q90 87.5 96 91L118 94Q128 95 134 97L139 95Q143 94 143 98V105H54Z"/>
-<circle class="bd" cx="44" cy="95" r="10.5"/>
-<path class="ln" d="M40.5 85Q42 81.5 45 84.8M64 97Q80 101 96 100"/>
-<path class="hd" d="M68 39L78 42 79.5 77Q81.5 84 81 86.5Q80 88.5 78 88.5H71Q68 88 67 85.5L59 85.5Q54.5 85.5 54 83.5Q54 81 58 80L68 77Z"/>
-<path class="th" d="M58.5 82.5H67M68 56.5H78.5"/>
+<path class="hd rs" d="M70 31L84 32Q100 40 114 60L117 70Q116 86 108 96L130 98V106H94Q93 94 96 86L100 76Q90 62 79 50L68 40Q65 36 66 33Z"/>
+<circle class="hd rs" cx="62" cy="24" r="11"/>
+<path class="bd vc" d="M54 96Q56 91 62 89Q70 86.5 80 87Q90 87.5 96 91L118 94Q128 95 134 97L139 95Q143 94 143 98V105H54Z"/>
+<circle class="bd vc" cx="44" cy="95" r="10.5"/>
+<path class="ln vc" d="M40.5 85Q42 81.5 45 84.8M64 97Q80 101 96 100"/>
+<path class="hd rs" d="M68 39L78 42 79.5 77Q81.5 84 81 86.5Q80 88.5 78 88.5H71Q68 88 67 85.5L59 85.5Q54.5 85.5 54 83.5Q54 81 58 80L68 77Z"/>
+<path class="th rs" d="M58.5 82.5H67M68 56.5H78.5"/>
 <path class="ac" d="M69 91H80M92 62V79M87 74L92 79 97 74"/>
 <path class="ln ft" d="M16 117H304" stroke-width="2"/>
-<path class="tb" d="M104 158L110 136 94 128M104 202L110 224 95 230M172 168L200 160 222 170M172 192L200 200 222 190"/>
+<path class="tb vc" d="M104 158L110 136 94 128M104 202L110 224 95 230M172 168L200 160 222 170M172 192L200 200 222 190"/>
 <path class="ti" d="M104 158L110 136 94 128M104 202L110 224 95 230M172 168L200 160 222 170M172 192L200 200 222 190"/>
-<path class="bd" d="M88 166Q94 154 112 153H150Q170 154 174 168L176 192Q172 206 150 207H112Q94 206 88 194Z"/>
-<path class="ln" d="M160 155Q177 160 177 180Q177 200 160 205"/>
-<circle class="bd" cx="66" cy="180" r="24"/>
-<path class="ln" d="M67 166Q71 170.5 67 175M67 185Q71 189.5 67 194M77.5 177.5Q80.5 180 77.5 182.5M60 156.5Q64 153 68 156.5M60 203.5Q64 207 68 203.5"/>
-<circle cx="112" cy="164" r="2.2" fill="currentColor"/>
-<circle cx="112" cy="196" r="2.2" fill="currentColor"/>
-<path class="ln ft" d="M112 168V192" stroke-dasharray="3 4" stroke-width="2"/>
-<path class="hd" d="M306 124L182 128Q160 126 140 138Q128 146 128 156Q129 163 137 166L124 170Q117 172 118.5 175.5Q120 178 124 178L148 177Q170 170 190 148L306 144"/>
-<path class="hd" d="M306 236L182 232Q160 234 140 222Q128 214 128 204Q129 197 137 194L124 190Q117 188 118.5 184.5Q120 182 124 182L148 183Q170 190 190 212L306 216"/>
-<path class="th" d="M152 134Q142 141 140 152M164 130Q154 138 152 148M152 226Q142 219 140 208M164 230Q154 222 152 212M236 126V145M236 215V234"/>
+<path class="bd vc" d="M88 166Q94 154 112 153H150Q170 154 174 168L176 192Q172 206 150 207H112Q94 206 88 194Z"/>
+<path class="ln vc" d="M160 155Q177 160 177 180Q177 200 160 205"/>
+<circle class="bd vc" cx="66" cy="180" r="24"/>
+<path class="ln vc" d="M67 166Q71 170.5 67 175M67 185Q71 189.5 67 194M77.5 177.5Q80.5 180 77.5 182.5M60 156.5Q64 153 68 156.5M60 203.5Q64 207 68 203.5"/>
+<circle cx="112" cy="164" r="2.2" fill="var(--muted,#556575)"/>
+<circle cx="112" cy="196" r="2.2" fill="var(--muted,#556575)"/>
+<path class="ln ft vc" d="M112 168V192" stroke-dasharray="3 4" stroke-width="2"/>
+<path class="hd rs" d="M306 124L182 128Q160 126 140 138Q128 146 128 156Q129 163 137 166L124 170Q117 172 118.5 175.5Q120 178 124 178L148 177Q170 170 190 148L306 144"/>
+<path class="hd rs" d="M306 236L182 232Q160 234 140 222Q128 214 128 204Q129 197 137 194L124 190Q117 188 118.5 184.5Q120 182 124 182L148 183Q170 190 190 212L306 216"/>
+<path class="th rs" d="M152 134Q142 141 140 152M164 130Q154 138 152 148M152 226Q142 219 140 208M164 230Q154 222 152 212M236 126V145M236 215V234"/>
 <path class="ac" d="M117 172.5Q114 175 117 177.5M117 182.5Q114 185 117 187.5"/>
 </g>
 </svg><figcaption id="cap-bls-11">Atas: anak. Berlutut di samping anak, bahu tepat di atas dada, lengan lurus; tekan bagian bawah tulang dada dengan pangkal satu telapak tangan, sekitar sepertiga tebal dada. Bawah: bayi. Lingkari dadanya dengan kedua tangan; dua ibu jari berdampingan di tengah dada, tepat di bawah garis puting (garis putus-putus). Tangan tidak bisa melingkari dada bayi? Pakai pangkal satu tangan.</figcaption></figure>
@@ -2385,18 +2466,28 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     if(st.sess&&typeof st.sess==='object'){st.sess.mods=obj(st.sess.mods);st.sess.fin=obj(st.sess.fin);st.sess.say=num(st.sess.say);st.sess.act=num(st.sess.act)}else st.sess=null;
     st.nomor=typeof st.nomor==='string'?st.nomor.slice(0,30):'';
   }
+  /* PENGAMAN-v1: polyfill kecil untuk peramban HP lama (WebView Android 4.4/5). */
+  try{var EP=Element.prototype;if(!EP.matches)EP.matches=EP.msMatchesSelector||EP.webkitMatchesSelector;
+    if(!EP.closest)EP.closest=function(q){var e=this;while(e&&e.nodeType===1){if(e.matches(q))return e;e=e.parentElement}return null};
+    if(!Object.assign)Object.assign=function(t){for(var a=1;a<arguments.length;a++){var o=arguments[a];if(o)for(var k in o)if(Object.prototype.hasOwnProperty.call(o,k))t[k]=o[k]}return t};
+    if(!window.performance)window.performance={};if(!performance.now)performance.now=function(){return Date.now()};}catch(e){}
+  /* Satu bagian gagal: catat (tanpa data pribadi), lanjutkan bagian lain, beri tahu sekali bila aplikasi sudah berjalan. */
+  function fault(where,e){try{console.error(where,e)}catch(_){}try{if(window.__litLog)window.__litLog('['+where+'] '+((e&&e.message)||e))}catch(_){}
+    try{if(window.__litOK&&window.__litErr)window.__litErr()}catch(_){}}
   function $(id){return document.getElementById(id)}
   function all(sel,root){return [].slice.call((root||document).querySelectorAll(sel))}
   function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
   function num(v){v=parseInt(v,10);return v>0?v:0}
   /* Satu komponen yang rusak (mis. JSON cerita salah ketik saat diedit) tidak boleh mematikan seluruh aplikasi. */
-  function guard(fn){return function(el){try{fn(el)}catch(e){try{console.error(e)}catch(_){}
+  function guard(fn){return function(el){try{fn(el)}catch(e){fault('komponen '+(el.getAttribute('data-id')||el.className),e);
     var p=document.createElement('p');p.className='fb no';p.textContent='Bagian ini sedang diperbaiki. Lanjutkan ke layar berikutnya.';el.appendChild(p)}}}
   function toast(t){var el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(function(){el.hidden=true},Math.max(1400,t.length*55))}
   function modOf(el){var d=el.closest('.deck');return d?d.getAttribute('data-mod'):'home'}
 
   var home=$('home'),decks=all('.deck'),deckBy={},cur=null,slides=[];
+  try{ /* batas galat: decks */
   decks.forEach(function(d){deckBy[d.getAttribute('data-mod')]=d});
+  }catch(e){fault('decks',e)}
 
   /* ---------- bintang bersama ----------
      Telaah Argon dan DeepThink: poin per kampung berisiko mempermalukan kampung atau kader.
@@ -2474,21 +2565,27 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
      WhatsApp dengan ringkasan terisi. Kader memilih sendiri penerimanya (bidan koordinator), lalu pesan
      terkirim begitu ada sinyal. Lebih mudah daripada salin-tempel. */
   function waOpen(t){try{window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank')}catch(e){toast('WhatsApp tidak bisa dibuka')}}
+  try{ /* batas galat: log-wa */
   $('log-wa').onclick=function(){
     var t=logText(LOG_MAX);
     if(navigator.share){
       navigator.share({title:'Catatan sesi kader',text:t}).catch(function(e){if(!e||e.name!=='AbortError')waOpen(t)});
     }else waOpen(t);
   };
+  }catch(e){fault('log-wa',e)}
+  try{ /* batas galat: log-copy */
   $('log-copy').onclick=function(){
     var t=logText();
     try{navigator.clipboard.writeText(t).then(function(){toast('Ringkasan disalin')},function(){toast('Gagal menyalin')})}catch(e){toast('Gagal menyalin')}
   };
+  }catch(e){fault('log-copy',e)}
   /* Hapus seluruh catatan sesi di HP ini (HP bersama, atau akan diserahkan). Nomor jaga dan pengaturan tetap. */
+  try{ /* batas galat: log-clear */
   $('log-clear').onclick=function(){
     if(!confirm('Hapus semua catatan sesi di HP ini? Yang sudah dikirim ke Puskesmas tidak ikut terhapus.'))return;
     st.log=[];st.sess=newSess();st.done={};st.stars=0;persist();renderScores();renderLog();renderPlaces();toast('Catatan dihapus');
   };
+  }catch(e){fault('log-clear',e)}
 
   /* ---------- beranda & navigasi ---------- */
   function renderMods(){
@@ -2577,14 +2674,22 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     /* Langsung, tanpa jeda, supaya masih dalam rangkaian sentuhan pengguna (aturan putar otomatis peramban). */
     if(st.auto)speakSlide(slides[i]);
   }
+  try{ /* batas galat: prev */
   $('prev').onclick=function(){go(st.pos[cur]-1)};
+  }catch(e){fault('prev',e)}
+  try{ /* batas galat: next */
   $('next').onclick=function(){if(st.pos[cur]>=slides.length-1)goHome();else go(st.pos[cur]+1)};
+  }catch(e){fault('next',e)}
+  try{ /* batas galat: home-btn */
   $('home-btn').onclick=goHome;
+  }catch(e){fault('home-btn',e)}
+  try{ /* batas galat: keydown */
   document.addEventListener('keydown',function(e){
     if(!cur||sheetOpen())return;var t=e.target.tagName;if(t==='INPUT'||t==='SELECT'||t==='TEXTAREA')return;
     if(e.key==='ArrowRight'||e.key==='PageDown')$('next').click();
     if(e.key==='ArrowLeft'||e.key==='PageUp')go(st.pos[cur]-1);
   });
+  }catch(e){fault('keydown',e)}
 
   /* ---------- suara ---------- */
   var canSpeak='speechSynthesis' in window;
@@ -2687,6 +2792,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       }catch(e){speak(text,btn)}
     })();
   }
+  try{ /* batas galat: .slide */
   all('.slide').forEach(function(s){
     var h=s.querySelector('h1,h2');if(!h)return;
     var b=document.createElement('button');b.className='say';b.type='button';
@@ -2694,12 +2800,16 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     b.onclick=function(){if(b.classList.contains('playing')){stopSpeak();return}sess().say++;persist();speakSlide(s,b)};
     var hero=h.closest('.hero');if(hero)hero.insertAdjacentElement('afterend',b);else h.insertAdjacentElement('afterend',b);
   });
+  }catch(e){fault('.slide',e)}
+  try{ /* batas galat: .quiz,.pick */
   all('.quiz,.pick').forEach(function(q){
     var qEl=q.querySelector('.q');if(!qEl)return;
     qEl.insertAdjacentElement('afterend',readBtn(function(b){q._read=true;readChoices(qEl,all('.opt',q),null,b)}));
   });
+  }catch(e){fault('.quiz,.pick',e)}
   /* Permainan urutan: tombol di bawah pertanyaan bila ada. Kartu yang tersisa dibacakan;
      bila semua sudah tersusun, urutan yang benar yang dibacakan. */
+  try{ /* batas galat: .seq */
   all('.seq').forEach(function(box){
     var qEl=box.querySelector('.q');
     var rb=readBtn(function(b){
@@ -2709,15 +2819,19 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     });
     if(qEl)qEl.insertAdjacentElement('afterend',rb);else box.insertBefore(rb,box.firstChild);
   });
+  }catch(e){fault('.seq',e)}
   /* Catatan untuk kader di bawah setiap halaman cetak: naskah Bacakan layar itu. */
+  try{ /* batas galat: .deck .slide */
   all('.deck .slide').forEach(function(s){
     var t=sayText(s);if(!t)return;
     var p=document.createElement('p');p.className='print-only kader-note';p.textContent='Untuk kader: '+t;s.appendChild(p);
   });
+  }catch(e){fault('.deck .slide',e)}
 
   /* ---------- sampul foto, bilah segmen, peta modul, angka hidup, perayaan ---------- */
   var RM=false;try{RM=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
   /* Layar pertama setiap modul mendapat foto sampul dari data-cover pada deck. */
+  try{ /* batas galat: decks */
   decks.forEach(function(d){
     var cv=d.getAttribute('data-cover'),s=d.querySelector('.slide');if(!cv||!s)return;
     var n=all('.slide',d).length,label=d.getAttribute('data-n'),isNum=/^\d+$/.test(label);
@@ -2731,6 +2845,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     var eb=s.querySelector(':scope > .eyebrow'),cap=box.querySelector('.cap');
     if(eb){cap.innerHTML='';cap.appendChild(eb);cap.appendChild(document.createTextNode(' · '+n+' layar'))}
   });
+  }catch(e){fault('decks',e)}
   /* Bilah segmen di atas, satu segmen per layar: yang sudah dilihat terisi, yang sedang dibuka lebih tebal. Ketuk untuk melompat. */
   function buildSegs(){
     var box=$('segs');box.innerHTML='';
@@ -2787,7 +2902,10 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     var top=document.querySelector('.top');if(top){top.removeAttribute('inert');top.removeAttribute('aria-hidden')}
     try{if(sheetOpener&&sheetOpener.focus)sheetOpener.focus()}catch(e){}sheetOpener=null;
   }
+  try{ /* batas galat: prog */
   $('prog').onclick=openMap;$('map-bd').onclick=closeMap;$('map-close').onclick=closeMap;
+  }catch(e){fault('prog',e)}
+  try{ /* batas galat: keydown */
   document.addEventListener('keydown',function(e){
     if(e.key==='Escape'){closeMap();return}
     if(e.key!=='Tab'||!sheetOpen())return;
@@ -2797,21 +2915,32 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
     else if(!pn.contains(document.activeElement)){e.preventDefault();first.focus()}
   });
+  }catch(e){fault('keydown',e)}
   /* Tombol Darurat: dari layar mana pun langsung ke nomor penting, ketukan tekan dada, atau Kartu Tanda Bahaya. */
   function openSos(){
     var t=String(st.nomor||'').replace(/[^\d+]/g,''),a=$('sos-jaga');
     a.hidden=t.length<4;if(t){a.href='tel:'+t;$('sos-jaga-n').textContent=st.nomor}
     stopAll();closeMap();openSheet('sos');
   }
+  try{ /* batas galat: sos-btn */
   $('sos-btn').onclick=openSos;$('sos-bd').onclick=closeMap;$('sos-close').onclick=closeMap;
+  }catch(e){fault('sos-btn',e)}
   /* Pintu darurat dibedakan umur, karena teknik dewasa berbeda dengan anak/bayi. Metronom tidak dinyalakan otomatis:
      kader mulai menekan dulu; ketukan bisa dinyalakan dari layar itu bila membantu. */
   function sosGo(key){closeMap();var k=all('.slide',deckBy.bls).map(slideKey).indexOf(key);openDeck('bls',k<0?0:k)}
+  try{ /* batas galat: sos-cpr */
   $('sos-cpr').onclick=function(){sosGo('bls-06')};
+  }catch(e){fault('sos-cpr',e)}
+  try{ /* batas galat: sos-cpr-anak */
   $('sos-cpr-anak').onclick=function(){sosGo('bls-11')};
+  }catch(e){fault('sos-cpr-anak',e)}
+  try{ /* batas galat: sos-tanda */
   $('sos-tanda').onclick=function(){closeMap();openDeck('tanda',0)};
+  }catch(e){fault('sos-tanda',e)}
   /* Healing119: nomornya 119 lalu tekan 8; diingatkan tepat sebelum layar berpindah ke telepon. */
+  try{ /* batas galat: a.h119 */
   all('a.h119').forEach(function(a){a.addEventListener('click',function(){toast('Setelah tersambung ke 119, tekan angka 8')})});
+  }catch(e){fault('a.h119',e)}
   /* Foto beranda mengikuti tampilan: laut dan Arfak saat terang, senja Rouwor saat gelap. */
   function heroImg(){
     var h=$('hero-img');if(!h)return;
@@ -2820,7 +2949,9 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     if(h.getAttribute('src')!==src)h.setAttribute('src',src);
     $('hero-cred').textContent=h.getAttribute(dark?'data-dark-cred':'data-light-cred');
   }
+  try{ /* batas galat: change */
   try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',heroImg)}catch(e){}
+  }catch(e){fault('change',e)}
 
   /* ---------- mode & kelompok ---------- */
   function setMode(m){
@@ -2832,8 +2963,12 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     $('kp-setup').hidden=m!=='group';
     renderScores();
   }
+  try{ /* batas galat: m-group */
   $('m-group').onclick=function(){setMode('group')};
+  }catch(e){fault('m-group',e)}
+  try{ /* batas galat: m-solo */
   $('m-solo').onclick=function(){setMode('solo')};
+  }catch(e){fault('m-solo',e)}
   /* Tempat sesi hanya untuk catatan Puskesmas; tidak dipakai untuk membandingkan kampung. */
   /* Ganti kampung di hari yang sama setelah ada kegiatan: catatan kampung sebelumnya diarsipkan dulu, tidak digabung. */
   function setPlace(k){
@@ -2852,17 +2987,23 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       b.setAttribute('aria-pressed',cur===k);b.onclick=function(){setPlace(k)};box.appendChild(b);
     });
   }
+  try{ /* batas galat: kp-add */
   $('kp-add').onclick=function(){
     var v=$('kp-new').value.trim().slice(0,30);if(!v)return;
     if(looksLikePerson(v)){toast('Tulis nama kampung atau posyandu saja, bukan nama orang');return}
     $('kp-new').value='';setPlace(v);
   };
+  }catch(e){fault('kp-add',e)}
+  try{ /* batas galat: kp-new */
   $('kp-new').addEventListener('keydown',function(e){if(e.key==='Enter')$('kp-add').click()});
+  }catch(e){fault('kp-new',e)}
+  try{ /* batas galat: reset-all */
   $('reset-all').onclick=function(){
     var kp=sess().kp;archive();st.sess.mode=st.mode||'';st.sess.kp=kp;
     st.seen={};st.pos={};st.vis={};st.last=null;persist();
     decks.forEach(resetDeck);renderScores();renderMods();renderPlaces();renderLog();toast('Sesi baru dimulai');
   };
+  }catch(e){fault('reset-all',e)}
 
   /* ---------- kuis pilihan ---------- */
   function resetQuiz(q){
@@ -2874,6 +3015,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     if(!o.querySelector('.mark')){var m=document.createElement('span');m.className='mark';m.textContent=ok?'Benar':'Ayo bahas';o.insertBefore(m,o.firstChild)}
     o.classList.add(ok?'right':'wrong');if(ok)sfx();
   }
+  try{ /* batas galat: .quiz */
   all('.quiz').forEach(guard(function(q){
     var key=modOf(q)+':'+q.getAttribute('data-id');
     q.addEventListener('click',function(e){
@@ -2885,10 +3027,12 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       if(ok){all('.opt',q).forEach(function(x){x.disabled=true});award(key)}
     });
   }));
+  }catch(e){fault('.quiz',e)}
   /* Penjelasan jawaban ikut dibacakan bila pengguna tadi memakai "Bacakan pilihan" di kotak ini, atau bacaan otomatis menyala. */
   function speakFb(host,text){clearTimeout(fbT);if(text&&(st.auto||host._read))fbT=setTimeout(function(){speak(text)},320)}
 
   /* ---------- pilih banyak ---------- */
+  try{ /* batas galat: .pick */
   all('.pick').forEach(guard(function(p){
     var key=modOf(p)+':'+p.getAttribute('data-id');
     /* Pilihan adalah tombol saklar: statusnya tersedia untuk pembaca layar lewat aria-pressed, bukan hanya warna. */
@@ -2921,8 +3065,10 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       speakFb(p,fb.textContent);
     };
   }));
+  }catch(e){fault('.pick',e)}
 
   /* ---------- susun urutan ---------- */
+  try{ /* batas galat: .seq */
   all('.seq').forEach(guard(function(box){
     var key=modOf(box)+':'+box.getAttribute('data-id');
     var pool=box.querySelector('.seq-pool'),done=box.querySelector('.seq-done'),fb=box.querySelector('.fb');
@@ -2946,8 +3092,10 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     });
     box.querySelector('.seq-reset').onclick=box._reset;shuffle();
   }));
+  }catch(e){fault('.seq',e)}
 
   /* ---------- cerita bercabang ---------- */
+  try{ /* batas galat: .story */
   all('.story').forEach(guard(function(box){
     var key=modOf(box)+':'+box.getAttribute('data-id');
     var data=JSON.parse(box.querySelector('script[type="application/json"]').textContent);
@@ -2999,6 +3147,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     }
     box._reset=function(){render(0)};render(0);
   }));
+  }catch(e){fault('.story',e)}
 
   /* ---------- ulangi modul ----------
      Hanya tampilan yang dikembalikan. st.done tetap, jadi bintang tidak dihitung dua kali dalam satu sesi;
@@ -3011,7 +3160,9 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     if(d.querySelector('#nt-tool')){stopNt();$('nt-tool').hidden=true;$('nt-gate-fb').textContent='';$('nt-gate-fb').className='fb';ntClear()}
     st.pos[m]=0;persist();
   }
+  try{ /* batas galat: .restart */
   all('.restart').forEach(function(b){b.onclick=function(){var d=b.closest('.deck');resetDeck(d);go(0)}});
+  }catch(e){fault('.restart',e)}
 
   /* ---------- nomor jaga (dipakai beberapa modul) ---------- */
   /* Setiap isian nomor jaga mendapat tombol telepon langsung. */
@@ -3019,11 +3170,13 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     var t=String(st.nomor||'').replace(/[^\d+]/g,'');
     all('.call-jaga').forEach(function(a){a.hidden=t.length<4;if(t)a.href='tel:'+t});
   }
+  try{ /* batas galat: .nomor-jaga */
   all('.nomor-jaga').forEach(function(inp){
     var a=document.createElement('a');a.className='btn ghost call call-jaga';a.textContent='Telepon nomor jaga';a.hidden=true;
     (inp.closest('.numcard')||inp.parentNode).appendChild(a);
     inp.addEventListener('input',function(){st.nomor=inp.value;persist();all('.nomor-jaga').forEach(function(o){if(o!==inp)o.value=inp.value});syncCalls()});
   });
+  }catch(e){fault('.nomor-jaga',e)}
 
   /* ---------- pesan darurat ---------- */
   function buildMsg(){
@@ -3032,6 +3185,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     /* Pesan dikirim sebelum napas diperiksa, jadi tidak boleh mendahului: cukup "tidak sadar" dan "sedang menolong". */
     $('msg-out').textContent='Ada '+who+' tidak sadar di '+where+'. Kami sedang menolong. Tolong kirim bantuan dan kendaraan.';
   }
+  try{ /* batas galat: msg-out */
   if($('msg-out')){
     $('msg-who').onchange=buildMsg;$('msg-where').oninput=buildMsg;
     $('msg-say').onclick=function(){if(this.classList.contains('playing'))stopSpeak();else speak($('msg-out').textContent,this)};
@@ -3041,6 +3195,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       try{navigator.clipboard.writeText(t).then(function(){toast('Pesan disalin')},sel)}catch(e){sel()}
     };
   }
+  }catch(e){fault('msg-out',e)}
 
   /* ---------- metronom ---------- */
   var ac=null,timer=null,bpm=110,mCount=0,lock=null,nextT=0,marks=[];
@@ -3097,13 +3252,16 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     if($('metro-btn')){$('metro-btn').textContent='Nyalakan ketukan';$('metro-count').textContent=''}
     wakeOff();
   }
+  try{ /* batas galat: metro-btn */
   if($('metro-btn')){
     /* Ganti kecepatan tanpa mematikan ketukan dan tanpa meminta kunci layar berulang kali. */
     $('bpm').oninput=function(){bpm=+this.value;$('bpm-v').textContent=bpm};
     $('metro-btn').onclick=function(){timer?stopMetro():startMetro()};
   }
+  }catch(e){fault('metro-btn',e)}
 
   /* ---------- latihan ketuk ---------- */
+  try{ /* batas galat: pad */
   if($('pad')){
     var taps=[],pCount=0,MIN=60,MAX=160;
     var pos=function(v){return Math.max(0,Math.min(100,(v-MIN)/(MAX-MIN)*100))};
@@ -3134,6 +3292,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     /* click hanya dihitung bila gesturnya tidak diawali pointerdown (teknologi bantu); benderanya dipakai sekali, bukan jendela waktu. */
     $('pad').addEventListener('click',function(){if(padPD){padPD=false;return}padTap()});
   }
+  }catch(e){fault('pad',e)}
 
   /* ---------- hitung napas anak ---------- */
   var ntTimer=null,ntTaps=0;
@@ -3146,6 +3305,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   /* Batas bawah per umur (lim 60/50/40 = <2 bln / 2–11 bln / 1–5 th). Di bawah ini napas lebih lambat
      dari biasanya untuk umur itu: hitung ulang, dan antar bila anak lemas. Perlu ditinjau dokter. */
   var NT_LOW={60:30,50:25,40:20};
+  try{ /* batas galat: nt-start */
   if($('nt-start')){
     /* Saringan tanda bahaya umum dulu: anak dengan tanda ini diantar tanpa menunggu hitung napas. */
     $('nt-yes').onclick=function(){
@@ -3204,24 +3364,31 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       else{fb.textContent=n+' napas per menit: tidak termasuk napas cepat (batas '+lim+'). Ini tidak berarti anak sehat. Anak tetap demam, lemas, tidak mau minum atau menyusu, atau keluarga cemas? Antar ke Puskesmas hari ini. Demam di Momiwaren: periksa darah malaria.';fb.className='fb'}
     };
   }
+  }catch(e){fault('nt-start',e)}
 
   function stopAll(){stopMetro();stopSpeak();stopNt()}
   /* Layar dikunci atau pindah aplikasi: hentikan suara, ketukan, dan hitung napas.
      Timer di latar belakang diperlambat peramban, jadi irama dan hitungan 60 detik tidak bisa dipercaya. */
   var stoppedHidden=false;
+  try{ /* batas galat: visibilitychange */
   document.addEventListener('visibilitychange',function(){
     var talking=false;try{talking=canSpeak&&(speechSynthesis.speaking||speechSynthesis.pending)}catch(e){}
     if(document.hidden){if(timer||ntTimer||curAudio||playBtn||talking){stopAll();stoppedHidden=true}}
     else if(stoppedHidden){stoppedHidden=false;toast('Tadi dihentikan karena pindah aplikasi. Tekan lagi.')}
   });
+  }catch(e){fault('visibilitychange',e)}
 
   /* ---------- pengaturan ---------- */
   function applyFs(v){
     st.fs=v;document.documentElement.style.setProperty('--fs',v);
     all('.chip.fs').forEach(function(b){b.setAttribute('aria-pressed',+b.getAttribute('data-fs')===v)});
   }
+  try{ /* batas galat: set-btn */
   $('set-btn').onclick=function(){var p=$('settings'),open=p.hidden;p.hidden=!open;this.setAttribute('aria-expanded',open)};
+  }catch(e){fault('set-btn',e)}
+  try{ /* batas galat: .chip.fs */
   all('.chip.fs').forEach(function(b){b.onclick=function(){applyFs(+b.getAttribute('data-fs'));persist()}});
+  }catch(e){fault('.chip.fs',e)}
   /* Tampilan terang untuk dipakai di bawah matahari, walau HP disetel gelap. */
   function applyTheme(v){
     st.theme=v||'';
@@ -3229,11 +3396,21 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     all('.chip.th').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-th')===st.theme)});
     heroImg();
   }
+  try{ /* batas galat: .chip.th */
   all('.chip.th').forEach(function(b){b.onclick=function(){applyTheme(b.getAttribute('data-th'));persist()}});
+  }catch(e){fault('.chip.th',e)}
+  try{ /* batas galat: opt-auto */
   $('opt-auto').onchange=function(){st.auto=this.checked;persist();if(st.auto&&cur)speakSlide(slides[st.pos[cur]])};
+  }catch(e){fault('opt-auto',e)}
+  try{ /* batas galat: opt-sfx */
   $('opt-sfx').onchange=function(){st.sfx=this.checked;persist();if(st.sfx)sfx()};
+  }catch(e){fault('opt-sfx',e)}
+  try{ /* batas galat: hint-ok */
   $('hint-ok').onclick=function(){st.hinted=true;persist();$('hint').hidden=true};
+  }catch(e){fault('hint-ok',e)}
+  try{ /* batas galat: print-btn */
   $('print-btn').onclick=function(){$('settings').hidden=true;$('set-btn').setAttribute('aria-expanded',false);stopAll();try{window.print()}catch(e){toast('Cetak belum didukung di perangkat ini')}};
+  }catch(e){fault('print-btn',e)}
 
   /* ---------- kesiapan tanpa sinyal ----------
      Telaah: cache bisa terhapus diam-diam di HP bermemori kecil, dan suara mesin bahasa Indonesia
@@ -3265,6 +3442,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       $('img-row').hidden=n>=urls.length;
     }).catch(function(){setStatus('st-img',null,'Foto belum bisa diperiksa.')});
   }
+  try{ /* batas galat: img-retry */
   $('img-retry').onclick=function(){
     var b=this,urls=imgUrls(),i=0;b.disabled=true;
     (function next(){
@@ -3273,6 +3451,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       fetch(urls[i++],{cache:'no-cache'}).catch(function(){}).then(next);
     })();
   };
+  }catch(e){fault('img-retry',e)}
   /* Suara dinilai terpisah dari teks, supaya tanda hijau teks tidak dikira suara juga siap. */
   var audioKeys=['beranda-00'].concat(all('.deck .slide').map(slideKey));
   function recCount(set){var L=recList(set);return audioKeys.filter(function(k){return L.indexOf(k)>=0}).length}
@@ -3309,8 +3488,12 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       setStatus('st-voice',ok,head+'. '+msg);
     });
   }
+  try{ /* batas galat: voiceschanged */
   if(canSpeak){try{speechSynthesis.addEventListener('voiceschanged',checkVoice)}catch(e){}}
+  }catch(e){fault('voiceschanged',e)}
+  try{ /* batas galat: controllerchange */
   try{navigator.serviceWorker.addEventListener('controllerchange',checkApp)}catch(e){}
+  }catch(e){fault('controllerchange',e)}
   /* Pilihan suara: dipakai tombol Bacakan; logat Papua hanya untuk layar yang sudah direkam. */
   function applyVoice(v){
     st.voice=v==='papua'?'papua':'';
@@ -3320,7 +3503,9 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     n.textContent=nP?'Rekaman logat Papua: '+nP+' dari '+audioKeys.length+' layar. Layar yang belum direkam memakai suara bahasa Indonesia.':'Rekaman logat Papua belum ada. Sementara Bacakan memakai suara bahasa Indonesia.';
     checkVoice();
   }
+  try{ /* batas galat: .chip.vo */
   all('.chip.vo').forEach(function(b){b.onclick=function(){applyVoice(b.getAttribute('data-vo'));persist()}});
+  }catch(e){fault('.chip.vo',e)}
   /* Daftar rekaman yang tersedia (audio/daftar.json, dibuat build.sh dari isi folder audio). */
   function allRecUrls(){
     var urls=[];['id','papua'].forEach(function(set){recList(set).forEach(function(k){if(audioKeys.indexOf(k)>=0)urls.push(recUrl(set,k))})});
@@ -3349,6 +3534,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     }).catch(show);
   }
   /* Simpan semua rekaman yang tercatat (kedua suara) supaya bisa diputar tanpa sinyal. */
+  try{ /* batas galat: audio-save */
   $('audio-save').onclick=function(){
     var b=this,urls=allRecUrls(),i=0;
     if(!urls.length)return;b.disabled=true;
@@ -3370,16 +3556,20 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
       saveOne(urls[i++]).then(next);
     })();
   };
+  }catch(e){fault('audio-save',e)}
 
   /* ---------- geser untuk pindah layar ---------- */
   var tx=null,ty=null;
+  try{ /* batas galat: app */
   $('app').addEventListener('touchstart',function(e){
     if(!cur||e.touches.length!==1||e.target.closest('.tablewrap,input,select,textarea,.pad'))return tx=null;
     /* Geser dari tepi layar adalah gerakan "kembali" milik HP; jangan ikut diproses sebagai pindah layar. */
     var x=e.touches[0].clientX;if(x<24||x>window.innerWidth-24)return tx=null;
     tx=x;ty=e.touches[0].clientY;
   },{passive:true});
+  }catch(e){fault('app',e)}
   /* Geser harus jelas mendatar dan cukup panjang; di layar terakhir, geser tidak menutup modul. */
+  try{ /* batas galat: app */
   $('app').addEventListener('touchend',function(e){
     if(tx===null||!cur)return;
     var dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;tx=null;
@@ -3387,6 +3577,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     if(dx<0){if(st.pos[cur]<slides.length-1)go(st.pos[cur]+1)}else go(st.pos[cur]-1);
     if(!st.hinted){st.hinted=true;persist();$('hint').hidden=true}
   },{passive:true});
+  }catch(e){fault('app',e)}
 
   /* ---------- mulai ---------- */
   function start(data){
@@ -3403,13 +3594,30 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
     if(m&&deckBy[m[1]]){try{history.replaceState(null,'','#beranda');history.pushState({deck:1},'','#'+m[1]+'-'+m[2])}catch(e){}openDeck(m[1],+m[2],true)}
     else showHome();
   }
+  try{ /* batas galat: hashchange */
   window.addEventListener('hashchange',function(){
     var m=/^#([a-z]+)-(\d+)$/.exec(location.hash);
     if(m&&deckBy[m[1]])openDeck(m[1],+m[2],true);else if((!location.hash||location.hash==='#beranda')&&cur)showHome();
   });
+  }catch(e){fault('hashchange',e)}
   try{if(window.claude&&window.claude.hot&&window.claude.hot.snapshot)window.claude.hot.snapshot(function(){return st})}catch(e){}
-  if(window.claude&&window.claude.hot&&window.claude.hot.ready)window.claude.hot.ready(start);
-  else start(window.claude&&window.claude.hot&&window.claude.hot.data||{});
+  /* Laporan masalah: dibaca dari catatan galat (maks. 20, tanpa data pribadi) untuk pemelihara. */
+  function errList(){try{var a=JSON.parse(localStorage.getItem('literasi-galat')||'[]');return Array.isArray(a)?a:[]}catch(e){return []}}
+  function renderErr(){var a=errList(),p=$('st-err'),r=$('err-row');if(!p)return;p.hidden=!a.length;r.hidden=!a.length;
+    p.textContent=a.length?'Tercatat '+a.length+' masalah teknis (terakhir '+String(a[a.length-1].t||'').slice(0,16).replace('T',' ')+'). Bila aplikasi terasa aneh: Pengaturan › Perbaiki aplikasi.':''}
+  try{
+  $('err-copy').onclick=function(){var t='Laporan masalah Literasi Kader v'+'0.8.6'+'\n'+errList().map(function(x){return x.t+' '+x.v+' '+x.m}).join('\n');
+    try{navigator.clipboard.writeText(t).then(function(){toast('Laporan disalin')},function(){toast('Gagal menyalin')})}catch(e){toast('Gagal menyalin')}};
+  $('err-clear').onclick=function(){try{localStorage.removeItem('literasi-galat')}catch(e){}renderErr();toast('Laporan dihapus')};
+  }catch(e){fault('laporan',e)}
+  var errT=0;window.__litErr=function(){var t=Date.now();if(t-errT<30000)return;errT=t;renderErr();
+    toast('Ada bagian yang bermasalah. Aplikasi tetap bisa dipakai. Bila terus terjadi: Pengaturan › Perbaiki aplikasi.')};
+  function boot(data){
+    try{start(data)}catch(e){fault('mulai',e);try{showHome()}catch(_){}}
+    window.__litOK=true;var bf=$('boot-fail');if(bf&&!bf.getAttribute('data-sticky'))bf.hidden=true;renderErr();
+  }
+  try{if(window.claude&&window.claude.hot&&window.claude.hot.ready)window.claude.hot.ready(boot);
+  else boot(window.claude&&window.claude.hot&&window.claude.hot.data||{});}catch(e){fault('mulai',e)}
 })();
 </script>
 <script>if("serviceWorker" in navigator){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}</script></body></html>

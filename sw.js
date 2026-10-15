@@ -4,7 +4,7 @@
 // Nama cache memuat jalur pemasangan (scope), supaya dua pemasangan Literasi di satu origin
 // (misalnya /uji/ dan /resmi/) tidak saling menghapus cache.
 const SCOPE = (() => { try { return new URL(self.registration.scope).pathname.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '') || 'root'; } catch (e) { return 'root'; } })();
-const APP = 'literasi-app-' + SCOPE + '-v0.8.5';
+const APP = 'literasi-app-' + SCOPE + '-v0.8.6';
 const AUDIO = 'literasi-audio-v1';
 const CORE = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png'];
 // Foto sampul: disimpan satu per satu (yang gagal tidak membatalkan pemasangan; halaman menghitung ulang yang tersimpan).
@@ -27,7 +27,9 @@ self.addEventListener('activate', e => {
 function ranged(req, res) {
   const range = req.headers.get('range');
   if (!range) return res;
-  return res.blob().then(b => {
+  const copy = res.clone();
+  return res.blob().catch(() => null).then(b => {
+    if (!b) return copy;
     const m = /^bytes=(\d*)-(\d*)$/.exec(range.trim());
     const type = res.headers.get('Content-Type') || 'audio/mpeg';
     const bad = () => new Response(null, { status: 416, headers: { 'Content-Range': 'bytes */' + b.size } });
@@ -70,13 +72,16 @@ function manifestFirst(req) {
   }).catch(() => caches.match(req.url).then(hit => hit || Response.error()));
 }
 
+// Batas galat: bila jalur cache gagal (penyimpanan rusak/penuh), langsung ke jaringan; jangan biarkan halaman kosong.
+const safe = (p, req) => Promise.resolve(p).then(r => r || fetch(req)).catch(() => fetch(req));
+
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
-  const url = new URL(req.url);
+  let url; try { url = new URL(req.url); } catch (err) { return; }
   if (url.origin !== self.location.origin) return;
-  if (url.pathname.indexOf('/audio/') !== -1 && /\.mp3$/i.test(url.pathname)) { e.respondWith(audio(req)); return; }
-  if (/\/audio\/daftar\.json$/.test(url.pathname)) { e.respondWith(manifestFirst(req)); return; }
+  if (url.pathname.indexOf('/audio/') !== -1 && /\.mp3$/i.test(url.pathname)) { e.respondWith(safe(audio(req), req)); return; }
+  if (/\/audio\/daftar\.json$/.test(url.pathname)) { e.respondWith(safe(manifestFirst(req), req)); return; }
 
   // Halaman dicocokkan tanpa parameter (?fbclid=… dari tautan yang dibagikan) dan selalu punya cadangan index.html.
   const nav = req.mode === 'navigate';
@@ -89,6 +94,9 @@ self.addEventListener('fetch', e => {
     return res;
   });
   e.waitUntil(net.catch(() => {}));
-  e.respondWith(caches.match(key, { ignoreSearch: nav }).then(hit => hit || net.catch(() =>
-    nav ? caches.match('index.html').then(r => r || caches.match('./')) : Response.error())));
+  const offline = () => nav ? caches.match('index.html').then(r => r || caches.match('./')).then(r => r || Response.error()).catch(() => Response.error()) : Response.error();
+  e.respondWith(caches.match(key, { ignoreSearch: nav })
+    .catch(() => null)
+    .then(hit => hit || net.catch(offline))
+    .catch(offline));
 });
