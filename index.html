@@ -376,7 +376,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 bila aplikasi belum siap dalam 8 detik atau galat terjadi saat memuat, panel darurat cadangan ditampilkan. ?reset=1 menghapus
 simpanan luring aplikasi (bukan catatan, bukan rekaman) lalu memuat ulang. */
 (function(){var K='literasi-galat';window.__litOK=false;
-function log(m){try{var a=JSON.parse(localStorage.getItem(K)||'[]');if(!Array.isArray(a))a=[];a.push({t:new Date().toISOString(),v:'0.8.6',m:String(m).slice(0,240)});localStorage.setItem(K,JSON.stringify(a.slice(-20)))}catch(e){}}
+function log(m){try{var a=JSON.parse(localStorage.getItem(K)||'[]');if(!Array.isArray(a))a=[];a.push({t:new Date().toISOString(),v:'0.8.7',m:String(m).slice(0,240)});localStorage.setItem(K,JSON.stringify(a.slice(-20)))}catch(e){}}
 window.__litLog=log;
 function fail(){if(window.__litOK)return;var f=document.getElementById('boot-fail');if(f){f.hidden=false;f.setAttribute('data-sticky','1')}}
 window.addEventListener('error',function(e){if(e&&e.target&&e.target!==window&&!e.message)return;log((e.message||'galat')+' @'+String(e.filename||'').split('/').pop()+':'+(e.lineno||0));if(!window.__litOK)fail();else if(window.__litErr)window.__litErr()});
@@ -493,7 +493,7 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
       <li>Mama merajut noken · EmaMukar · CC BY-SA 4.0</li>
     </ul>
   </details>
-  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.8.6, 15 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
+  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.8.7, 15 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
 </section>
 <div class="hint" id="hint" hidden><span>Geser layar ke kiri atau tekan <b>Lanjut</b>. Tekan <b>Bacakan</b> untuk mendengar isi layar.</span><button class="btn ghost" id="hint-ok">Mengerti</button></div>
 <div class="deck" data-mod="bls" data-cover="img/dermaga-sumano.webp" data-pos="center 55%" data-credit="Dermaga kecil, Kampung Sumano · Lefaan · CC BY-SA 4.0" data-n="1" data-title="Bantuan Hidup Dasar" data-desc="Menolong orang yang tiba-tiba tidak sadar dan tidak bernapas normal: periksa, panggil, tekan." hidden>
@@ -992,22 +992,48 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   <p class="eyebrow">Keadaan khusus</p>
   <h2>Tenggelam: yang dibutuhkan udara</h2>
   <p class="lead">Orang tenggelam kehabisan udara. Jangan buang waktu mencoba mengeluarkan air.</p>
-  <figure class="ill"><svg aria-describedby="cap-bls-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Penolong tetap rendah di darat yang stabil dan mengulurkan tongkat kepada orang sadar di air, sedangkan masuk atau terjun ke air tanpa pelatihan penyelamatan dilarang.">
-<style>.ill-bls12-line{fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}.ill-bls12-body{fill:var(--pulse-soft,#FBE5E8);stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}.ill-bls12-accent{fill:none;stroke:var(--pulse,#C3122D);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}</style>
-<path class="ill-bls12-body" d="M12 145h145l-13 43H12"/>
-<path class="ill-bls12-line" d="M152 164q10 9 20 0t20 0 20 0 20 0 20 0 20 0 20 0 20 0M158 183q10 9 20 0t20 0 20 0 20 0 20 0 20 0 20 0"/>
-<path class="ill-bls12-body" d="M43 121 23 130l-6 12 32-1 31-9 17 9h40c8 0 10-10 2-12l-31-3-23-15Z"/>
-<path class="ill-bls12-body" d="M45 112c16-6 36-15 51-16l15 21c-16 9-35 14-54 14Z"/>
-<path class="ill-bls12-body" d="M116 77c12 0 21 9 20 21-1 12-10 19-21 17-11-2-19-11-17-22 1-10 8-16 18-16Z"/>
-<path class="ill-bls12-accent" d="m116 129 130-24"/>
-<path class="ill-bls12-body" d="m94 108 20 13 26-7c6-2 9 5 4 8l-32 13-30-13"/>
-<path class="ill-bls12-line" d="m135 119 2 6"/>
-<path class="ill-bls12-body" d="M249 144c0-10 7-17 17-17s17 7 17 17c0 11-7 18-17 18s-17-7-17-18Z"/>
-<path class="ill-bls12-body" d="m249 162-10-16-3-29-4-4c-5-5-1-10 4-8l8 4 7 30 9 8m16 15 10-12 12-3c6-1 7 6 2 9l-10 6"/>
-<path class="ill-bls12-line" d="m236 112 9 1M22 43l9 9 18-23"/>
-<g class="ill-bls12-line"><circle cx="260" cy="45" r="31"/><circle cx="246" cy="39" r="6"/><path d="m252 43 11 8 12-10m-13 9-5 12m-5-19 11-11 13-1m-19 31 11 3"/></g>
-<path class="ill-bls12-accent" d="m238 23 44 44m0-44-44 44"/>
-</svg><figcaption id="cap-bls-12">Utamakan keselamatan penolong. Ulurkan alat dari posisi stabil di darat; jangan ikut masuk ke air tanpa pelatihan.</figcaption></figure>
+  <figure class="ill"><svg aria-describedby="cap-bls-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" role="img" aria-label="Penolong berlutut rendah di tepi kali, tetap di darat, mengulurkan sebatang kayu panjang kepada orang di air yang memegang ujungnya. Di pojok, gambar orang terjun ke air dicoret: jangan ikut terjun bila tidak pandai berenang.">
+<style>
+.c12 .ln{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.c12 .bd{fill:var(--bg,#F3F5F8);stroke:var(--muted,#556575);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.c12 .hd{fill:var(--bg,#F3F5F8);stroke:var(--accent,#1D5C86);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.c12 .ac{fill:none;stroke:var(--pulse,#C3122D);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.c12 .tb{fill:none;stroke:var(--accent,#1D5C86);stroke-width:11;stroke-linecap:round;stroke-linejoin:round}
+.c12 .tv{fill:none;stroke:var(--muted,#556575);stroke-width:11;stroke-linecap:round;stroke-linejoin:round}
+.c12 .ti{fill:none;stroke:var(--bg,#F3F5F8);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.c12 .wt{fill:var(--accent,#1D5C86);opacity:.14}
+.c12 .wl{fill:none;stroke:var(--accent,#1D5C86);stroke-width:2.5;stroke-linecap:round;opacity:.7}
+.c12 .hr{opacity:.7}
+</style>
+<g class="c12">
+<!-- tanah dan air -->
+<path class="wt" d="M136 132Q150 126 164 132T192 132T220 132T248 132T276 132T304 132T320 132V200H136Z"/>
+<path class="wl" d="M136 132Q150 126 164 132T192 132T220 132T248 132T276 132T304 132T320 132M160 160Q172 155 184 160M230 172Q242 167 254 172"/>
+<path d="M0 122H128Q134 124 136 134V200H0Z" fill="var(--muted,#556575)" opacity=".12"/>
+<path class="ln" d="M4 122H128Q134 124 136 134V198" opacity=".55"/>
+<!-- penolong: berlutut satu kaki, badan rendah dan condong ke belakang, dua tangan menggenggam kayu -->
+<path class="tb" d="M70 96L60 120 38 120"/><path class="ti" d="M70 96L60 120 38 120"/>
+<path class="hd" d="M68 70Q78 64 88 70L86 96Q78 102 68 98Z"/>
+<path class="tb" d="M80 96L102 92 104 120"/><path class="ti" d="M80 96L102 92 104 120"/>
+<path d="M96 121H112" style="fill:none;stroke:var(--accent,#1D5C86);stroke-width:5;stroke-linecap:round"/>
+<circle class="hd" cx="76" cy="54" r="13"/>
+<path d="M64 50Q66 40 76 41Q88 42 89 53Q86 50 84 52Q80 46 72 48Q67 49 66 53Z" fill="var(--accent,#1D5C86)" class="hr"/>
+<path class="ac" d="M98 84L240 108" stroke-width="5"/>
+<path class="tb" d="M84 74L100 84 112 86M80 76L94 90 102 84"/><path class="ti" d="M84 74L100 84 112 86M80 76L94 90 102 84"/>
+<!-- orang di air -->
+<path class="tv" d="M248 132L240 120 238 110"/><path class="ti" d="M248 132L240 120 238 110"/>
+<path class="bd" d="M240 136Q242 124 254 122Q266 124 268 136Z"/>
+<circle class="bd" cx="256" cy="110" r="12"/>
+<path d="M245 106Q247 96 256 97Q266 98 267 108Q264 104 260 104Q254 100 248 103Z" fill="var(--muted,#556575)" class="hr"/>
+<path class="ln" d="M232 104L230 99M241 101L242 96" opacity=".6"/>
+<!-- jangan ikut terjun -->
+<circle cx="286" cy="36" r="24" fill="var(--bg,#F3F5F8)" stroke="var(--pulse,#C3122D)" stroke-width="3"/>
+<path class="wl" d="M266 48Q272 45 278 48T290 48T302 48T308 48"/>
+<path class="tv" d="M272 26L292 40" stroke-width="7"/><path class="ti" d="M272 26L292 40" stroke-width="2"/>
+<circle cx="296" cy="44" r="4" fill="var(--bg,#F3F5F8)" stroke="var(--muted,#556575)" stroke-width="2.5"/>
+<path class="ac" d="M269 19L303 53"/>
+</g>
+</svg><figcaption id="cap-bls-12">Tetap di darat, rendahkan badan (berlutut atau tiarap) supaya tidak ikut tertarik, lalu ulurkan kayu, tali, atau jeriken kosong. Jangan ikut terjun bila tidak pandai berenang.</figcaption></figure>
   <ol class="list">
     <li><b>Tolong dari darat dulu:</b> ulurkan kayu, tali, atau jeriken kosong. Jangan ikut terjun bila tidak pandai berenang.</li>
     <li>Setelah di darat, baringkan di tempat datar. Periksa sadar dan napas.</li>
@@ -3606,7 +3632,7 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   function renderErr(){var a=errList(),p=$('st-err'),r=$('err-row');if(!p)return;p.hidden=!a.length;r.hidden=!a.length;
     p.textContent=a.length?'Tercatat '+a.length+' masalah teknis (terakhir '+String(a[a.length-1].t||'').slice(0,16).replace('T',' ')+'). Bila aplikasi terasa aneh: Pengaturan › Perbaiki aplikasi.':''}
   try{
-  $('err-copy').onclick=function(){var t='Laporan masalah Literasi Kader v'+'0.8.6'+'\n'+errList().map(function(x){return x.t+' '+x.v+' '+x.m}).join('\n');
+  $('err-copy').onclick=function(){var t='Laporan masalah Literasi Kader v'+'0.8.7'+'\n'+errList().map(function(x){return x.t+' '+x.v+' '+x.m}).join('\n');
     try{navigator.clipboard.writeText(t).then(function(){toast('Laporan disalin')},function(){toast('Gagal menyalin')})}catch(e){toast('Gagal menyalin')}};
   $('err-clear').onclick=function(){try{localStorage.removeItem('literasi-galat')}catch(e){}renderErr();toast('Laporan dihapus')};
   }catch(e){fault('laporan',e)}
