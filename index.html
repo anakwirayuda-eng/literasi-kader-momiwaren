@@ -183,7 +183,8 @@ p{margin:0}
 .opt.wrong{border-color:var(--warn);background:var(--warn-soft)}
 .opt[disabled]{cursor:default}
 .opt .mark{flex:none;font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em}
-.pair{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+/* Dua kolom bila muat; bersusun bila kata terpanjang ("Puskesmas", "berikutnya") tidak muat, mis. layar 320 px dengan huruf A++. */
+.pair{display:grid;grid-template-columns:1fr 1fr;grid-template-columns:repeat(auto-fit,minmax(7.5em,1fr));gap:.5rem}
 .fb{font-size:1rem;min-height:1.5em}
 .fb.ok{color:var(--go)}
 .fb.no{color:var(--warn)}
@@ -267,7 +268,8 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 @keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 
 .board{display:grid;gap:.5rem}
-.board .r{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.6rem .9rem;font-variant-numeric:tabular-nums}
+/* flex-wrap: di layar sangat sempit (280 px, A++) nilai/tombol turun ke bawah label, bukan melebarkan halaman. */
+.board .r{display:flex;flex-wrap:wrap;gap:.25rem .6rem;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.6rem .9rem;font-variant-numeric:tabular-nums}
 .board .r.top1{border-color:var(--go);border-width:2px}
 .badge{font-family:var(--display);font-size:1.3rem}
 
@@ -379,11 +381,12 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 .tes-dots button.done{background:var(--pulse-soft);border-color:var(--pulse);color:var(--pulse)}
 .tes-dots button.cur{background:var(--pulse);border-color:var(--pulse);color:var(--accent-ink)}
 .tes-q{font-size:1.25rem}
-.tes-row{justify-content:space-between;cursor:default}
+/* Tombol hitung turun ke bawah teks hanya bila kata terpanjang dan tombolnya tidak muat satu baris (320 px, huruf A+/A++). */
+.tes-row{justify-content:space-between;cursor:default;flex-wrap:wrap}
 .tes-row:hover{border-color:var(--line)}
 .tes-row:active:not([disabled]){transform:none;box-shadow:0 2px 0 var(--line)}
-.tes-row .t{flex:1;min-width:0}
-.tes-step{display:flex;align-items:center;gap:.3rem;flex:none}
+.tes-row .t{flex:1 1 0}
+.tes-step{display:flex;align-items:center;gap:.3rem;flex:none;margin-left:auto}
 .tes-step button{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:var(--surface);font-size:1.35rem;font-weight:700;line-height:1;padding:0}
 .tes-step button:disabled{opacity:.4;cursor:default}
 .tes-step output{min-width:2.2ch;text-align:center;font-family:var(--display);font-size:1.6rem;font-variant-numeric:tabular-nums}
@@ -427,7 +430,7 @@ p.box{display:block}
 bila aplikasi belum siap dalam 8 detik atau galat terjadi saat memuat, panel darurat cadangan ditampilkan. ?reset=1 menghapus
 simpanan luring aplikasi (bukan catatan, bukan rekaman) lalu memuat ulang. */
 (function(){var K='literasi-galat';window.__litOK=false;
-function log(m){try{var a=JSON.parse(localStorage.getItem(K)||'[]');if(!Array.isArray(a))a=[];a.push({t:new Date().toISOString(),v:'0.9.2',m:String(m).slice(0,240)});localStorage.setItem(K,JSON.stringify(a.slice(-20)))}catch(e){}}
+function log(m){try{var a=JSON.parse(localStorage.getItem(K)||'[]');if(!Array.isArray(a))a=[];a.push({t:new Date().toISOString(),v:'0.9.3',m:String(m).slice(0,240)});localStorage.setItem(K,JSON.stringify(a.slice(-20)))}catch(e){}}
 window.__litLog=log;
 function fail(){if(window.__litOK)return;var f=document.getElementById('boot-fail');if(f){f.hidden=false;f.setAttribute('data-sticky','1')}
 var n=document.getElementById('bf-note');if(n&&window.__litResetMsg){n.textContent=window.__litResetMsg;n.hidden=false}}
@@ -507,6 +510,12 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
     </div>
   </div>
   <button class="resume" id="resume" hidden></button>
+  <div class="box tip" id="pindah" hidden>
+    <h3>Aplikasi pindah alamat</h3>
+    <p>Alamat baru: <b id="pindah-url"></b></p>
+    <p class="muted">Buka saat ada sinyal. Catatan sesi dan nomor jaga ikut dibawa lewat tautan (tidak dikirim ke server mana pun). Setelah terbuka, pasang lagi aplikasinya dari alamat baru, lalu hapus ikon yang lama.</p>
+    <div class="row"><button class="btn" id="pindah-go" type="button">Pindah dan bawa catatan ›</button></div>
+  </div>
   <div class="box">
     <h3>Cara belajar</h3>
     <div class="row">
@@ -544,7 +553,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   </div>
   <details class="box" id="log-box">
     <summary>Catatan sesi untuk Puskesmas (tanpa nama)</summary>
-    <p class="muted">Tidak ada nama dan tidak ada jawaban siapa pun yang dicatat. Yang dicatat hanya tanggal, tempat, modul yang dibuka dan diselesaikan, berapa kali Bacakan dipakai, apakah dipakai tanpa sinyal, dan jumlah jawaban benar pada tes awal dan tes akhir (bukan jawaban per orang). Catatan hanya ada di HP ini sampai kamu menyalinnya.</p>
+    <p class="muted">Catatan ini tidak memuat nama dan tidak memuat jawaban per orang. Yang dicatat hanya tanggal, tempat, modul yang dibuka dan diselesaikan, berapa kali Bacakan dipakai, apakah dipakai tanpa sinyal, dan jumlah jawaban benar pada tes awal dan tes akhir. Catatan hanya ada di HP ini sampai kamu menyalinnya. Jawaban tes belajar sendiri juga tersimpan di HP ini supaya pembahasannya bisa dibuka lagi; ikut terhapus dengan tombol hapus di bawah.</p>
     <div class="log-list" id="log-list"></div>
     <div class="row"><button class="btn" id="log-wa">Kirim ringkasan (WhatsApp dll.)</button><button class="btn ghost" id="log-copy">Salin ringkasan</button></div>
     <p class="muted">Yang dikirim persis seperti daftar di atas. HP dipakai bersama atau akan diserahkan ke orang lain? Hapus catatannya dulu.</p>
@@ -565,7 +574,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
       <li>Mama merajut noken · EmaMukar · CC BY-SA 4.0</li>
     </ul>
   </details>
-  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.9.2, 24 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
+  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.9.3, 25 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
 </section>
 <div class="hint" id="hint" hidden><span>Geser layar ke kiri atau tekan <b>Lanjut</b>. Tekan <b>Bacakan</b> untuk mendengar isi layar.</span><button class="btn ghost" id="hint-ok">Mengerti</button></div>
 <div class="deck" data-mod="bls" data-cover="img/dermaga-sumano.webp" data-pos="center 55%" data-credit="Dermaga kecil, Kampung Sumano · Lefaan · CC BY-SA 4.0" data-n="1" data-title="Bantuan Hidup Dasar" data-desc="Menolong orang yang tiba-tiba tidak sadar dan tidak bernapas normal: periksa, panggil, tekan." hidden>
@@ -586,7 +595,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   <div class="box tes" data-id="tes-awal" data-phase="pre"></div>
 </section>
 
-<section class="slide" data-key="bls-01" hiddendata-say="Tiga langkah menyelamatkan nyawa. Satu, periksa: aman, sadar, bernapas. Dua, panggil: telepon dengan pengeras suara atau teriak minta tolong. Tiga, tekan: tekan dada kuat dan cepat.">
+<section class="slide" data-key="bls-01" hidden data-say="Tiga langkah menyelamatkan nyawa. Satu, periksa: aman, sadar, bernapas. Dua, panggil: telepon dengan pengeras suara atau teriak minta tolong. Tiga, tekan: tekan dada kuat dan cepat.">
   <p class="eyebrow">Gambaran besar</p>
   <h2>Tiga langkah menyelamatkan nyawa</h2>
   <ol class="steps3">
@@ -1206,7 +1215,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   <div class="box tes" data-id="tes-akhir" data-phase="post"></div>
 </section>
 
-<section class="slide" data-key="bls-16" hiddendata-say="Selesai. Ingat tiga langkah: periksa, panggil, tekan. Dewasa dan remaja: tekan lima sampai enam sentimeter, seratus sampai seratus dua puluh per menit. Anak dan bayi: lima napas dulu bila terlatih, tekan sepertiga tebal dada; anak dengan satu tangan, bayi dengan dua ibu jari melingkari dada.">
+<section class="slide" data-key="bls-16" hidden data-say="Selesai. Ingat tiga langkah: periksa, panggil, tekan. Dewasa dan remaja: tekan lima sampai enam sentimeter, seratus sampai seratus dua puluh per menit. Anak dan bayi: lima napas dulu bila terlatih, tekan sepertiga tebal dada; anak dengan satu tangan, bayi dengan dua ibu jari melingkari dada.">
   <p class="eyebrow">Selesai</p>
   <h2>Periksa · Panggil · Tekan</h2>
   <div class="board"></div>
@@ -1250,7 +1259,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   <div class="box tes" data-id="tes-awal" data-phase="pre"></div>
 </section>
 
-<section class="slide" data-key="kespro-01" hiddendata-say="Tahu hamil? Ke bidan sejak awal. Periksa kehamilan minimal enam kali, dua kali di antaranya dengan dokter: sekali di awal kehamilan dan sekali menjelang melahirkan.">
+<section class="slide" data-key="kespro-01" hidden data-say="Tahu hamil? Ke bidan sejak awal. Periksa kehamilan minimal enam kali, dua kali di antaranya dengan dokter: sekali di awal kehamilan dan sekali menjelang melahirkan.">
   <p class="eyebrow">Hamil</p>
   <h2>Ke bidan sejak awal</h2>
   <div class="stats"><div class="stat"><b data-count="6">6</b><span>kali periksa, minimal</span></div><div class="stat"><b data-count="2">2</b><span>kali dengan dokter</span></div></div>
@@ -1530,7 +1539,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   <div class="box tes" data-id="tes-akhir" data-phase="post"></div>
 </section>
 
-<section class="slide" data-key="kespro-11" hiddendata-say="Selesai. Ingat: periksa hamil ke bidan sejak awal, minimal enam kali. Susun rencana persalinan. Bersalin ditolong bidan. Tanda gawat seperti perdarahan, kejang, atau ketuban pecah: berangkat sekarang. Tanda bahaya lain: periksa hari itu juga.">
+<section class="slide" data-key="kespro-11" hidden data-say="Selesai. Ingat: periksa hamil ke bidan sejak awal, minimal enam kali. Susun rencana persalinan. Bersalin ditolong bidan. Tanda gawat seperti perdarahan, kejang, atau ketuban pecah: berangkat sekarang. Tanda bahaya lain: periksa hari itu juga.">
   <p class="eyebrow">Selesai</p>
   <h2>Ibu selamat, bayi selamat</h2>
   <div class="board"></div>
@@ -1570,7 +1579,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   <div class="box tes" data-id="tes-awal" data-phase="pre"></div>
 </section>
 
-<section class="slide" data-key="kulit-01" hiddendata-say="Kusta. Tanda utama: bercak putih atau kemerahan yang mati rasa, tidak gatal, dan tidak sakit. Juga kesemutan atau mati rasa di tangan dan kaki, tangan atau kaki lemah, atau luka di telapak yang tidak terasa. Ajak periksa ke Puskesmas. Obatnya gratis. Kader tidak menguji bercak dan tidak menebak nama penyakit; yang memeriksa petugas Puskesmas.">
+<section class="slide" data-key="kulit-01" hidden data-say="Kusta. Tanda utama: bercak putih atau kemerahan yang mati rasa, tidak gatal, dan tidak sakit. Juga kesemutan atau mati rasa di tangan dan kaki, tangan atau kaki lemah, atau luka di telapak yang tidak terasa. Ajak periksa ke Puskesmas. Obatnya gratis. Kader tidak menguji bercak dan tidak menebak nama penyakit; yang memeriksa petugas Puskesmas.">
   <p class="eyebrow">Kusta</p>
   <h2>Bercak yang mati rasa</h2>
   <div class="figure">
@@ -1724,7 +1733,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   </div>
 </section>
 
-<section class="slide" data-key="kulit-08" hidden data-say="Ke Puskesmas hari itu juga bila luka bengkak, merah meluas, bernanah, atau disertai demam; bila kulit melepuh atau mengelupas luas; bila ruam disertai demam tinggi; atau bila bercak mati rasa disertai tangan atau kaki lemah.">
+<section class="slide" data-key="kulit-08" hidden data-say="Ke Puskesmas hari itu juga bila luka bengkak, merah meluas, bernanah, atau disertai demam; bila kulit melepuh atau mengelupas luas; bila ruam disertai demam tinggi atau anak tampak lemas; atau bila bercak mati rasa disertai tangan atau kaki lemah.">
   <p class="eyebrow">Tanda bahaya</p>
   <h2>Ke Puskesmas hari itu juga bila…</h2>
   <ol class="list">
@@ -1773,7 +1782,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   <div class="box tes" data-id="tes-akhir" data-phase="post"></div>
 </section>
 
-<section class="slide" data-key="kulit-10" hiddendata-say="Selesai. Ingat: bercak mati rasa diperiksa ke Puskesmas. Kusta bisa sembuh dengan obat gratis. Kaskado dan kudis diobati sampai tuntas, keluarga serumah ikut diperiksa. Jaga rahasia dan jangan menjauhi.">
+<section class="slide" data-key="kulit-10" hidden data-say="Selesai. Ingat: bercak mati rasa diperiksa ke Puskesmas. Kusta bisa sembuh dengan obat gratis. Kaskado dan kudis diobati sampai tuntas, keluarga serumah ikut diperiksa. Jaga rahasia dan jangan menjauhi.">
   <p class="eyebrow">Selesai</p>
   <h2>Kenali, ajak periksa, jaga rahasia</h2>
   <div class="board"></div>
@@ -1812,7 +1821,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   <div class="box tes" data-id="tes-awal" data-phase="pre"></div>
 </section>
 
-<section class="slide" data-key="gizi-01" hiddendata-say="ASI. Susui dalam satu jam pertama. Sampai umur enam bulan, bayi cukup diberi ASI saja, tanpa air, teh, madu, pisang, atau bubur. Lanjutkan ASI sampai umur dua tahun.">
+<section class="slide" data-key="gizi-01" hidden data-say="ASI. Susui dalam satu jam pertama. Sampai umur enam bulan, bayi cukup diberi ASI saja, tanpa air, teh, madu, pisang, atau bubur. Lanjutkan ASI sampai umur dua tahun.">
   <p class="eyebrow">Bayi 0–6 bulan</p>
   <h2>ASI saja sampai 6 bulan</h2>
   <div class="stats"><div class="stat"><b data-count="6">6</b><span>bulan ASI saja</span></div><div class="stat"><b data-count="2">2</b><span>tahun lanjut ASI</span></div></div>
@@ -2028,7 +2037,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   <div class="box tes" data-id="tes-akhir" data-phase="post"></div>
 </section>
 
-<section class="slide" data-key="gizi-11" hiddendata-say="Selesai. Ingat: ASI saja sampai enam bulan, makanan pendamping dengan lauk hewani setiap hari, timbang setiap bulan, sikat gigi pagi dan malam, kurangi yang manis, dan jangan beri pinang pada anak.">
+<section class="slide" data-key="gizi-11" hidden data-say="Selesai. Ingat: ASI saja sampai enam bulan, makanan pendamping dengan lauk hewani setiap hari, timbang setiap bulan, sikat gigi pagi dan malam, kurangi yang manis, dan jangan beri pinang pada anak.">
   <p class="eyebrow">Selesai</p>
   <h2>Makan bergizi, gigi sehat</h2>
   <div class="board"></div>
@@ -2042,7 +2051,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
     </ol>
   </div>
   <div class="row"><button class="btn ghost restart">Ulangi modul</button></div>
-  <p class="foot">Sumber: <a href="https://www.who.int/news-room/fact-sheets/detail/infant-and-young-child-feeding">WHO, infant and young child feeding</a>; <a href="https://kesprimkom.kemkes.go.id/assets/uploads/contents/others/Buku_KIA_2024.pdf">Buku KIA Kemenkes 2024</a>; <a href="https://repository.badankebijakan.kemkes.go.id/id/eprint/5861/1/SSGI%20DALAM%20ANGKA%202024%20repo.pdf">SSGI 2024</a> (stunting Manokwari Selatan 26,4%); <a href="https://www.who.int/tools/elena/interventions/sam-identification">WHO, identifikasi gizi buruk</a>; <a href="https://www.iarc.who.int/faq/iarc-monographs-meeting-128-acrolein-crotonaldehyde-and-arecoline/">IARC, pinang (areca nut)</a>. Rincian per klaim: SUMBER.md. Status telaah klinis: belum ditinjau bidan dan petugas gizi (TINJAUAN-KLINIS.md).</p>
+  <p class="foot">Sumber: <a href="https://www.who.int/news-room/fact-sheets/detail/infant-and-young-child-feeding">WHO, infant and young child feeding</a>; <a href="https://kesprimkom.kemkes.go.id/assets/uploads/contents/others/Buku_KIA_2024.pdf">Buku KIA Kemenkes 2024</a>; <a href="https://www.badankebijakan.kemkes.go.id/survei-status-gizi-indonesia-ssgi-2024/">SSGI 2024</a> (stunting Manokwari Selatan 26,4%); <a href="https://www.who.int/tools/elena/interventions/sam-identification">WHO, identifikasi gizi buruk</a>; <a href="https://www.iarc.who.int/faq/iarc-monographs-meeting-128-acrolein-crotonaldehyde-and-arecoline/">IARC, pinang (areca nut)</a>. Rincian per klaim: SUMBER.md. Status telaah klinis: belum ditinjau bidan dan petugas gizi (TINJAUAN-KLINIS.md).</p>
 </section>
 
 </div>
@@ -2072,7 +2081,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   <div class="box tes" data-id="tes-awal" data-phase="pre"></div>
 </section>
 
-<section class="slide" data-key="remaja-01" hiddendata-say="Tubuh yang berubah itu wajar. Perempuan: payudara tumbuh, pinggul melebar, tumbuh rambut di ketiak dan kemaluan, lalu mulai haid. Laki-laki: suara berubah, tumbuh jakun, kumis, dan rambut di ketiak dan kemaluan, lalu mengalami mimpi basah. Setiap orang mulai pada waktu yang berbeda.">
+<section class="slide" data-key="remaja-01" hidden data-say="Tubuh yang berubah itu wajar. Perempuan: payudara tumbuh, pinggul melebar, tumbuh rambut di ketiak dan kemaluan, lalu mulai haid. Laki-laki: suara berubah, tumbuh jakun, kumis, dan rambut di ketiak dan kemaluan, lalu mengalami mimpi basah. Setiap orang mulai pada waktu yang berbeda.">
   <p class="eyebrow">Pubertas</p>
   <h2>Tubuh yang berubah itu wajar</h2>
   <p class="lead">Setiap orang mulai pada waktu yang berbeda, biasanya antara umur 8 dan 14 tahun.</p>
@@ -2324,7 +2333,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   <div class="box tes" data-id="tes-akhir" data-phase="post"></div>
 </section>
 
-<section class="slide" data-key="remaja-13" hiddendata-say="Selesai. Ingat: perubahan tubuh itu wajar. Tidak berarti tidak. Kekerasan tidak pernah salah korban: cerita, datang ke Puskesmas sekarang, lewat tiga hari pun tetap datang, lapor ke SAPA seratus dua puluh sembilan. Tunda menikah sampai minimal sembilan belas tahun. HIV bisa dicegah, dan tes di Puskesmas gratis dan rahasia. Perasaanmu penting.">
+<section class="slide" data-key="remaja-13" hidden data-say="Selesai. Ingat: perubahan tubuh itu wajar. Tidak berarti tidak. Kekerasan tidak pernah salah korban: cerita, datang ke Puskesmas sekarang, lewat tiga hari pun tetap datang, lapor ke SAPA seratus dua puluh sembilan. Tunda menikah sampai minimal sembilan belas tahun. HIV bisa dicegah, dan tes di Puskesmas gratis dan rahasia. Perasaanmu penting.">
   <p class="eyebrow">Selesai</p>
   <h2>Tubuhmu, keputusanmu, masa depanmu</h2>
   <div class="board"></div>
@@ -2814,7 +2823,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   /* Hapus seluruh catatan sesi di HP ini (HP bersama, atau akan diserahkan). Nomor jaga dan pengaturan tetap. */
   try{ /* batas galat: log-clear */
   $('log-clear').onclick=function(){
-    if(!confirm('Hapus semua catatan sesi di HP ini? Yang sudah dikirim ke Puskesmas tidak ikut terhapus.'))return;
+    if(!confirm('Hapus semua catatan sesi, bintang, dan jawaban tes di HP ini? Yang sudah dikirim ke Puskesmas tidak ikut terhapus. Kemajuan layar dan pengaturan tetap.'))return;
     st.log=[];st.sess=newSess();st.done={};st.stars=0;st.tes={};decks.forEach(function(d){all('.tes',d).forEach(function(x){if(x._reset)x._reset()})});persist();renderScores();renderMods();renderLog();renderPlaces();toast('Catatan dihapus');
   };
   }catch(e){fault('log-clear',e)}
@@ -2843,6 +2852,25 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   /* Riwayat: membuka modul menambah satu langkah riwayat, pindah layar di dalam modul tidak.
      Jadi tombol Kembali bawaan Android membawa ke menu, bukan keluar dari aplikasi. */
   function setHash(h){try{history.replaceState(history.state,'',h)}catch(e){}}
+  /* Alamat layar. Bentuk tetap: #kulit (pembuka modul), #kulit/01 (layar dengan data-key kulit-01; tes: /90 dan /91),
+     #darurat (panel Darurat). Nama modul yang mudah dibaca; nama dalam (bls, kespro, gizi, tanda) juga diterima.
+     Bentuk lama #kulit-3 (nomor urut layar) tetap dibuka supaya tautan yang sudah dibagikan tidak mati,
+     walau nomor urut bisa bergeser bila layar disisipkan; kode data-key tidak bergeser. */
+  var SLUG={bls:'bhd',kespro:'ibu-bayi',kulit:'kulit',gizi:'gizi-gigi',remaja:'remaja',tanda:'tanda-bahaya'},UNSLUG={};
+  Object.keys(SLUG).forEach(function(k){UNSLUG[SLUG[k]]=k;UNSLUG[k]=k});
+  function slideHash(m,i){
+    var k=deckBy[m]?all('.slide',deckBy[m]).map(slideKey)[i]:null,n=k&&/-(\d\d)$/.exec(k);
+    return '#'+(SLUG[m]||m)+(n?'/'+n[1]:'');
+  }
+  function parseHash(h){
+    var x=/^#([a-z-]+)(?:\/(\d\d))?$/.exec(h||''),m;
+    if(x&&UNSLUG[x[1]]&&deckBy[m=UNSLUG[x[1]]]){
+      if(!x[2])return {m:m,i:0};
+      var k=all('.slide',deckBy[m]).map(slideKey).indexOf(m+'-'+x[2]);return {m:m,i:k<0?0:k};
+    }
+    x=/^#([a-z]+)-(\d+)$/.exec(h||'');
+    return x&&deckBy[x[1]]?{m:x[1],i:+x[2]}:null;
+  }
   function inDeckEntry(){try{return !!(history.state&&history.state.deck)}catch(e){return false}}
   /* Setiap perpindahan beranda/modul menaikkan navGen; timer lama yang masih hidup diabaikan bila konteksnya sudah berganti. */
   var navGen=0;
@@ -2864,7 +2892,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   function openDeck(m,i,fromHistory){
     var d=deckBy[m];if(!d)return showHome();
     navGen++;if(!st.mode)setMode('solo');
-    if(!fromHistory&&!cur){try{history.pushState({deck:1},'','#'+m+'-'+(i==null?num(st.pos[m]):i))}catch(e){}}
+    if(!fromHistory&&!cur){try{history.pushState({deck:1},'',slideHash(m,i==null?num(st.pos[m]):i))}catch(e){}}
     home.hidden=true;decks.forEach(function(x){x.hidden=x!==d});
     cur=m;st.cur=m;slides=all('.slide',d);buildSegs();$('segs').hidden=false;
     document.documentElement.setAttribute('data-mod',m);
@@ -2902,7 +2930,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
       else{var left=slides.length-visCount(cur,slides.length);bd.textContent='Masih '+left+' layar belum dibuka · lihat peta';bd.style.background='var(--warn-soft)';bd.style.color='var(--warn)'}
       var eb=slides[i].querySelector('.eyebrow');if(eb)eb.insertAdjacentElement('afterend',bd);else slides[i].insertBefore(bd,slides[i].firstChild);
     }
-    setHash('#'+cur+'-'+i);window.scrollTo(0,0);
+    setHash(slideHash(cur,i));window.scrollTo(0,0);
     /* Fokus ke judul layar baru, supaya pembaca layar mengumumkan judulnya. */
     if(!opening){var hh=slides[i].querySelector('h2');if(hh){hh.setAttribute('tabindex','-1');try{hh.focus({preventScroll:true})}catch(e){}}}
     /* Langsung, tanpa jeda, supaya masih dalam rangkaian sentuhan pengguna (aturan putar otomatis peramban). */
@@ -2920,8 +2948,11 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   try{ /* batas galat: keydown */
   document.addEventListener('keydown',function(e){
     if(!cur||sheetOpen())return;var t=e.target.tagName;if(t==='INPUT'||t==='SELECT'||t==='TEXTAREA')return;
-    if(e.key==='ArrowRight'||e.key==='PageDown')$('next').click();
-    if(e.key==='ArrowLeft'||e.key==='PageUp')go(st.pos[cur]-1);
+    /* Alt+panah = kembali/maju di peramban; jangan ikut pindah layar. */
+    if(e.altKey||e.ctrlKey||e.metaKey)return;
+    /* preventDefault: PageDown/PageUp bawaan menggulir halaman, sehingga judul layar baru terlewat. */
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();$('next').click()}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(st.pos[cur]-1)}
   });
   }catch(e){fault('keydown',e)}
 
@@ -3346,15 +3377,17 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
     });
     var en=document.createElement('p');en.className='lead';en.textContent='Akhir cerita. '+data.end;pr.appendChild(en);
     box.appendChild(pr);
-    function render(i){
+    /* focus: dari tombol Lanjut/Ulangi, yang ikut terhapus; fokus pindah ke awal bagian baru supaya tidak hilang ke BODY. */
+    function render(i,focus){
       stage.innerHTML='';
-      var part=document.createElement('p');part.className='eyebrow';
+      var part=document.createElement('p');part.className='eyebrow';part.tabIndex=-1;
       part.textContent=i<data.steps.length?'Bagian '+(i+1)+' dari '+data.steps.length:'Akhir cerita';stage.appendChild(part);
+      if(focus)setTimeout(function(){try{part.focus({preventScroll:true})}catch(e){}},0);
       if(i>=data.steps.length){
         var e=document.createElement('p');e.className='lead';e.textContent=data.end;stage.appendChild(e);
         var s=document.createElement('p');s.className='fb ok';s.textContent='Cerita selesai. Bahas bersama: apakah kejadian seperti ini pernah ada di kampung kita?';stage.appendChild(s);
         award(key);
-        var again=document.createElement('button');again.className='btn ghost';again.textContent='Ulangi cerita';again.onclick=function(){stopSpeak();render(0)};stage.appendChild(again);
+        var again=document.createElement('button');again.className='btn ghost';again.textContent='Ulangi cerita';again.onclick=function(){stopSpeak();render(0,true)};stage.appendChild(again);
         return;
       }
       var stp=data.steps[i];
@@ -3375,7 +3408,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
           if(o[1]){
             [].forEach.call(opts.children,function(x){x.disabled=true});
             var n=document.createElement('button');n.className='btn';n.textContent=i===data.steps.length-1?'Lihat akhir cerita':'Lanjut cerita';
-            n.onclick=function(){stopSpeak();render(i+1)};stage.appendChild(n);
+            n.onclick=function(){stopSpeak();render(i+1,true)};stage.appendChild(n);
           }
         };
         opts.appendChild(b);
@@ -3410,10 +3443,12 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   /* Satu baris catatan per putaran: tes awal membuat barisnya, tes akhir melengkapinya. */
   function tesRecord(m){
     var a=tesScore(m,'pre'),z=tesScore(m,'post');if(!a&&!z)return;
+    /* Tes awal dan akhir dengan cara berbeda (sendiri/kelompok) tidak digabung: baris tes awal tetap, tes akhir baris sendiri. */
+    var mixed=!!(a&&z&&a.mode!==z.mode);if(mixed)a=null;
     var s=sess(),T=tesSt(m),pk=function(x){return x?[x.b,x.n,x.q]:null};
     if(!s.tes||typeof s.tes!=='object')s.tes={};
     var L=Array.isArray(s.tes[m])?s.tes[m]:(s.tes[m]=[]),row={m:(z||a).mode,pre:pk(a),post:pk(z)};
-    if(typeof T.row==='number'&&L[T.row]&&!L[T.row].post)L[T.row]=row;else{T.row=L.length;L.push(row)}
+    if(!mixed&&typeof T.row==='number'&&L[T.row]&&!L[T.row].post)L[T.row]=row;else{T.row=L.length;L.push(row)}
     persist();
   }
   /* Pintu masuk yang terlihat: nomor layar tes, baris status di kartu modul, dan panel tes di beranda. */
@@ -3494,8 +3529,10 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
     }
     function finish(r){
       r.fin=true;persist();tesRecord(m);
-      if(post){var a=tesScore(m,'pre'),z=tesScore(m,'post');cheer=!!(a&&z&&z.pct>a.pct)}
+      if(post){var a=tesScore(m,'pre'),z=tesScore(m,'post');cheer=!!(a&&z&&a.mode===z.mode&&z.pct>a.pct)}
       award(key);render();
+      /* Tombol yang tadi difokus sudah terhapus; fokus pindah ke kalimat hasil, bukan hilang ke BODY. */
+      var h=stage.querySelector('.tes-big');if(h){h.tabIndex=-1;try{h.focus({preventScroll:true})}catch(e){}}
       var t=stage.getBoundingClientRect().top;if(t<70)window.scrollBy(0,t-80);
     }
     function pick(r,oi){
@@ -3575,7 +3612,8 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
     }
     function donePre(r){
       stage.appendChild(mk('p','tes-big','★ Jawaban tersimpan!'));
-      stage.appendChild(mk('p',null,r.mode==='group'?'Jumlah tangan untuk '+qs.length+' soal sudah dicatat.':'Kamu sudah menjawab '+qs.length+' soal.'));
+      var isi=r.mode==='group'?qs.filter(function(_,k){return tesCounts(r.ans[k])>0}).length:qs.length;
+      stage.appendChild(mk('p',null,r.mode!=='group'?'Kamu sudah menjawab '+qs.length+' soal.':isi<qs.length?'Jumlah tangan untuk '+isi+' dari '+qs.length+' soal sudah dicatat. Soal yang dilewati tidak dihitung.':'Jumlah tangan untuk '+qs.length+' soal sudah dicatat.'));
       stage.appendChild(mk('p','muted','Skor dan kunci jawabannya dibuka di Tes akhir, sebelum layar Selesai. Sekarang, ayo belajar!'));
       var row=mk('div','row');row.appendChild(nextBtn('Mulai belajar ›'));stage.appendChild(row);
     }
@@ -3588,7 +3626,8 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
       var a=tesScore(m,'pre'),z=tesScore(m,'post'),T=tesSt(m),msg;
       if(!z)msg='Semua soal dilewati, jadi belum ada skor.';
       else if(!a)msg='Tes awal belum dikerjakan, jadi belum ada perbandingan. Lain kali kerjakan "Tebak dulu!" di awal modul.';
-      else if(z.pct>a.pct)msg=(z.mode==='solo'&&a.mode==='solo'?'Naik dari '+a.b+' jadi '+z.b+' jawaban benar':'Naik dari '+a.pct+'% jadi '+z.pct+'%')+'! Belajar bersama ada hasilnya.';
+      else if(a.mode!==z.mode)msg='Tes awal dan tes akhir memakai cara berbeda (belajar sendiri dan sesi kelompok), jadi hasilnya tidak dibandingkan.';
+      else if(z.pct>a.pct)msg=(z.mode==='solo'&&a.mode==='solo'?'Naik dari '+a.b+' jadi '+z.b+' jawaban benar':'Naik dari '+a.pct+'% jadi '+z.pct+'%')+(z.mode==='group'?'! Belajar bersama ada hasilnya.':'! Belajarmu ada hasilnya.');
       else if(z.pct===100)msg='Sempurna sejak awal. Hebat!';
       else if(z.pct===a.pct)msg='Sama seperti di awal. Yuk bahas lagi soal yang belum tepat di bawah ini.';
       else msg='Tidak apa-apa. Bahas lagi bersama soal yang belum tepat di bawah ini.';
@@ -3603,7 +3642,11 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
       });
       stage.appendChild(bars);
       setTimeout(function(){fills.forEach(function(p){p[0].style.width=Math.max(p[1],2)+'%'})},60);
-      if(z&&z.mode==='group')stage.appendChild(mk('p','tes-sum','Sekitar '+Math.round(z.n/Math.max(1,z.q))+' orang ikut tes akhir.'));
+      /* Kelompok: tampilkan jumlah peserta kedua tes; jumlah yang berbeda membuat perbandingan persen kurang tepat. */
+      if(z&&z.mode==='group'){
+        var pz=Math.round(z.n/Math.max(1,z.q)),pa=a&&a.mode==='group'?Math.round(a.n/Math.max(1,a.q)):0;
+        stage.appendChild(mk('p','tes-sum',pa?'Sekitar '+pa+' orang ikut tes awal dan '+pz+' orang ikut tes akhir.'+(pa!==pz?' Jumlah peserta berbeda, jadi perbandingan ini hanya perkiraan.':''):'Sekitar '+pz+' orang ikut tes akhir.'));
+      }
       if(cheer){cheer=false;celebrate()}
       stage.appendChild(mk('h3',null,'Kunci jawaban dan penjelasan'));
       var A=T.pre&&T.pre.fin?T.pre:null,ul=mk('ol','tes-key'),say=[{t:msg}];
@@ -4020,6 +4063,8 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
     st.voice=v==='papua'?'papua':'';
     all('.chip.vo').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-vo')===st.voice)});
     var n=$('vo-note'),nP=recCount('papua');
+    /* Pilihan tetap bisa dipilih (rekaman bisa ditambahkan kapan saja), tetapi statusnya terlihat sebelum dipilih. */
+    all('.chip.vo[data-vo="papua"]').forEach(function(b){b.textContent=nP?'Logat Papua':'Logat Papua (rekaman belum ada)'});
     n.hidden=st.voice!=='papua';
     n.textContent=nP?'Rekaman logat Papua: '+nP+' dari '+audioKeys.length+' layar. Layar yang belum direkam memakai suara bahasa Indonesia.':'Rekaman logat Papua belum ada. Sementara Bacakan memakai suara bahasa Indonesia.';
     checkVoice();
@@ -4100,8 +4145,48 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   },{passive:true});
   }catch(e){fault('app',e)}
 
+  /* ---------- pindah alamat ----------
+     ALAMAT = alamat resmi sekarang. Dibuka dari alamat lama (LAMA): beranda menampilkan pemberitahuan dan tombol yang membuka
+     alamat baru sambil membawa data HP ini di bagian # tautan (bagian # tidak dikirim ke server). Di alamat baru, data diterima
+     setelah dikonfirmasi; catatan sesi digabung, tidak menimpa. Pindah lagi (mis. ke alamat ITS): ganti ALAMAT, tambahkan alamat ini ke LAMA. */
+  var ALAMAT='https://kadermomiwaren.github.io/',LAMA=['anakwirayuda-eng.github.io'];
+  function b64e(s){return btoa(unescape(encodeURIComponent(s))).replace(/[+]/g,'-').replace(/[/]/g,'_').replace(/=+$/,'')}
+  function b64d(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return decodeURIComponent(escape(atob(s)))}
+  /* Sesi dari luar dibersihkan bentuknya dulu, supaya catatan yang rusak tidak mematikan daftar atau ringkasan. */
+  function cleanSess(s){
+    if(!s||typeof s!=='object'||typeof s.d!=='string')return null;
+    var keys=function(v){var o={};if(v&&typeof v==='object')Object.keys(v).forEach(function(k){if(/^[a-z]+$/.test(k))o[k]=1});return o};
+    var tri=function(a){return Array.isArray(a)&&a.length===3?a.map(num):null},tes={};
+    if(s.tes&&typeof s.tes==='object')Object.keys(s.tes).forEach(function(m){if(/^[a-z]+$/.test(m)&&Array.isArray(s.tes[m]))tes[m]=s.tes[m].filter(function(r){return r&&typeof r==='object'}).slice(0,20).map(function(r){return {m:r.m==='group'?'group':'solo',pre:tri(r.pre),post:tri(r.post)}})});
+    return {d:s.d.slice(0,10),kp:typeof s.kp==='string'?s.kp.slice(0,60):'',mode:s.mode==='group'||s.mode==='solo'?s.mode:'',mods:keys(s.mods),fin:keys(s.fin),say:num(s.say),act:num(s.act),off:s.off?1:0,tes:tes};
+  }
+  function terimaBawaan(){
+    var m=/^#bawa=([A-Za-z0-9_-]+)$/.exec(location.hash||'');if(!m)return;
+    try{history.replaceState(null,'',location.pathname+'#beranda')}catch(e){}
+    var src=null;try{src=JSON.parse(b64d(m[1]))}catch(e){}
+    if(!src||typeof src!=='object'){toast('Data dari alamat lama tidak terbaca. Coba lagi tombol Pindah di alamat lama.');return}
+    var log=(Array.isArray(src.log)?src.log:[]).map(cleanSess).filter(Boolean),ss=cleanSess(src.sess);
+    if(ss&&used(ss))log.push(ss);
+    var nomor=typeof src.nomor==='string'?src.nomor.slice(0,30):'';
+    if(!confirm('Bawa catatan dari alamat lama ke HP ini? '+log.length+' sesi'+(nomor?' dan nomor jaga':'')+'. Catatan yang sudah ada di sini tidak dihapus.'))return;
+    var cur0=load(),fresh=!(Array.isArray(cur0.log)&&cur0.log.length)&&!used(cleanSess(cur0.sess)),out=fresh?{}:cur0,seen={};
+    /* HP yang belum dipakai di alamat baru ikut membawa pengaturan dan posisi Lanjutkan; bintang mulai dari nol karena sesi lama diarsipkan. */
+    if(fresh){['fs','theme','voice','auto','sfx','hinted','mode','pos','last'].forEach(function(k){if(k in src)out[k]=src[k]})}
+    out.log=[].concat(Array.isArray(cur0.log)?cur0.log:[],log).filter(function(x){var k=JSON.stringify(x);if(seen[k])return false;seen[k]=1;return true}).slice(-100);
+    if(!out.nomor&&nomor)out.nomor=nomor;
+    try{localStorage.setItem(KEY,JSON.stringify(out));toast(log.length+' sesi dari alamat lama sudah dipindahkan.')}catch(e){toast('Penyimpanan HP penuh atau diblokir; catatan belum bisa dipindahkan.')}
+  }
+  try{ /* batas galat: pindah */
+  if(LAMA.indexOf(location.hostname)>=0){
+    $('pindah').hidden=false;$('pindah-url').textContent=ALAMAT.replace(/^https:[/][/]/,'').replace(/[/]$/,'');
+    $('pindah-go').onclick=function(){var o={};Object.keys(st).forEach(function(k){if(k!=='audioList')o[k]=st[k]});location.href=ALAMAT+'#bawa='+b64e(JSON.stringify(o))};
+  }
+  }catch(e){fault('pindah',e)}
+
   /* ---------- mulai ---------- */
   function start(data){
+    /* Data dibawa dari alamat lama (#bawa=...): diterima sebelum simpanan dibaca. */
+    try{terimaBawaan()}catch(e){fault('bawa',e)}
     st=Object.assign(st,load(),data&&data.done?data:{});
     normalize();delete st.teams;delete st.solo;delete st.audioOk;
     applyFs(st.fs||1);applyTheme(st.theme);$('opt-auto').checked=!!st.auto;$('opt-sfx').checked=st.sfx!==false;
@@ -4110,15 +4195,15 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
     renderPlaces();
     all('.nomor-jaga').forEach(function(i){i.value=st.nomor||''});syncCalls();
     buildMsg();renderScores();checkApp();applyVoice(st.voice);checkAudio();
-    var m=/^#([a-z]+)-(\d+)$/.exec(location.hash);
+    var r=parseHash(location.hash),sos=location.hash==='#darurat';
     /* Dibuka langsung ke sebuah layar: pasang beranda di belakangnya, supaya tombol Kembali tetap ke menu. */
-    if(m&&deckBy[m[1]]){try{history.replaceState(null,'','#beranda');history.pushState({deck:1},'','#'+m[1]+'-'+m[2])}catch(e){}openDeck(m[1],+m[2],true)}
-    else showHome();
+    if(r){try{history.replaceState(null,'','#beranda');history.pushState({deck:1},'',slideHash(r.m,Math.max(0,Math.min(r.i,all('.slide',deckBy[r.m]).length-1))))}catch(e){}openDeck(r.m,r.i,true)}
+    else{showHome();if(sos)openSos()}
   }
   try{ /* batas galat: hashchange */
   window.addEventListener('hashchange',function(){
-    var m=/^#([a-z]+)-(\d+)$/.exec(location.hash);
-    if(m&&deckBy[m[1]])openDeck(m[1],+m[2],true);else if((!location.hash||location.hash==='#beranda')&&cur)showHome();
+    var r=parseHash(location.hash);
+    if(r)openDeck(r.m,r.i,true);else if(location.hash==='#darurat')openSos();else if((!location.hash||location.hash==='#beranda')&&cur)showHome();
   });
   }catch(e){fault('hashchange',e)}
   try{if(window.claude&&window.claude.hot&&window.claude.hot.snapshot)window.claude.hot.snapshot(function(){return st})}catch(e){}
@@ -4127,7 +4212,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   function renderErr(){var a=errList(),p=$('st-err'),r=$('err-row');if(!p)return;p.hidden=!a.length;r.hidden=!a.length;
     p.textContent=a.length?'Tercatat '+a.length+' masalah teknis (terakhir '+String(a[a.length-1].t||'').slice(0,16).replace('T',' ')+'). Bila aplikasi terasa aneh: Pengaturan › Perbaiki aplikasi.':''}
   try{
-  $('err-copy').onclick=function(){var t='Laporan masalah Literasi Kader v'+'0.9.2'+'\n'+errList().map(function(x){return x.t+' '+x.v+' '+x.m}).join('\n');
+  $('err-copy').onclick=function(){var t='Laporan masalah Literasi Kader v'+'0.9.3'+'\n'+errList().map(function(x){return x.t+' '+x.v+' '+x.m}).join('\n');
     try{navigator.clipboard.writeText(t).then(function(){toast('Laporan disalin')},function(){toast('Gagal menyalin')})}catch(e){toast('Gagal menyalin')}};
   $('err-clear').onclick=function(){try{localStorage.removeItem('literasi-galat')}catch(e){}renderErr();toast('Laporan dihapus')};
   }catch(e){fault('laporan',e)}
