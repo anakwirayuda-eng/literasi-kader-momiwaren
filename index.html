@@ -370,13 +370,47 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   .nav-in{grid-template-columns:1fr 1fr;gap:.5rem .6rem;padding:.45rem 12px}
   .nav-in .prog{grid-column:1/-1;order:-1;min-height:36px;padding:.1rem .3rem}
 }
+/* ---------- Tes awal dan tes akhir (v0.9): satu soal per tampilan, titik nomor soal, penghitung angkat tangan,
+   kunci jawaban dengan penjelasan, dan bilah sebelum-sesudah. ---------- */
+.tes-stage{display:grid;gap:.75rem}
+.tes-top{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+.tes-dots{display:flex;gap:.35rem}
+.tes-dots button{width:38px;height:38px;border-radius:50%;border:2px solid var(--line);background:var(--surface);color:var(--muted);font-weight:700;font-size:.9rem;padding:0;font-variant-numeric:tabular-nums}
+.tes-dots button.done{background:var(--pulse-soft);border-color:var(--pulse);color:var(--pulse)}
+.tes-dots button.cur{background:var(--pulse);border-color:var(--pulse);color:var(--accent-ink)}
+.tes-q{font-size:1.25rem}
+.tes-row{justify-content:space-between;cursor:default}
+.tes-row:hover{border-color:var(--line)}
+.tes-row:active:not([disabled]){transform:none;box-shadow:0 2px 0 var(--line)}
+.tes-row .t{flex:1;min-width:0}
+.tes-step{display:flex;align-items:center;gap:.3rem;flex:none}
+.tes-step button{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:var(--surface);font-size:1.35rem;font-weight:700;line-height:1;padding:0}
+.tes-step button:disabled{opacity:.4;cursor:default}
+.tes-step output{min-width:2.2ch;text-align:center;font-family:var(--display);font-size:1.6rem;font-variant-numeric:tabular-nums}
+.tes-sum{font-size:.95rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.tes-why{background:var(--bg);border-left:5px solid var(--go);padding:.8rem 1rem;border-radius:0 12px 12px 0;display:grid;gap:.4rem}
+.tes-why:focus{outline:none}
+.tes-why .k{color:var(--go);font-weight:700}
+.tes-link{justify-self:start;background:transparent;border:0;color:var(--accent);font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:.3rem 0;min-height:44px;text-align:left}
+.tes-big{font-family:var(--display);font-size:1.7rem;line-height:1.15}
+.tes-bars{display:grid;gap:.7rem}
+.tes-bar{display:grid;gap:.25rem}
+.tes-bar .lbl{display:flex;justify-content:space-between;gap:.5rem;font-weight:700;font-size:.95rem;font-variant-numeric:tabular-nums}
+.tes-bar .trk{height:22px;border-radius:11px;background:var(--line);overflow:hidden}
+.tes-bar .trk i{display:block;height:100%;width:0;border-radius:11px;background:var(--muted);transition:width 1s cubic-bezier(.22,1,.36,1)}
+.tes-bar.post .trk i{background:var(--pulse)}
+.tes-key{display:grid;gap:.6rem;margin:0;padding:0;list-style:none}
+.tes-key li{border:1px solid var(--line);border-radius:var(--r);padding:.8rem .95rem;display:grid;gap:.35rem;background:var(--bg)}
+.tes-key .k{color:var(--go);font-weight:700}
+.tes-key .res{font-size:.92rem;color:var(--muted);font-variant-numeric:tabular-nums}
+@media print{.tes-stage{display:none!important}.tes-print .list li{break-inside:avoid}}
 </style>
 
 <script>/* PENGAMAN-v1: berjalan sebelum aplikasi. Galat yang tidak tertangkap dicatat (tanpa data pribadi);
 bila aplikasi belum siap dalam 8 detik atau galat terjadi saat memuat, panel darurat cadangan ditampilkan. ?reset=1 menghapus
 simpanan luring aplikasi (bukan catatan, bukan rekaman) lalu memuat ulang. */
 (function(){var K='literasi-galat';window.__litOK=false;
-function log(m){try{var a=JSON.parse(localStorage.getItem(K)||'[]');if(!Array.isArray(a))a=[];a.push({t:new Date().toISOString(),v:'0.8.7',m:String(m).slice(0,240)});localStorage.setItem(K,JSON.stringify(a.slice(-20)))}catch(e){}}
+function log(m){try{var a=JSON.parse(localStorage.getItem(K)||'[]');if(!Array.isArray(a))a=[];a.push({t:new Date().toISOString(),v:'0.9.0',m:String(m).slice(0,240)});localStorage.setItem(K,JSON.stringify(a.slice(-20)))}catch(e){}}
 window.__litLog=log;
 function fail(){if(window.__litOK)return;var f=document.getElementById('boot-fail');if(f){f.hidden=false;f.setAttribute('data-sticky','1')}}
 window.addEventListener('error',function(e){if(e&&e.target&&e.target!==window&&!e.message)return;log((e.message||'galat')+' @'+String(e.filename||'').split('/').pop()+':'+(e.lineno||0));if(!window.__litOK)fail();else if(window.__litErr)window.__litErr()});
@@ -472,7 +506,7 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   </div>
   <details class="box" id="log-box">
     <summary>Catatan sesi untuk Puskesmas (tanpa nama)</summary>
-    <p class="muted">Tidak ada nama dan tidak ada jawaban siapa pun yang dicatat. Yang dicatat hanya tanggal, tempat, modul yang dibuka dan diselesaikan, berapa kali Bacakan dipakai, dan apakah dipakai tanpa sinyal. Catatan hanya ada di HP ini sampai kamu menyalinnya.</p>
+    <p class="muted">Tidak ada nama dan tidak ada jawaban siapa pun yang dicatat. Yang dicatat hanya tanggal, tempat, modul yang dibuka dan diselesaikan, berapa kali Bacakan dipakai, apakah dipakai tanpa sinyal, dan jumlah jawaban benar pada tes awal dan tes akhir (bukan jawaban per orang). Catatan hanya ada di HP ini sampai kamu menyalinnya.</p>
     <div class="log-list" id="log-list"></div>
     <div class="row"><button class="btn" id="log-wa">Kirim ringkasan (WhatsApp dll.)</button><button class="btn ghost" id="log-copy">Salin ringkasan</button></div>
     <p class="muted">Yang dikirim persis seperti daftar di atas. HP dipakai bersama atau akan diserahkan ke orang lain? Hapus catatannya dulu.</p>
@@ -493,7 +527,7 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
       <li>Mama merajut noken · EmaMukar · CC BY-SA 4.0</li>
     </ul>
   </details>
-  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.8.7, 15 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
+  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.9.0, 24 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
 </section>
 <div class="hint" id="hint" hidden><span>Geser layar ke kiri atau tekan <b>Lanjut</b>. Tekan <b>Bacakan</b> untuk mendengar isi layar.</span><button class="btn ghost" id="hint-ok">Mengerti</button></div>
 <div class="deck" data-mod="bls" data-cover="img/dermaga-sumano.webp" data-pos="center 55%" data-credit="Dermaga kecil, Kampung Sumano · Lefaan · CC BY-SA 4.0" data-n="1" data-title="Bantuan Hidup Dasar" data-desc="Menolong orang yang tiba-tiba tidak sadar dan tidak bernapas normal: periksa, panggil, tekan." hidden>
@@ -507,7 +541,14 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   <p class="box key"><b>Untuk siapa:</b> langkah utama modul ini untuk <b>orang dewasa dan remaja</b>. Anak dan bayi berbeda: lihat layar <b>Anak dan bayi</b>.</p>
 </section>
 
-<section class="slide" data-key="bls-01" hidden data-say="Tiga langkah menyelamatkan nyawa. Satu, periksa: aman, sadar, bernapas. Dua, panggil: telepon dengan pengeras suara atau teriak minta tolong. Tiga, tekan: tekan dada kuat dan cepat.">
+<section class="slide" data-key="bls-90" hidden data-say="Tes awal. Tebak dulu. Lima pertanyaan singkat sebelum belajar. Belum tahu jawabannya tidak apa-apa, tebak saja. Kunci jawaban dan pembahasannya dibuka di akhir modul.">
+  <p class="eyebrow">Tes awal</p>
+  <h2>Tebak dulu!</h2>
+  <p class="lead">5 pertanyaan singkat sebelum belajar. Belum tahu tidak apa-apa, tebak saja. Kunci jawaban dan pembahasannya dibuka di akhir modul.</p>
+  <div class="box tes" data-id="tes-awal" data-phase="pre"></div>
+</section>
+
+<section class="slide" data-key="bls-01" hiddendata-say="Tiga langkah menyelamatkan nyawa. Satu, periksa: aman, sadar, bernapas. Dua, panggil: telepon dengan pengeras suara atau teriak minta tolong. Tiga, tekan: tekan dada kuat dan cepat.">
   <p class="eyebrow">Gambaran besar</p>
   <h2>Tiga langkah menyelamatkan nyawa</h2>
   <ol class="steps3">
@@ -1112,7 +1153,14 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   </div>
 </section>
 
-<section class="slide" data-key="bls-16" hidden data-say="Selesai. Ingat tiga langkah: periksa, panggil, tekan. Dewasa dan remaja: tekan lima sampai enam sentimeter, seratus sampai seratus dua puluh per menit. Anak dan bayi: lima napas dulu bila terlatih, tekan sepertiga tebal dada; anak dengan satu tangan, bayi dengan dua ibu jari melingkari dada.">
+<section class="slide" data-key="bls-91" hidden data-say="Tes akhir. Cek lagi. Lima pertanyaan yang sama seperti di awal. Setiap selesai menjawab, kunci jawaban dan penjelasannya langsung muncul. Di akhir, lihat perbandingan sebelum dan sesudah belajar.">
+  <p class="eyebrow">Tes akhir</p>
+  <h2>Cek lagi: seberapa banyak yang diingat?</h2>
+  <p class="lead">Pertanyaan yang sama seperti di awal. Setiap selesai menjawab, kunci jawaban dan penjelasannya langsung muncul.</p>
+  <div class="box tes" data-id="tes-akhir" data-phase="post"></div>
+</section>
+
+<section class="slide" data-key="bls-16" hiddendata-say="Selesai. Ingat tiga langkah: periksa, panggil, tekan. Dewasa dan remaja: tekan lima sampai enam sentimeter, seratus sampai seratus dua puluh per menit. Anak dan bayi: lima napas dulu bila terlatih, tekan sepertiga tebal dada; anak dengan satu tangan, bayi dengan dua ibu jari melingkari dada.">
   <p class="eyebrow">Selesai</p>
   <h2>Periksa · Panggil · Tekan</h2>
   <div class="board"></div>
@@ -1149,7 +1197,14 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   </div>
 </section>
 
-<section class="slide" data-key="kespro-01" hidden data-say="Tahu hamil? Ke bidan sejak awal. Periksa kehamilan minimal enam kali, dua kali di antaranya dengan dokter: sekali di awal kehamilan dan sekali menjelang melahirkan.">
+<section class="slide" data-key="kespro-90" hidden data-say="Tes awal. Tebak dulu. Lima pertanyaan singkat sebelum belajar. Belum tahu jawabannya tidak apa-apa, tebak saja. Kunci jawaban dan pembahasannya dibuka di akhir modul.">
+  <p class="eyebrow">Tes awal</p>
+  <h2>Tebak dulu!</h2>
+  <p class="lead">5 pertanyaan singkat sebelum belajar. Belum tahu tidak apa-apa, tebak saja. Kunci jawaban dan pembahasannya dibuka di akhir modul.</p>
+  <div class="box tes" data-id="tes-awal" data-phase="pre"></div>
+</section>
+
+<section class="slide" data-key="kespro-01" hiddendata-say="Tahu hamil? Ke bidan sejak awal. Periksa kehamilan minimal enam kali, dua kali di antaranya dengan dokter: sekali di awal kehamilan dan sekali menjelang melahirkan.">
   <p class="eyebrow">Hamil</p>
   <h2>Ke bidan sejak awal</h2>
   <div class="stats"><div class="stat"><b data-count="6">6</b><span>kali periksa, minimal</span></div><div class="stat"><b data-count="2">2</b><span>kali dengan dokter</span></div></div>
@@ -1422,7 +1477,14 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   </div>
 </section>
 
-<section class="slide" data-key="kespro-11" hidden data-say="Selesai. Ingat: periksa hamil ke bidan sejak awal, minimal enam kali. Susun rencana persalinan. Bersalin ditolong bidan. Tanda gawat seperti perdarahan, kejang, atau ketuban pecah: berangkat sekarang. Tanda bahaya lain: periksa hari itu juga.">
+<section class="slide" data-key="kespro-91" hidden data-say="Tes akhir. Cek lagi. Lima pertanyaan yang sama seperti di awal. Setiap selesai menjawab, kunci jawaban dan penjelasannya langsung muncul. Di akhir, lihat perbandingan sebelum dan sesudah belajar.">
+  <p class="eyebrow">Tes akhir</p>
+  <h2>Cek lagi: seberapa banyak yang diingat?</h2>
+  <p class="lead">Pertanyaan yang sama seperti di awal. Setiap selesai menjawab, kunci jawaban dan penjelasannya langsung muncul.</p>
+  <div class="box tes" data-id="tes-akhir" data-phase="post"></div>
+</section>
+
+<section class="slide" data-key="kespro-11" hiddendata-say="Selesai. Ingat: periksa hamil ke bidan sejak awal, minimal enam kali. Susun rencana persalinan. Bersalin ditolong bidan. Tanda gawat seperti perdarahan, kejang, atau ketuban pecah: berangkat sekarang. Tanda bahaya lain: periksa hari itu juga.">
   <p class="eyebrow">Selesai</p>
   <h2>Ibu selamat, bayi selamat</h2>
   <div class="board"></div>
@@ -1455,7 +1517,14 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   <p class="muted">Kusta masih ditemukan di Papua Barat: sampai September 2025 tercatat 254 kasus baru, 62 di antaranya anak.</p>
 </section>
 
-<section class="slide" data-key="kulit-01" hidden data-say="Kusta. Tanda utama: bercak putih atau kemerahan yang mati rasa, tidak gatal, dan tidak sakit. Juga kesemutan atau mati rasa di tangan dan kaki, tangan atau kaki lemah, atau luka di telapak yang tidak terasa. Ajak periksa ke Puskesmas. Obatnya gratis. Kader tidak menguji bercak dan tidak menebak nama penyakit; yang memeriksa petugas Puskesmas.">
+<section class="slide" data-key="kulit-90" hidden data-say="Tes awal. Tebak dulu. Lima pertanyaan singkat sebelum belajar. Belum tahu jawabannya tidak apa-apa, tebak saja. Kunci jawaban dan pembahasannya dibuka di akhir modul.">
+  <p class="eyebrow">Tes awal</p>
+  <h2>Tebak dulu!</h2>
+  <p class="lead">5 pertanyaan singkat sebelum belajar. Belum tahu tidak apa-apa, tebak saja. Kunci jawaban dan pembahasannya dibuka di akhir modul.</p>
+  <div class="box tes" data-id="tes-awal" data-phase="pre"></div>
+</section>
+
+<section class="slide" data-key="kulit-01" hiddendata-say="Kusta. Tanda utama: bercak putih atau kemerahan yang mati rasa, tidak gatal, dan tidak sakit. Juga kesemutan atau mati rasa di tangan dan kaki, tangan atau kaki lemah, atau luka di telapak yang tidak terasa. Ajak periksa ke Puskesmas. Obatnya gratis. Kader tidak menguji bercak dan tidak menebak nama penyakit; yang memeriksa petugas Puskesmas.">
   <p class="eyebrow">Kusta</p>
   <h2>Bercak yang mati rasa</h2>
   <div class="figure">
@@ -1651,7 +1720,14 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   </div>
 </section>
 
-<section class="slide" data-key="kulit-10" hidden data-say="Selesai. Ingat: bercak mati rasa diperiksa ke Puskesmas. Kusta bisa sembuh dengan obat gratis. Kaskado dan kudis diobati sampai tuntas, keluarga serumah ikut diperiksa. Jaga rahasia dan jangan menjauhi.">
+<section class="slide" data-key="kulit-91" hidden data-say="Tes akhir. Cek lagi. Lima pertanyaan yang sama seperti di awal. Setiap selesai menjawab, kunci jawaban dan penjelasannya langsung muncul. Di akhir, lihat perbandingan sebelum dan sesudah belajar.">
+  <p class="eyebrow">Tes akhir</p>
+  <h2>Cek lagi: seberapa banyak yang diingat?</h2>
+  <p class="lead">Pertanyaan yang sama seperti di awal. Setiap selesai menjawab, kunci jawaban dan penjelasannya langsung muncul.</p>
+  <div class="box tes" data-id="tes-akhir" data-phase="post"></div>
+</section>
+
+<section class="slide" data-key="kulit-10" hiddendata-say="Selesai. Ingat: bercak mati rasa diperiksa ke Puskesmas. Kusta bisa sembuh dengan obat gratis. Kaskado dan kudis diobati sampai tuntas, keluarga serumah ikut diperiksa. Jaga rahasia dan jangan menjauhi.">
   <p class="eyebrow">Selesai</p>
   <h2>Kenali, ajak periksa, jaga rahasia</h2>
   <div class="board"></div>
@@ -1683,7 +1759,14 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   </div>
 </section>
 
-<section class="slide" data-key="gizi-01" hidden data-say="ASI. Susui dalam satu jam pertama. Sampai umur enam bulan, bayi cukup diberi ASI saja, tanpa air, teh, madu, pisang, atau bubur. Lanjutkan ASI sampai umur dua tahun.">
+<section class="slide" data-key="gizi-90" hidden data-say="Tes awal. Tebak dulu. Lima pertanyaan singkat sebelum belajar. Belum tahu jawabannya tidak apa-apa, tebak saja. Kunci jawaban dan pembahasannya dibuka di akhir modul.">
+  <p class="eyebrow">Tes awal</p>
+  <h2>Tebak dulu!</h2>
+  <p class="lead">5 pertanyaan singkat sebelum belajar. Belum tahu tidak apa-apa, tebak saja. Kunci jawaban dan pembahasannya dibuka di akhir modul.</p>
+  <div class="box tes" data-id="tes-awal" data-phase="pre"></div>
+</section>
+
+<section class="slide" data-key="gizi-01" hiddendata-say="ASI. Susui dalam satu jam pertama. Sampai umur enam bulan, bayi cukup diberi ASI saja, tanpa air, teh, madu, pisang, atau bubur. Lanjutkan ASI sampai umur dua tahun.">
   <p class="eyebrow">Bayi 0–6 bulan</p>
   <h2>ASI saja sampai 6 bulan</h2>
   <div class="stats"><div class="stat"><b data-count="6">6</b><span>bulan ASI saja</span></div><div class="stat"><b data-count="2">2</b><span>tahun lanjut ASI</span></div></div>
@@ -1892,7 +1975,14 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   </div>
 </section>
 
-<section class="slide" data-key="gizi-11" hidden data-say="Selesai. Ingat: ASI saja sampai enam bulan, makanan pendamping dengan lauk hewani setiap hari, timbang setiap bulan, sikat gigi pagi dan malam, kurangi yang manis, dan jangan beri pinang pada anak.">
+<section class="slide" data-key="gizi-91" hidden data-say="Tes akhir. Cek lagi. Lima pertanyaan yang sama seperti di awal. Setiap selesai menjawab, kunci jawaban dan penjelasannya langsung muncul. Di akhir, lihat perbandingan sebelum dan sesudah belajar.">
+  <p class="eyebrow">Tes akhir</p>
+  <h2>Cek lagi: seberapa banyak yang diingat?</h2>
+  <p class="lead">Pertanyaan yang sama seperti di awal. Setiap selesai menjawab, kunci jawaban dan penjelasannya langsung muncul.</p>
+  <div class="box tes" data-id="tes-akhir" data-phase="post"></div>
+</section>
+
+<section class="slide" data-key="gizi-11" hiddendata-say="Selesai. Ingat: ASI saja sampai enam bulan, makanan pendamping dengan lauk hewani setiap hari, timbang setiap bulan, sikat gigi pagi dan malam, kurangi yang manis, dan jangan beri pinang pada anak.">
   <p class="eyebrow">Selesai</p>
   <h2>Makan bergizi, gigi sehat</h2>
   <div class="board"></div>
@@ -1929,7 +2019,14 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   </div>
 </section>
 
-<section class="slide" data-key="remaja-01" hidden data-say="Tubuh yang berubah itu wajar. Perempuan: payudara tumbuh, pinggul melebar, tumbuh rambut di ketiak dan kemaluan, lalu mulai haid. Laki-laki: suara berubah, tumbuh jakun, kumis, dan rambut di ketiak dan kemaluan, lalu mengalami mimpi basah. Setiap orang mulai pada waktu yang berbeda.">
+<section class="slide" data-key="remaja-90" hidden data-say="Tes awal. Tebak dulu. Lima pertanyaan singkat sebelum belajar. Belum tahu jawabannya tidak apa-apa, tebak saja. Kunci jawaban dan pembahasannya dibuka di akhir modul.">
+  <p class="eyebrow">Tes awal</p>
+  <h2>Tebak dulu!</h2>
+  <p class="lead">5 pertanyaan singkat sebelum belajar. Belum tahu tidak apa-apa, tebak saja. Kunci jawaban dan pembahasannya dibuka di akhir modul.</p>
+  <div class="box tes" data-id="tes-awal" data-phase="pre"></div>
+</section>
+
+<section class="slide" data-key="remaja-01" hiddendata-say="Tubuh yang berubah itu wajar. Perempuan: payudara tumbuh, pinggul melebar, tumbuh rambut di ketiak dan kemaluan, lalu mulai haid. Laki-laki: suara berubah, tumbuh jakun, kumis, dan rambut di ketiak dan kemaluan, lalu mengalami mimpi basah. Setiap orang mulai pada waktu yang berbeda.">
   <p class="eyebrow">Pubertas</p>
   <h2>Tubuh yang berubah itu wajar</h2>
   <p class="lead">Setiap orang mulai pada waktu yang berbeda, biasanya antara umur 8 dan 14 tahun.</p>
@@ -2174,7 +2271,14 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   </div>
 </section>
 
-<section class="slide" data-key="remaja-13" hidden data-say="Selesai. Ingat: perubahan tubuh itu wajar. Tidak berarti tidak. Kekerasan tidak pernah salah korban: cerita, datang ke Puskesmas sekarang, lewat tiga hari pun tetap datang, lapor ke SAPA seratus dua puluh sembilan. Tunda menikah sampai minimal sembilan belas tahun. HIV bisa dicegah, dan tes di Puskesmas gratis dan rahasia. Perasaanmu penting.">
+<section class="slide" data-key="remaja-91" hidden data-say="Tes akhir. Cek lagi. Lima pertanyaan yang sama seperti di awal. Setiap selesai menjawab, kunci jawaban dan penjelasannya langsung muncul. Di akhir, lihat perbandingan sebelum dan sesudah belajar.">
+  <p class="eyebrow">Tes akhir</p>
+  <h2>Cek lagi: seberapa banyak yang diingat?</h2>
+  <p class="lead">Pertanyaan yang sama seperti di awal. Setiap selesai menjawab, kunci jawaban dan penjelasannya langsung muncul.</p>
+  <div class="box tes" data-id="tes-akhir" data-phase="post"></div>
+</section>
+
+<section class="slide" data-key="remaja-13" hiddendata-say="Selesai. Ingat: perubahan tubuh itu wajar. Tidak berarti tidak. Kekerasan tidak pernah salah korban: cerita, datang ke Puskesmas sekarang, lewat tiga hari pun tetap datang, lapor ke SAPA seratus dua puluh sembilan. Tunda menikah sampai minimal sembilan belas tahun. HIV bisa dicegah, dan tes di Puskesmas gratis dan rahasia. Perasaanmu penting.">
   <p class="eyebrow">Selesai</p>
   <h2>Tubuhmu, keputusanmu, masa depanmu</h2>
   <div class="board"></div>
@@ -2461,12 +2565,52 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   </div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<!-- Soal tes awal dan tes akhir: lima soal per modul, dipakai sama di awal dan di akhir modul.
+     o = pilihan (urutan di layar diacak; urutan di sini dipakai untuk lembar cetak A, B, C), a = nomor pilihan yang benar (mulai 0),
+     why = penjelasan yang muncul setelah menjawab di tes akhir, ref = data-key layar materinya. Perlu ditinjau tenaga kesehatan bersama isi modul. -->
+<script type="application/json" id="tes-data">
+{"bls":[
+ {"q":"Seorang bapa tiba-tiba jatuh. Bahunya sudah ditepuk dan dipanggil keras, tetapi ia tidak menjawab dan tidak bergerak. Apa yang dilakukan sekarang?","o":["Beri minum air hangat supaya sadar","Panggil bantuan: telepon dengan pengeras suara atau teriak minta tolong","Tunggu beberapa menit, siapa tahu bangun sendiri"],"a":1,"why":"Orang yang tidak sadar perlu bantuan secepatnya. Telepon dengan pengeras suara supaya tangan tetap bebas, sambil memeriksa napasnya. Jangan beri minum: orang yang tidak sadar bisa tersedak.","ref":"bls-04"},
+ {"q":"Napasnya megap-megap, satu-satu, seperti ikan di darat. Apa artinya?","o":["Bukan napas normal: mulai tekan dada","Masih bernapas, cukup ditunggu","Sedang tidur, biarkan saja"],"a":0,"why":"Napas megap-megap bukan napas normal; itu tanda jantung berhenti. Kalau ragu, anggap tidak normal dan mulai tekan dada.","ref":"bls-05"},
+ {"q":"Untuk orang dewasa, tekan dada seberapa dalam dan secepat apa?","o":["Sedalam 1–2 cm, pelan-pelan","Sedalam-dalamnya, secepat mungkin","Sedalam 5–6 cm, 100–120 kali per menit"],"a":2,"why":"Tekan di tengah dada sedalam 5–6 cm, 100–120 kali per menit, dan biarkan dada naik penuh setelah setiap tekanan. Jangan berhenti lama.","ref":"bls-06"},
+ {"q":"Bayi 6 bulan tidak sadar dan tidak bernapas normal. Cara menekan dada yang dianjurkan adalah…","o":["Dua jari saja, pelan-pelan","Dua ibu jari melingkari dada, sedalam sepertiga tebal dada","Dua tangan bertumpuk, seperti orang dewasa"],"a":1,"why":"Lingkari dada bayi dengan kedua tangan, dua ibu jari berdampingan di tengah dada, lalu tekan sepertiga tebal dada. Dua jari terlalu dangkal; dua tangan terlalu kuat. Kecepatannya sama, 100–120 per menit.","ref":"bls-11"},
+ {"q":"Anak ditarik dari kali dan tidak bernapas. Bantuan sudah dipanggil, dan kamu sudah dilatih napas buatan. Apa yang dilakukan?","o":["Gantung terbalik supaya airnya keluar dulu","Tekan perutnya kuat-kuat","Baringkan datar, beri 5 napas buatan dulu, lalu tekan dada dan napas 30:2"],"a":2,"why":"Orang tenggelam kehabisan udara, jadi napas buatan didahulukan. Jangan buang waktu mengeluarkan air: jangan digantung terbalik, diguncang, atau ditekan perutnya. Belum dilatih napas buatan? Tekan dada terus.","ref":"bls-12"}
+],
+"kespro":[
+ {"q":"Mama Ani baru tahu ia hamil 2 bulan. Kapan sebaiknya ia periksa ke bidan?","o":["Sekarang, sejak awal kehamilan","Nanti, setelah perutnya kelihatan besar","Cukup sekali menjelang melahirkan"],"a":0,"why":"Periksa ke bidan sejak awal, minimal 6 kali selama hamil, dua kali di antaranya dengan dokter. Kalau ibu ingin kehamilannya tetap tertutup, kader bicara empat mata dan tidak mengumumkannya.","ref":"kespro-01"},
+ {"q":"Bagaimana ibu hamil minum tablet tambah darah?","o":["Hanya saat merasa pusing","Satu tablet seminggu sekali","Satu tablet setiap hari, minimal 90 tablet selama hamil"],"a":2,"why":"Satu tablet setiap hari selama hamil, minimal 90 tablet. Kalau mual, minum malam sebelum tidur dengan air putih, jangan dengan teh atau kopi. Jangan berhenti diam-diam; ceritakan ke bidan.","ref":"kespro-03"},
+ {"q":"Ibu hamil 7 bulan sakit kepala hebat, wajah dan tangannya bengkak, pandangannya kabur. Apa yang dilakukan kader?","o":["Suruh istirahat dan minum obat sakit kepala","Panggil bantuan dan berangkat ke fasilitas kesehatan sekarang","Tunggu jadwal periksa bulan depan"],"a":1,"why":"Sakit kepala hebat dengan bengkak di wajah dan tangan, atau pandangan kabur, adalah tanda bahaya yang bisa berujung kejang. Berangkat sekarang; berdoa dan berembuk bisa sambil jalan.","ref":"kespro-04"},
+ {"q":"Apa yang perlu disepakati keluarga dalam rencana persalinan?","o":["Ramuan dan silet untuk melahirkan di rumah","Penolong, tempat melahirkan, kendaraan, dan calon donor darah","Tidak perlu direncanakan, diputuskan saat mulas"],"a":1,"why":"Rencana persalinan (P4K) disepakati jauh sebelum waktunya: penolong, tempat, pendamping, kendaraan dan sopir (juga malam hari), calon donor darah, dan biaya atau JKN. Ditulis di stiker dan ditempel di rumah.","ref":"kespro-05"},
+ {"q":"Bagaimana merawat tali pusat bayi baru lahir?","o":["Biarkan bersih dan kering, jangan diberi apa pun","Olesi ramuan atau abu dapur supaya cepat lepas","Tutup rapat dengan kain basah"],"a":0,"why":"Tali pusat dijaga bersih dan kering tanpa diberi apa pun. Tali pusat merah, bernanah, atau berbau: ke bidan hari ini.","ref":"kespro-07"}
+],
+"kulit":[
+ {"q":"Tanda kusta yang perlu diajak periksa ke Puskesmas adalah…","o":["Jerawat di wajah remaja","Bercak putih atau kemerahan yang mati rasa dan tidak gatal","Bentol gatal setelah digigit nyamuk"],"a":1,"why":"Bercak putih atau kemerahan yang mati rasa, tidak gatal, dan tidak sakit perlu diperiksa. Kusta bisa sembuh dengan obat gratis; ditemukan lebih awal berarti cacat bisa dicegah.","ref":"kulit-01"},
+ {"q":"Kaskado, sisik yang melingkar seperti ukiran, disebabkan oleh…","o":["Jamur yang menular lewat sentuhan, pakaian, handuk, dan tikar","Kutukan atau guna-guna","Keturunan, jadi tidak bisa diobati"],"a":0,"why":"Kaskado disebabkan jamur, bukan kutukan. Obat jamur dari Puskesmas sering harus diminum berminggu-minggu sampai tuntas, walau gatalnya sudah berkurang.","ref":"kulit-04"},
+ {"q":"Kader melihat bercak mencurigakan di lengan seorang warga. Apa yang sebaiknya dilakukan?","o":["Umumkan di posyandu supaya warga lain waspada","Uji bercaknya dengan jarum supaya yakin","Bicara empat mata, jaga rahasia, dan tawarkan menemani ke Puskesmas"],"a":2,"why":"Kader tidak menguji bercak dan tidak menebak nama penyakit. Bicara empat mata, jangan menyebutnya di depan orang banyak, lalu ajak periksa. Petugas Puskesmas yang memeriksa.","ref":"kulit-03"},
+ {"q":"Satu keluarga gatal hebat setiap malam, ada bintil di sela jari. Apa yang dianjurkan?","o":["Hanya anak yang paling gatal yang diobati","Gosok kulit dengan minyak tanah","Periksa ke Puskesmas; obat dipakai seluruh keluarga bersamaan"],"a":2,"why":"Ini tanda kudis. Obat dari Puskesmas dipakai seluruh keluarga bersamaan, lalu pakaian, sprei, dan tikar dicuci dan dijemur di bawah matahari, supaya tidak saling menulari lagi.","ref":"kulit-05"},
+ {"q":"Adik punya benjolan seperti buah arbei di kaki, tidak sakit. Apa yang dilakukan?","o":["Ajak periksa ke Puskesmas; teman serumah dan teman bermain juga diperiksa","Biarkan, nanti hilang sendiri karena tidak sakit","Tusuk dan peras benjolannya"],"a":0,"why":"Ini bisa frambusia, yang menular lewat sentuhan dengan luka. Frambusia bisa disembuhkan dengan obat dari Puskesmas.","ref":"kulit-06"}
+],
+"gizi":[
+ {"q":"Sampai umur berapa bayi cukup diberi ASI saja, tanpa air, madu, pisang, atau bubur?","o":["2 bulan","6 bulan","1 tahun"],"a":1,"why":"ASI saja sampai 6 bulan, sesering bayi mau, siang dan malam. Setelah itu mulai makanan pendamping, dan ASI dilanjutkan sampai 2 tahun.","ref":"gizi-01"},
+ {"q":"Adik umur 9 bulan. Makanan pendamping mana yang paling baik?","o":["Bubur nasi, sagu, atau singkong saja","Biskuit dan teh manis","Makanan dicincang halus dengan ikan atau telur dan sayur hijau"],"a":2,"why":"Mulai 6 bulan anak perlu lauk hewani setiap hari: ikan, telur, ayam, atau hati. Makanan pokok saja tidak cukup untuk tumbuh; tambahkan lauk dan sayur hijau.","ref":"gizi-02"},
+ {"q":"Anak 2 tahun sangat kurus, kedua kakinya bengkak, dan lemas. Apa yang dilakukan?","o":["Antar ke Puskesmas hari ini","Tunggu penimbangan bulan depan","Beri minuman manis supaya gemuk"],"a":0,"why":"Kaki bengkak, sangat kurus, lemas, atau tidak mau makan bisa tanda gizi buruk atau penyakit lain: antar hari ini. Berat yang hanya tidak naik dibicarakan dengan bidan atau petugas gizi di posyandu.","ref":"gizi-04"},
+ {"q":"Berapa banyak pasta gigi untuk anak di bawah 3 tahun?","o":["Tidak perlu pasta gigi","Sebesar butir beras","Sepanjang bulu sikat"],"a":1,"why":"Di bawah 3 tahun: olesan tipis sebesar butir beras. Umur 3–6 tahun: sebesar kacang polong. Pakai pasta berfluoride, sikat pagi setelah sarapan dan malam sebelum tidur.","ref":"gizi-06"},
+ {"q":"Mana yang benar tentang pinang?","o":["Pinang bisa menyebabkan kanker mulut, apalagi dengan kapur dan tembakau","Pinang aman untuk anak bila sedikit","Pinang menguatkan gigi anak"],"a":0,"why":"Pinang adalah adat yang dihormati, tetapi pinang sendiri bisa menyebabkan kanker mulut; kapur dan tembakau menambah risikonya. Jangan beri pada anak. Luka di mulut yang tidak sembuh 2 minggu: periksa ke Puskesmas.","ref":"gizi-08"}
+],
+"remaja":[
+ {"q":"Remaja putri yang sedang haid sebaiknya…","o":["Tidak mandi dan tidak keramas sampai selesai","Tetap mandi dan keramas, ganti pembalut beberapa kali sehari","Tidak pergi ke sekolah"],"a":1,"why":"Haid itu sehat dan tidak memalukan. Tetap mandi dan keramas, ganti pembalut beberapa kali sehari, dan cuci tangan. Nyeri ringan wajar; nyeri hebat atau haid sangat banyak: ke bidan.","ref":"remaja-02"},
+ {"q":"Pacar memaksa berhubungan seks dan mengancam menyebarkan foto. Ini tanda…","o":["Pacaran tidak sehat dan kekerasan; boleh menolak dan minta tolong","Rasa sayang yang besar","Hal yang wajar kalau sudah lama pacaran"],"a":0,"why":"Tidak berarti tidak. Dipaksa, dibujuk dengan uang atau pulsa, atau diancam fotonya disebar adalah tanda pacaran tidak sehat. Ceritakan pada orang dewasa yang dipercaya, atau hubungi SAPA 129.","ref":"remaja-03"},
+ {"q":"Setelah mengalami kekerasan seksual, kapan sebaiknya datang ke Puskesmas?","o":["Tunggu sampai ada keluhan","Tidak perlu, cukup dirahasiakan","Sekarang juga; obat pencegah HIV paling berguna dalam 3 hari"],"a":2,"why":"Datang sekarang: obat pencegah HIV paling berguna dalam 3 hari (72 jam), pencegah kehamilan sampai 5 hari. Lewat dari itu tetap datang. Kekerasan seksual tidak pernah salah korban.","ref":"remaja-04"},
+ {"q":"Lewat apa HIV bisa menular?","o":["Makan sepiring bersama atau berbagi gelas","Hubungan seks tanpa kondom, atau jarum suntik dan alat tato bergantian","Gigitan nyamuk"],"a":1,"why":"HIV menular lewat seks tanpa kondom; jarum, alat tato, atau tindik bergantian; dan dari ibu ke bayi. Tidak menular lewat bersalaman, makan bersama, atau nyamuk. Tes HIV di Puskesmas gratis dan rahasia.","ref":"remaja-07"},
+ {"q":"Teman tampak sangat sedih dan bilang ingin mati. Apa yang kamu lakukan?","o":["Anggap dia bercanda dan tinggalkan","Ceritakan di grup supaya semua tahu","Dengarkan, jangan tinggalkan sendirian, dan ajak cari bantuan"],"a":2,"why":"Ucapan ingin mati harus ditanggapi serius. Dengarkan tanpa menghakimi, temani, lalu hubungkan dengan orang dewasa yang dipercaya, Puskesmas, atau Healing119: telepon 119 lalu tekan 8.","ref":"remaja-10"}
+]}
+</script>
 
 <script>
 (function(){
   var KEY='literasi-momiwaren-v1';
   var KAMPUNG=['Dembek','Demini','Waren','Nij','Yekwandi','Siwi','Gaya Baru'];
-  var st={mode:null,stars:0,nomor:'',done:{},pos:{},seen:{},vis:{},cur:null,last:null,fs:1,theme:'',voice:'',auto:false,sfx:true,hinted:false,audioList:{id:{},papua:{}},sess:null,log:[]};
+  var st={mode:null,stars:0,nomor:'',done:{},pos:{},seen:{},vis:{},cur:null,last:null,fs:1,theme:'',voice:'',auto:false,sfx:true,hinted:false,audioList:{id:{},papua:{}},sess:null,log:[],tes:{}};
   var ICONS={
     bls:'<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 27s-10-6.2-10-13.2A5.6 5.6 0 0 1 16 10a5.6 5.6 0 0 1 10 3.8C26 20.8 16 27 16 27z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M7 17h5l2-4 3 7 2-3h6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     kespro:'<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="9" r="4.2" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M8 28c0-6 3.2-10.5 8-10.5S24 22 24 28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="23.5" r="3" fill="currentColor"/></svg>',
@@ -2483,13 +2627,13 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
     catch(e){if(!persistFail){persistFail=true;var w2=$('st-store');if(w2)w2.hidden=false}return false}}
   function normalize(){
     var obj=function(v){return v&&typeof v==='object'&&!Array.isArray(v)?v:{}};
-    st.done=obj(st.done);st.pos=obj(st.pos);st.seen=obj(st.seen);st.vis=obj(st.vis);
+    st.done=obj(st.done);st.pos=obj(st.pos);st.seen=obj(st.seen);st.vis=obj(st.vis);st.tes=obj(st.tes);
     Object.keys(st.pos).forEach(function(k){st.pos[k]=num(st.pos[k])});Object.keys(st.seen).forEach(function(k){st.seen[k]=num(st.seen[k])});
     Object.keys(st.vis).forEach(function(k){st.vis[k]=Array.isArray(st.vis[k])?st.vis[k].filter(function(x){return typeof x==='number'}):[]});
     st.stars=num(st.stars);if(!Array.isArray(st.log))st.log=[];
     if(!st.audioList||typeof st.audioList!=='object')st.audioList={id:{},papua:{}};
     ['id','papua'].forEach(function(s){var L=st.audioList[s];if(Array.isArray(L)){var o={};L.forEach(function(k){o[k]=''});st.audioList[s]=o}else if(!L||typeof L!=='object')st.audioList[s]={}});
-    if(st.sess&&typeof st.sess==='object'){st.sess.mods=obj(st.sess.mods);st.sess.fin=obj(st.sess.fin);st.sess.say=num(st.sess.say);st.sess.act=num(st.sess.act)}else st.sess=null;
+    if(st.sess&&typeof st.sess==='object'){st.sess.mods=obj(st.sess.mods);st.sess.fin=obj(st.sess.fin);st.sess.say=num(st.sess.say);st.sess.act=num(st.sess.act);st.sess.tes=obj(st.sess.tes)}else st.sess=null;
     st.nomor=typeof st.nomor==='string'?st.nomor.slice(0,30):'';
   }
   /* PENGAMAN-v1: polyfill kecil untuk peramban HP lama (WebView Android 4.4/5). */
@@ -2543,12 +2687,13 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   function renderBoard(el){
     var fin=mainDecks.filter(finished).length;
     el.innerHTML='<div class="r"><span>'+(st.mode==='group'?'Bintang bersama sesi ini':'Bintang kamu')+'</span><span class="badge">★ '+num(st.stars)+'</span></div>'+
-      '<div class="r"><span>Modul selesai</span><span class="badge">'+fin+' dari '+mainDecks.length+'</span></div>';
+      '<div class="r"><span>Modul selesai</span><span class="badge">'+fin+' dari '+mainDecks.length+'</span></div>'+
+      (cur&&tesScore(cur,'post')?'<div class="r"><span>Tes awal → tes akhir</span><span class="badge">'+tesFmt(tesScore(cur,'pre'))+' → '+tesFmt(tesScore(cur,'post'))+'</span></div>':'');
   }
 
   /* ---------- catatan sesi tanpa nama (indikator proses untuk Puskesmas) ---------- */
   function today(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
-  function newSess(){return {d:today(),kp:'',mode:st.mode||'',mods:{},fin:{},say:0,act:0,off:navigator.onLine===false?1:0}}
+  function newSess(){return {d:today(),kp:'',mode:st.mode||'',mods:{},fin:{},say:0,act:0,off:navigator.onLine===false?1:0,tes:{}}}
   function used(s){return s&&(Object.keys(s.mods).length||s.say||s.act)}
   /* Satu pintu untuk mengganti sesi (ganti hari, ganti kampung, atau "Mulai sesi baru"):
      sesi lama diarsipkan bila ada kegiatannya, lalu bintang dan tanda "sudah dihitung" dimulai dari nol,
@@ -2557,7 +2702,7 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
     if(used(st.sess)){st.log=(st.log||[]).concat([st.sess]).slice(-100)}
     st.sess=newSess();if(cur)st.sess.mods[cur]=1;
     /* Bintang, tanda "sudah dihitung", layar yang dibuka, dan tampilan kuis mulai dari nol; posisi terakhir (Lanjutkan) tetap. */
-    st.done={};st.stars=0;st.vis={};st.seen={};
+    st.done={};st.stars=0;st.vis={};st.seen={};st.tes={};
     try{decks.forEach(resetDeck);renderMods()}catch(e){}
     renderScores();
   }
@@ -2571,7 +2716,18 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
     var names=function(o){return Object.keys(o).map(function(m){return MODNAME[m]||m}).join(', ')||'-'};
     return s.d+' · '+(s.kp||'tempat tidak diisi')+' · '+(s.mode==='group'?'kelompok':'sendiri')+
       ' · dibuka: '+names(s.mods)+' · selesai: '+names(s.fin)+' · Bacakan '+s.say+'x · kegiatan selesai '+s.act+
-      ' · tanpa sinyal: '+(s.off?'ya':'tidak');
+      ' · tanpa sinyal: '+(s.off?'ya':'tidak')+tesLine(s);
+  }
+  /* Hasil tes per modul untuk catatan: sendiri "benar/jumlah soal"; kelompok "persen tangan yang benar (perkiraan jumlah orang)". */
+  function tesLine(s){
+    var o=s.tes&&typeof s.tes==='object'?s.tes:{},out=[];
+    Object.keys(o).forEach(function(m){(Array.isArray(o[m])?o[m]:[]).forEach(function(r){
+      if(!r||typeof r!=='object')return;
+      var f=function(x){if(!Array.isArray(x)||!num(x[1]))return '-';var b=num(x[0]),n=num(x[1]);
+        return r.m==='group'?Math.round(b/n*100)+'% (±'+Math.round(n/Math.max(1,num(x[2])))+' org)':b+'/'+n};
+      out.push('tes '+(MODNAME[m]||m)+': awal '+f(r.pre)+', akhir '+f(r.post));
+    })});
+    return out.length?' · '+out.join(' · '):'';
   }
   /* Pratinjau dan yang dikirim memakai pemilihan yang sama: 20 sesi terbaru, yang terbaru di atas.
      Bila terlalu panjang untuk satu pesan, dipotong di batas sesi (yang terbaru tetap ikut) dan jumlahnya disebut. */
@@ -2609,7 +2765,7 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   try{ /* batas galat: log-clear */
   $('log-clear').onclick=function(){
     if(!confirm('Hapus semua catatan sesi di HP ini? Yang sudah dikirim ke Puskesmas tidak ikut terhapus.'))return;
-    st.log=[];st.sess=newSess();st.done={};st.stars=0;persist();renderScores();renderLog();renderPlaces();toast('Catatan dihapus');
+    st.log=[];st.sess=newSess();st.done={};st.stars=0;st.tes={};decks.forEach(function(d){all('.tes',d).forEach(function(x){if(x._reset)x._reset()})});persist();renderScores();renderLog();renderPlaces();toast('Catatan dihapus');
   };
   }catch(e){fault('log-clear',e)}
 
@@ -2686,6 +2842,7 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
     $('next').textContent=i===slides.length-1?'Ke menu':'Lanjut';
     stopAll();
     var b=slides[i].querySelector('.board');if(b)renderBoard(b);
+    var ts=slides[i].querySelector('.tes');if(ts&&ts._show)ts._show();
     /* Layar terakhir: "selesai" hanya bila semua layar sudah dibuka; kalau belum, tunjukkan berapa yang terlewat. */
     if(i===slides.length-1){
       var allSeen=finished(deckBy[cur]),old=slides[i].querySelector('.done-badge');if(old)old.remove();
@@ -3175,13 +3332,228 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   }));
   }catch(e){fault('.story',e)}
 
+  /* ---------- tes awal dan tes akhir ----------
+     Lima soal yang sama di awal modul (layar ...-90) dan sebelum layar Selesai (...-91); urutan pilihan diacak setiap kali.
+     Kunci 90/91 dipakai supaya kunci layar lain (dan rekaman suaranya) tidak bergeser.
+     Tes awal hanya menebak, tanpa tanda benar atau salah. Tes akhir langsung membuka kunci jawaban dan penjelasannya,
+     lalu membandingkan sebelum dan sesudah belajar. Belajar sendiri: ketuk jawaban. Sesi kelompok: kader mengisi berapa
+     peserta yang mengangkat tangan untuk tiap pilihan. Yang masuk catatan Puskesmas hanya jumlah benar, tanpa nama. */
+  var TES={};
+  try{TES=JSON.parse($('tes-data').textContent)||{}}catch(e){fault('tes-data',e)}
+  var LETTER=['A','B','C','D','E'];
+  function tesSt(m){var o=st.tes[m];if(!o||typeof o!=='object')o=st.tes[m]={};return o}
+  function tesCounts(a){return Array.isArray(a)?a.reduce(function(s,v){return s+num(v)},0):0}
+  /* Skor tes yang sudah selesai: sendiri = jawaban benar dari jumlah soal; kelompok = tangan pada kunci dari semua tangan. */
+  function tesScore(m,ph){
+    var qs=TES[m]||[],r=st.tes&&st.tes[m]&&st.tes[m][ph];
+    if(!r||!r.fin||!Array.isArray(r.ans))return null;
+    var b=0,n=0,q=0;
+    qs.forEach(function(x,i){var a=r.ans[i];
+      if(r.mode==='group'){var t=tesCounts(a);if(!t)return;b+=num(a[x.a]);n+=t;q++}
+      else{n++;q++;if(a===x.a)b++}});
+    return n?{b:b,n:n,q:q,mode:r.mode,pct:Math.round(b/n*100)}:null;
+  }
+  function tesFmt(x){return !x?'–':x.mode==='group'?x.pct+'%':x.b+'/'+x.n}
+  /* Satu baris catatan per putaran: tes awal membuat barisnya, tes akhir melengkapinya. */
+  function tesRecord(m){
+    var a=tesScore(m,'pre'),z=tesScore(m,'post');if(!a&&!z)return;
+    var s=sess(),T=tesSt(m),pk=function(x){return x?[x.b,x.n,x.q]:null};
+    if(!s.tes||typeof s.tes!=='object')s.tes={};
+    var L=Array.isArray(s.tes[m])?s.tes[m]:(s.tes[m]=[]),row={m:(z||a).mode,pre:pk(a),post:pk(z)};
+    if(typeof T.row==='number'&&L[T.row]&&!L[T.row].post)L[T.row]=row;else{T.row=L.length;L.push(row)}
+    persist();
+  }
+  function tesShuffle(n){var a=[];for(var i=0;i<n;i++)a.push(i);for(var j=n-1;j>0;j--){var k=Math.floor(Math.random()*(j+1)),t=a[j];a[j]=a[k];a[k]=t}return a}
+  function mk(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+  function markAs(o,cls,t){o.classList.add(cls);o.insertBefore(mk('span','mark',t),o.firstChild)}
+  try{ /* batas galat: .tes */
+  all('.tes').forEach(guard(function(box){
+    var m=modOf(box),post=box.getAttribute('data-phase')==='post',ph=post?'post':'pre',qs=TES[m];
+    if(!Array.isArray(qs)||!qs.length)throw new Error('soal tes '+m+' tidak ada');
+    var key=m+':'+box.getAttribute('data-id'),stage=mk('div','tes-stage'),ord=[],tmp=[],i=-1,cheer=false,tok=0;
+    box.appendChild(stage);
+    /* Versi cetak: tes awal menjadi lembar soal kertas (A, B, C), tes akhir menjadi kunci jawaban dengan penjelasan. */
+    var pr=mk('div','print-only tes-print'),pl=mk('ol','list');
+    pr.appendChild(mk('p','q',post?'Kunci jawaban tes awal dan tes akhir':'Lembar soal (dipakai untuk tes awal dan tes akhir)'));
+    qs.forEach(function(x){
+      var li=mk('li');li.appendChild(mk('b',null,x.q));
+      if(post){li.appendChild(mk('p',null,'Kunci: '+LETTER[x.a]+'. '+x.o[x.a]));li.appendChild(mk('p','muted',x.why))}
+      else x.o.forEach(function(o,k){li.appendChild(mk('p',null,LETTER[k]+'. '+o))});
+      pl.appendChild(li);
+    });
+    pr.appendChild(pl);box.appendChild(pr);
+    function mode(){return st.mode==='group'?'group':'solo'}
+    /* Tes yang belum selesai mengikuti cara belajar yang sedang dipilih; yang sudah selesai tetap dengan caranya sendiri. */
+    function rec(){
+      var T=tesSt(m),r=T[ph];
+      if(!r||typeof r!=='object'||!Array.isArray(r.ans)||(!r.fin&&r.mode!==mode()))r=T[ph]={mode:mode(),ans:[],fin:false};
+      return r;
+    }
+    function has(r,k){return r.mode==='group'?Array.isArray(r.ans[k]):typeof r.ans[k]==='number'}
+    function firstOpen(r){for(var k=0;k<qs.length;k++)if(!has(r,k))return k;return qs.length}
+    function title(ref){var s=all('.slide',deckBy[m]).filter(function(x){return slideKey(x)===ref})[0],h=s&&s.querySelector('h2');return h?h.textContent.trim():''}
+    function refBtn(ref){
+      var t=title(ref);if(!t)return null;
+      var b=mk('button','tes-link','Buka lagi materinya: '+t);b.type='button';
+      b.onclick=function(){var k=slides.map(slideKey).indexOf(ref);if(k>=0){stopSpeak();go(k)}};return b;
+    }
+    function nextBtn(label){var b=mk('button','btn big',label);b.type='button';b.onclick=function(){stopSpeak();if(cur===m)go(num(st.pos[m])+1)};return b}
+    function focusQ(){
+      var q=stage.querySelector('.tes-q');if(q){try{q.focus({preventScroll:true})}catch(e){}}
+      var t=stage.getBoundingClientRect().top;if(t<70)window.scrollBy(0,t-80);
+    }
+    function render(){
+      tok++;stage.innerHTML='';var r=rec();
+      if(r.fin)return post?result(r):donePre(r);
+      if(i<0||i>=qs.length)i=firstOpen(r);if(i>=qs.length)i=qs.length-1;
+      if(!ord[i])ord[i]=tesShuffle(qs[i].o.length);
+      question(r);
+    }
+    /* Ke soal berikutnya yang belum dijawab; semua sudah dijawab di tes awal berarti selesai. */
+    function next(r){
+      for(var k=1;k<=qs.length;k++){var j=(i+k)%qs.length;if(!has(r,j)){i=j;render();focusQ();return}}
+      finish(r);
+    }
+    function finish(r){
+      r.fin=true;persist();tesRecord(m);
+      if(post){var a=tesScore(m,'pre'),z=tesScore(m,'post');cheer=!!(a&&z&&z.pct>a.pct)}
+      award(key);render();
+      var t=stage.getBoundingClientRect().top;if(t<70)window.scrollBy(0,t-80);
+    }
+    function pick(r,oi){
+      if(post&&has(r,i))return;
+      stopSpeak();r.ans[i]=oi;persist();render();
+      if(post){revealed();if(oi===qs[i].a)sfx();return}
+      /* Tes awal: jawaban ditandai sebentar, lalu pindah sendiri ke soal berikutnya. */
+      var my=tok;setTimeout(function(){if(my===tok)next(r)},450);
+    }
+    function revealed(){
+      var x=qs[i],w=stage.querySelector('.tes-why');
+      if(w){try{w.focus({preventScroll:true})}catch(e){}
+        if(w.getBoundingClientRect().bottom>window.innerHeight-90){try{w.scrollIntoView({block:'center',behavior:RM?'auto':'smooth'})}catch(e){w.scrollIntoView(false)}}}
+      speakFb(box,'Kunci: '+x.o[x.a]+'. '+x.why);
+    }
+    function question(r){
+      var x=qs[i],grp=r.mode==='group',open=post&&has(r,i),sum=null;
+      if(grp&&!tmp[i])tmp[i]=has(r,i)?r.ans[i].map(num):x.o.map(function(){return 0});
+      var top=mk('div','tes-top'),dots=mk('div','tes-dots');
+      top.appendChild(mk('p','eyebrow',(post?'Soal ':'Tebak ')+(i+1)+' dari '+qs.length));
+      qs.forEach(function(_,k){
+        var d=mk('button',k===i?'cur':has(r,k)?'done':'',String(k+1));d.type='button';
+        d.setAttribute('aria-label','Soal '+(k+1)+(has(r,k)?', sudah dijawab':''));if(k===i)d.setAttribute('aria-current','true');
+        d.onclick=function(){stopSpeak();i=k;render();focusQ()};dots.appendChild(d);
+      });
+      top.appendChild(dots);stage.appendChild(top);
+      if(grp&&!open)stage.appendChild(mk('p','muted','Bacakan soal dan pilihannya. Minta peserta mengangkat tangan untuk setiap pilihan (satu orang satu pilihan), lalu isi jumlahnya.'));
+      var q=mk('p','q tes-q',x.q);q.tabIndex=-1;stage.appendChild(q);
+      var opts=mk('div','opts');
+      stage.appendChild(readBtn(function(b){box._read=true;speakList([{t:x.q}].concat([].map.call(opts.children,function(o,k){return {t:'Pilihan '+(k+1)+'. '+o._t+'.',el:o}})),b)}));
+      stage.appendChild(opts);
+      function sumText(){var t=tesCounts(tmp[i]);return t?'Jumlah tangan: '+t:'Belum ada yang diisi. Soal boleh dilewati.'}
+      ord[i].forEach(function(oi){
+        var o,right=oi===x.a,picked=!grp&&r.ans[i]===oi;
+        if(grp){
+          o=mk('div','opt tes-row');o.appendChild(mk('span','t',x.o[oi]));
+          if(open)o.appendChild(mk('span','tes-sum',num(r.ans[i][oi])+' orang'));
+          else{
+            var stp=mk('span','tes-step'),minus=mk('button',null,'−'),out=mk('output',null,String(tmp[i][oi])),plus=mk('button',null,'+');
+            minus.type='button';plus.type='button';
+            minus.setAttribute('aria-label','Kurangi satu: '+x.o[oi]);plus.setAttribute('aria-label','Tambah satu: '+x.o[oi]);
+            var set=function(v){tmp[i][oi]=Math.max(0,Math.min(200,v));out.textContent=tmp[i][oi];minus.disabled=!tmp[i][oi];if(sum)sum.textContent=sumText()};
+            minus.onclick=function(){set(tmp[i][oi]-1)};plus.onclick=function(){set(tmp[i][oi]+1)};minus.disabled=!tmp[i][oi];
+            stp.appendChild(minus);stp.appendChild(out);stp.appendChild(plus);o.appendChild(stp);
+          }
+        }else{
+          o=mk('button','opt',x.o[oi]);o.type='button';o.setAttribute('aria-pressed',picked?'true':'false');
+          if(picked&&!open)o.classList.add('sel');
+          if(open)o.disabled=true;else o.onclick=function(){pick(r,oi)};
+        }
+        o._t=x.o[oi];
+        if(open){if(right)markAs(o,'right',picked?'Benar':'Kunci');else if(picked)markAs(o,'wrong','Ayo bahas')}
+        opts.appendChild(o);
+      });
+      if(grp&&!open){sum=mk('p','tes-sum',sumText());sum.setAttribute('aria-live','polite');stage.appendChild(sum)}
+      if(open){
+        var w=mk('div','tes-why'),kp=mk('p');w.tabIndex=-1;
+        kp.appendChild(mk('span','k','Kunci: '));kp.appendChild(document.createTextNode(x.o[x.a]));w.appendChild(kp);
+        if(grp){var t=tesCounts(r.ans[i]),ok=num(r.ans[i][x.a]);w.appendChild(mk('p','tes-sum',t?ok+' dari '+t+' orang menjawab benar ('+Math.round(ok/t*100)+'%).':'Soal ini dilewati.'))}
+        w.appendChild(mk('p',null,x.why));
+        var rb=refBtn(x.ref);if(rb)w.appendChild(rb);
+        stage.appendChild(w);
+      }
+      var row=mk('div','row'),last=firstOpen(r)>=qs.length;
+      if(grp&&!open){
+        var others=qs.filter(function(_,k){return k!==i&&!has(r,k)}).length;
+        var nb=mk('button','btn',post?'Lihat kunci':others?'Soal berikutnya':'Selesai');nb.type='button';
+        nb.onclick=function(){stopSpeak();r.ans[i]=tmp[i].slice();persist();if(post){render();revealed()}else next(r)};
+        row.appendChild(nb);
+      }
+      if(open){
+        var nb2=mk('button','btn',last?'Lihat hasil':'Soal berikutnya');nb2.type='button';
+        nb2.onclick=function(){stopSpeak();if(firstOpen(r)>=qs.length)finish(r);else next(r)};
+        row.appendChild(nb2);
+      }
+      if(row.children.length)stage.appendChild(row);
+    }
+    function donePre(r){
+      stage.appendChild(mk('p','tes-big','★ Jawaban tersimpan!'));
+      stage.appendChild(mk('p',null,r.mode==='group'?'Jumlah tangan untuk '+qs.length+' soal sudah dicatat.':'Kamu sudah menjawab '+qs.length+' soal.'));
+      stage.appendChild(mk('p','muted','Skor dan kunci jawabannya dibuka di Tes akhir, sebelum layar Selesai. Sekarang, ayo belajar!'));
+      var row=mk('div','row');row.appendChild(nextBtn('Mulai belajar ›'));stage.appendChild(row);
+    }
+    function resText(R,x,k,lbl){
+      if(!R||!R.fin)return lbl+': –';
+      if(R.mode==='group'){var t=tesCounts(R.ans[k]);return t?lbl+': '+Math.round(num(R.ans[k][x.a])/t*100)+'% benar':lbl+': dilewati'}
+      return typeof R.ans[k]!=='number'?lbl+': –':R.ans[k]===x.a?lbl+': benar':lbl+': belum tepat';
+    }
+    function result(r){
+      var a=tesScore(m,'pre'),z=tesScore(m,'post'),T=tesSt(m),msg;
+      if(!z)msg='Semua soal dilewati, jadi belum ada skor.';
+      else if(!a)msg='Tes awal belum dikerjakan, jadi belum ada perbandingan. Lain kali kerjakan "Tebak dulu!" di awal modul.';
+      else if(z.pct>a.pct)msg=(z.mode==='solo'&&a.mode==='solo'?'Naik dari '+a.b+' jadi '+z.b+' jawaban benar':'Naik dari '+a.pct+'% jadi '+z.pct+'%')+'! Belajar bersama ada hasilnya.';
+      else if(z.pct===100)msg='Sempurna sejak awal. Hebat!';
+      else if(z.pct===a.pct)msg='Sama seperti di awal. Yuk bahas lagi soal yang belum tepat di bawah ini.';
+      else msg='Tidak apa-apa. Bahas lagi bersama soal yang belum tepat di bawah ini.';
+      stage.appendChild(mk('p','eyebrow','Hasil'));
+      stage.appendChild(mk('p','tes-big',msg));
+      var bars=mk('div','tes-bars'),fills=[];
+      [['Sebelum belajar',a,''],['Sesudah belajar',z,' post']].forEach(function(p){
+        var bw=mk('div','tes-bar'+p[2]),lb=mk('div','lbl'),tr=mk('div','trk'),f=mk('i');
+        lb.appendChild(mk('span',null,p[0]));
+        lb.appendChild(mk('span',null,!p[1]?'belum ada':p[1].mode==='group'?p[1].pct+'% benar':p[1].b+' dari '+p[1].n+' benar'));
+        tr.appendChild(f);bw.appendChild(lb);bw.appendChild(tr);bars.appendChild(bw);fills.push([f,p[1]?p[1].pct:0]);
+      });
+      stage.appendChild(bars);
+      setTimeout(function(){fills.forEach(function(p){p[0].style.width=Math.max(p[1],2)+'%'})},60);
+      if(z&&z.mode==='group')stage.appendChild(mk('p','tes-sum','Sekitar '+Math.round(z.n/Math.max(1,z.q))+' orang ikut tes akhir.'));
+      if(cheer){cheer=false;celebrate()}
+      stage.appendChild(mk('h3',null,'Kunci jawaban dan penjelasan'));
+      var A=T.pre&&T.pre.fin?T.pre:null,ul=mk('ol','tes-key'),say=[{t:msg}];
+      qs.forEach(function(x,k){
+        var li=mk('li'),kp=mk('p');
+        li.appendChild(mk('p','q',(k+1)+'. '+x.q));
+        kp.appendChild(mk('span','k','✓ '+x.o[x.a]));li.appendChild(kp);
+        li.appendChild(mk('p','res',resText(A,x,k,'Tes awal')+' · '+resText(r,x,k,'Tes akhir')));
+        li.appendChild(mk('p',null,x.why));
+        var rb=refBtn(x.ref);if(rb)li.appendChild(rb);
+        ul.appendChild(li);say.push({t:'Soal '+(k+1)+'. '+x.q+' Kunci: '+x.o[x.a]+'. '+x.why});
+      });
+      var sb=readBtn(function(b){speakList(say,b)});sb.lastChild.textContent='Bacakan pembahasan';
+      stage.appendChild(sb);stage.appendChild(ul);
+      var row=mk('div','row');row.appendChild(nextBtn('Lanjut ke layar Selesai ›'));stage.appendChild(row);
+    }
+    box._show=render;
+    box._reset=function(){delete st.tes[m];ord=[];tmp=[];i=-1;cheer=false;render()};
+  }));
+  }catch(e){fault('.tes',e)}
+
   /* ---------- ulangi modul ----------
      Hanya tampilan yang dikembalikan. st.done tetap, jadi bintang tidak dihitung dua kali dalam satu sesi;
      st.done baru dikosongkan oleh "Mulai sesi baru". */
   function resetDeck(d){
     var m=d.getAttribute('data-mod');
     all('.quiz,.pick',d).forEach(resetQuiz);
-    all('.seq,.story',d).forEach(function(x){if(x._reset)x._reset()});
+    all('.seq,.story,.tes',d).forEach(function(x){if(x._reset)x._reset()});
     all('.done-badge',d).forEach(function(x){x.remove()});
     if(d.querySelector('#nt-tool')){stopNt();$('nt-tool').hidden=true;$('nt-gate-fb').textContent='';$('nt-gate-fb').className='fb';ntClear()}
     st.pos[m]=0;persist();
@@ -3632,7 +4004,7 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   function renderErr(){var a=errList(),p=$('st-err'),r=$('err-row');if(!p)return;p.hidden=!a.length;r.hidden=!a.length;
     p.textContent=a.length?'Tercatat '+a.length+' masalah teknis (terakhir '+String(a[a.length-1].t||'').slice(0,16).replace('T',' ')+'). Bila aplikasi terasa aneh: Pengaturan › Perbaiki aplikasi.':''}
   try{
-  $('err-copy').onclick=function(){var t='Laporan masalah Literasi Kader v'+'0.8.7'+'\n'+errList().map(function(x){return x.t+' '+x.v+' '+x.m}).join('\n');
+  $('err-copy').onclick=function(){var t='Laporan masalah Literasi Kader v'+'0.9.0'+'\n'+errList().map(function(x){return x.t+' '+x.v+' '+x.m}).join('\n');
     try{navigator.clipboard.writeText(t).then(function(){toast('Laporan disalin')},function(){toast('Gagal menyalin')})}catch(e){toast('Gagal menyalin')}};
   $('err-clear').onclick=function(){try{localStorage.removeItem('literasi-galat')}catch(e){}renderErr();toast('Laporan dihapus')};
   }catch(e){fault('laporan',e)}
