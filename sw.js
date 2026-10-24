@@ -4,7 +4,8 @@
 // Nama cache memuat jalur pemasangan (scope), supaya dua pemasangan Literasi di satu origin
 // (misalnya /uji/ dan /resmi/) tidak saling menghapus cache.
 const SCOPE = (() => { try { return new URL(self.registration.scope).pathname.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '') || 'root'; } catch (e) { return 'root'; } })();
-const APP = 'literasi-app-' + SCOPE + '-v0.9.1';
+const OLD = 'literasi-app-' + SCOPE + '-';
+const APP = OLD + 'v0.9.2';
 const AUDIO = 'literasi-audio-v1';
 // Teks aplikasi (wajib). index.html diunduh sekali lalu disimpan untuk './' dan 'index.html'.
 const CORE = ['manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png'];
@@ -51,7 +52,8 @@ self.addEventListener('activate', e => {
   e.waitUntil(caches.open(APP)
     .then(c => Promise.all(IMG.map(u => c.match(u).then(h => h || caches.match(u).then(o => o && c.put(u, o))).catch(() => {}))))
     .then(() => caches.keys())
-    .then(ks => Promise.all(ks.filter(k => k !== APP && (k.startsWith('literasi-app-' + SCOPE + '-') || /^literasi-app-v\d/.test(k))).map(k => caches.delete(k))))
+    // Nama versi wajib tepat setelah scope, supaya pemasangan bersarang (…-uji-v…) tidak ikut terhapus.
+    .then(ks => Promise.all(ks.filter(k => k !== APP && ((k.indexOf(OLD) === 0 && /^v\d/.test(k.slice(OLD.length))) || /^literasi-app-v\d/.test(k))).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
 
@@ -114,7 +116,7 @@ self.addEventListener('fetch', e => {
   let url; try { url = new URL(req.url); } catch (err) { return; }
   if (url.origin !== self.location.origin) return;
   // Pemeriksaan sinyal "Perbaiki aplikasi" (?cek=) dan permintaan no-store langsung ke jaringan: tidak dijawab dan tidak disimpan cache.
-  if (req.cache === 'no-store' || url.searchParams.has('cek')) return;
+  if (req.cache === 'no-store' || /[?&]cek=/.test(url.search)) return;
   if (url.pathname.indexOf('/audio/') !== -1 && /\.mp3$/i.test(url.pathname)) { e.respondWith(safe(audio(req), req)); return; }
   if (/\/audio\/daftar\.json$/.test(url.pathname)) { e.respondWith(safe(manifestFirst(req), req)); return; }
 

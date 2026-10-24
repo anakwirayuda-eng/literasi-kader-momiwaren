@@ -277,7 +277,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 .prog:active{background:var(--bg)}
 .bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--pulse);width:0;transition:width .2s}
-.toast{position:fixed;left:50%;bottom:calc(5.5rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:.5rem 1rem;border-radius:999px;font-weight:700;z-index:9}
+.toast{position:fixed;left:16px;right:16px;margin:0 auto;width:-webkit-fit-content;width:fit-content;max-width:30rem;bottom:calc(5.5rem + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:.5rem 1rem;border-radius:1rem;font-weight:700;text-align:center;z-index:9;pointer-events:none}
 .foot{font-size:.85rem;color:var(--muted)}
 /* ---------- Tampilan v0.7: foto sampul, bilah segmen, peta modul, angka hidup ---------- */
 .hero{position:relative;margin:-1.25rem -16px 0;height:clamp(240px,56vw,380px);overflow:hidden;background:#0f1a22;color:#fff;display:grid;align-content:end;border-radius:0 0 24px 24px;isolation:isolate}
@@ -427,7 +427,7 @@ p.box{display:block}
 bila aplikasi belum siap dalam 8 detik atau galat terjadi saat memuat, panel darurat cadangan ditampilkan. ?reset=1 menghapus
 simpanan luring aplikasi (bukan catatan, bukan rekaman) lalu memuat ulang. */
 (function(){var K='literasi-galat';window.__litOK=false;
-function log(m){try{var a=JSON.parse(localStorage.getItem(K)||'[]');if(!Array.isArray(a))a=[];a.push({t:new Date().toISOString(),v:'0.9.1',m:String(m).slice(0,240)});localStorage.setItem(K,JSON.stringify(a.slice(-20)))}catch(e){}}
+function log(m){try{var a=JSON.parse(localStorage.getItem(K)||'[]');if(!Array.isArray(a))a=[];a.push({t:new Date().toISOString(),v:'0.9.2',m:String(m).slice(0,240)});localStorage.setItem(K,JSON.stringify(a.slice(-20)))}catch(e){}}
 window.__litLog=log;
 function fail(){if(window.__litOK)return;var f=document.getElementById('boot-fail');if(f){f.hidden=false;f.setAttribute('data-sticky','1')}
 var n=document.getElementById('bf-note');if(n&&window.__litResetMsg){n.textContent=window.__litResetMsg;n.hidden=false}}
@@ -438,10 +438,11 @@ setTimeout(fail,8000);
    satu-satunya cara aplikasi terbuka, jadi tidak ada yang dihapus. Pemeriksaan memakai berkas kecil manifest.webmanifest
    dengan alamat unik (service worker meneruskan ?cek= langsung ke jaringan), dibatasi 8 detik, dan isinya harus manifest
    aplikasi ini (bukan halaman login wifi atau operator). Yang dihapus hanya pemasangan di alamat ini, bukan /uji/ atau lainnya. */
-if(/[?&]reset=1(&|$)/.test(location.search)){var back=function(){location.replace(location.pathname+'#beranda')};
-var dir=location.pathname.replace(/[^\/]*$/,''),scope=dir.replace(/[^a-z0-9]+/gi,'-').replace(/^-+|-+$/g,'')||'root';
-var wipe=function(){try{var jobs=[];if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration)jobs.push(navigator.serviceWorker.getRegistration().then(function(r){return r&&r.unregister()}));
-if(window.caches)jobs.push(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k.indexOf('literasi-app-'+scope+'-')===0||/^literasi-app-v\d/.test(k)}).map(function(k){return caches.delete(k)}))}));
+if(/[?&]reset=1(&|$)/.test(location.search)){var back=function(){try{sessionStorage.setItem('literasi-reset','1')}catch(e){}location.replace(location.pathname+'#beranda')};
+var dir=location.pathname.replace(/[^\/]*$/,''),scope=dir.replace(/[^a-z0-9]+/gi,'-').replace(/^-+|-+$/g,'')||'root',pre='literasi-app-'+scope+'-';
+/* Hanya registrasi yang scope-nya tepat folder ini (bukan pemasangan induk), dan hanya cache "<pre>v…" (bukan pemasangan bersarang). */
+var wipe=function(){try{var jobs=[];if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration)jobs.push(navigator.serviceWorker.getRegistration().then(function(r){return r&&r.scope===location.protocol+'//'+location.host+dir&&r.unregister()}));
+if(window.caches)jobs.push(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return (k.indexOf(pre)===0&&/^v\d/.test(k.slice(pre.length)))||/^literasi-app-v\d/.test(k)}).map(function(k){return caches.delete(k)}))}));
 Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}};
 var keep=function(){var sw=false;try{sw=!!navigator.serviceWorker.controller}catch(e){}
 var t='Perbaiki aplikasi butuh sinyal. Tidak ada yang dihapus'+(sw?'; aplikasi tetap bisa dipakai tanpa sinyal.':'. Coba lagi saat ada sinyal.');
@@ -564,7 +565,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
       <li>Mama merajut noken · EmaMukar · CC BY-SA 4.0</li>
     </ul>
   </details>
-  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.9.1, 24 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
+  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.9.2, 24 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
 </section>
 <div class="hint" id="hint" hidden><span>Geser layar ke kiri atau tekan <b>Lanjut</b>. Tekan <b>Bacakan</b> untuk mendengar isi layar.</span><button class="btn ghost" id="hint-ok">Mengerti</button></div>
 <div class="deck" data-mod="bls" data-cover="img/dermaga-sumano.webp" data-pos="center 55%" data-credit="Dermaga kecil, Kampung Sumano · Lefaan · CC BY-SA 4.0" data-n="1" data-title="Bantuan Hidup Dasar" data-desc="Menolong orang yang tiba-tiba tidak sadar dan tidak bernapas normal: periksa, panggil, tekan." hidden>
@@ -2735,6 +2736,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
     el.innerHTML='<div class="r"><span>'+(st.mode==='group'?'Bintang bersama sesi ini':'Bintang kamu')+'</span><span class="badge">★ '+num(st.stars)+'</span></div>'+
       '<div class="r"><span>Modul selesai</span><span class="badge">'+fin+' dari '+mainDecks.length+'</span></div>'+
       (cur&&tesScore(cur,'post')?'<div class="r"><span>Tes awal → tes akhir</span><span class="badge">'+tesFmt(tesScore(cur,'pre'))+' → '+tesFmt(tesScore(cur,'post'))+'</span></div>':
+       cur&&tesDone(cur,'post')?'<div class="r"><span>Tes akhir: semua soal dilewati</span></div>':
        cur&&tesIdx(cur,'post')>=0?'<div class="r"><span>Tes akhir belum dikerjakan</span><button class="btn tes-go" type="button">Kerjakan tes akhir ›</button></div>':'');
     var g=el.querySelector('.tes-go');if(g)g.onclick=function(){if(cur)go(tesIdx(cur,'post'))};
   }
@@ -2813,7 +2815,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   try{ /* batas galat: log-clear */
   $('log-clear').onclick=function(){
     if(!confirm('Hapus semua catatan sesi di HP ini? Yang sudah dikirim ke Puskesmas tidak ikut terhapus.'))return;
-    st.log=[];st.sess=newSess();st.done={};st.stars=0;st.tes={};decks.forEach(function(d){all('.tes',d).forEach(function(x){if(x._reset)x._reset()})});persist();renderScores();renderLog();renderPlaces();toast('Catatan dihapus');
+    st.log=[];st.sess=newSess();st.done={};st.stars=0;st.tes={};decks.forEach(function(d){all('.tes',d).forEach(function(x){if(x._reset)x._reset()})});persist();renderScores();renderMods();renderLog();renderPlaces();toast('Catatan dihapus');
   };
   }catch(e){fault('log-clear',e)}
 
@@ -3416,19 +3418,21 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   }
   /* Pintu masuk yang terlihat: nomor layar tes, baris status di kartu modul, dan panel tes di beranda. */
   function tesIdx(m,ph){return deckBy[m]?all('.slide',deckBy[m]).map(slideKey).indexOf(m+(ph==='post'?'-91':'-90')):-1}
+  /* "Sudah dikerjakan" dari tanda selesai, bukan dari skor: tes yang semua soalnya dilewati tetap selesai (tanpa skor). */
+  function tesDone(m,ph){var T=st.tes&&st.tes[m];return !!(T&&T[ph]&&T[ph].fin)}
   function tesCardLine(m){
     if(!TES[m]||tesIdx(m,'pre')<0)return '';
-    var T=st.tes&&st.tes[m]||{},pre=T.pre&&T.pre.fin,z=tesScore(m,'post');
-    return '<span class="mod-tes">Tes awal '+(pre?'✓':'belum')+' · Tes akhir '+(z?'✓ '+esc(tesFmt(z)):'belum')+'</span>';
+    var z=tesScore(m,'post');
+    return '<span class="mod-tes">Tes awal '+(tesDone(m,'pre')?'✓':'belum')+' · Tes akhir '+(tesDone(m,'post')?'✓'+(z?' '+esc(tesFmt(z)):''):'belum')+'</span>';
   }
   function renderTesPanel(){
     var box=$('tes-rows');if(!box)return;box.innerHTML='';
     mainDecks.forEach(function(d){
       var m=d.getAttribute('data-mod');if(!TES[m]||tesIdx(m,'pre')<0)return;
-      var T=st.tes&&st.tes[m]||{},pre=!!(T.pre&&T.pre.fin),z=tesScore(m,'post'),title=d.getAttribute('data-title');
+      var pre=tesDone(m,'pre'),post=tesDone(m,'post'),z=tesScore(m,'post'),title=d.getAttribute('data-title');
       var r=mk('div','tes-r'),nm=mk('span','nm'),bt=mk('span','bt');
       nm.appendChild(mk('b',null,d.getAttribute('data-n')));nm.appendChild(document.createTextNode(title));
-      [['pre',pre?'Tes awal ✓':'Tes awal',pre],['post',z?'Tes akhir ✓ '+tesFmt(z):'Tes akhir',!!z]].forEach(function(p){
+      [['pre',pre?'Tes awal ✓':'Tes awal',pre],['post',post?'Tes akhir ✓'+(z?' '+tesFmt(z):''):'Tes akhir',post]].forEach(function(p){
         var b=mk('button','chip'+(p[2]?' ok':''),p[1]);b.type='button';
         b.setAttribute('aria-label',(p[0]==='pre'?'Tes awal ':'Tes akhir ')+title+(p[2]?', sudah dikerjakan':''));
         b.onclick=function(){openDeck(m,tesIdx(m,p[0]))};bt.appendChild(b);
@@ -3698,7 +3702,8 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
      dan layar yang mati akan menghentikan keduanya. Satu kunci dipakai bersama, dilepas bila keduanya berhenti. */
   var lockReq=false,lockWarned=false;
   /* HP tanpa kunci layar (atau ditolak): beri tahu sekali, karena layar yang mati menghentikan ketukan dan hitung napas. */
-  function lockWarn(){if(lockWarned)return;lockWarned=true;toast('Layar HP ini bisa mati sendiri, lalu ketukan atau hitungan berhenti. Sentuh layar sesekali, atau perpanjang waktu layar mati di Setelan HP.')}
+  /* Tidak saat hitung napas berjalan: kader sedang mengetuk lingkaran napas dan tidak boleh terganggu. */
+  function lockWarn(){if(lockWarned||ntTimer)return;lockWarned=true;toast('Layar HP bisa mati sendiri dan ketukan ikut berhenti. Sentuh layar sesekali.')}
   function wakeOn(){
     if(lock||lockReq)return;
     try{if(navigator.wakeLock){lockReq=true;navigator.wakeLock.request('screen').then(function(l){lockReq=false;if(timer||ntTimer)lock=l;else l.release()}).catch(function(){lockReq=false;lockWarn()})}else lockWarn()}catch(e){lockReq=false;lockWarn()}
@@ -3942,10 +3947,11 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   function checkImgs(){
     if(!imgUrls().length||!window.caches){$('st-img').hidden=true;return}
     imgState().then(function(s){
-      var total=s.urls.length,n=total-s.miss.length;
+      var total=s.urls.length,n=total-s.miss.length,pend=s.miss.filter(function(u){return imgPend[u]}).length;
       var auto=!!(s.miss.length&&!imgAuto&&!imgBusy&&navigator.onLine!==false&&navigator.serviceWorker&&navigator.serviceWorker.controller);
-      setStatus('st-img',n>=total,n>=total?'Foto: semua '+n+' tersimpan di HP ini.':'Foto: '+n+' dari '+total+' tersimpan; '+(auto||imgBusy?'sedang dilengkapi, biarkan terbuka sebentar.':'yang belum tersimpan tidak tampil tanpa sinyal.'));
-      $('img-row').hidden=n>=total||auto||imgBusy;
+      /* Foto yang masih terunduh setelah dilewati (imgPend) dihitung sedang diproses, bukan gagal. */
+      setStatus('st-img',n>=total,n>=total?'Foto: semua '+n+' tersimpan di HP ini.':'Foto: '+n+' dari '+total+' tersimpan; '+(auto||imgBusy||pend?'sedang dilengkapi, biarkan terbuka sebentar.':'yang belum tersimpan tidak tampil tanpa sinyal.'));
+      $('img-row').hidden=n>=total||auto||imgBusy||pend===s.miss.length;
       if(auto){imgAuto=true;fetchImgs(s.miss,null,checkImgs)}
     }).catch(function(){setStatus('st-img',null,'Foto belum bisa diperiksa.')});
   }
@@ -4003,6 +4009,8 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   /* Versi baru mengambil alih halaman yang sudah terbuka (bukan pemasangan pertama): tawarkan muat ulang.
      Tidak otomatis, supaya sesi atau tes yang sedang berjalan tidak terputus. */
   var hadCtrl=false;try{hadCtrl=!!navigator.serviceWorker.controller}catch(e){}
+  /* Halaman yang dimuat tepat setelah "Perbaiki aplikasi" sedang memasang ulang, bukan menerima update: jangan tampilkan pemberitahuan. */
+  try{if(sessionStorage.getItem('literasi-reset')){sessionStorage.removeItem('literasi-reset');hadCtrl=false}}catch(e){}
   try{ /* batas galat: upd */
   try{navigator.serviceWorker.addEventListener('controllerchange',function(){if(hadCtrl)$('upd').hidden=false;hadCtrl=true})}catch(e){}
   $('upd-go').onclick=function(){location.reload()};$('upd-x').onclick=function(){$('upd').hidden=true};
@@ -4119,7 +4127,7 @@ fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
   function renderErr(){var a=errList(),p=$('st-err'),r=$('err-row');if(!p)return;p.hidden=!a.length;r.hidden=!a.length;
     p.textContent=a.length?'Tercatat '+a.length+' masalah teknis (terakhir '+String(a[a.length-1].t||'').slice(0,16).replace('T',' ')+'). Bila aplikasi terasa aneh: Pengaturan › Perbaiki aplikasi.':''}
   try{
-  $('err-copy').onclick=function(){var t='Laporan masalah Literasi Kader v'+'0.9.1'+'\n'+errList().map(function(x){return x.t+' '+x.v+' '+x.m}).join('\n');
+  $('err-copy').onclick=function(){var t='Laporan masalah Literasi Kader v'+'0.9.2'+'\n'+errList().map(function(x){return x.t+' '+x.v+' '+x.m}).join('\n');
     try{navigator.clipboard.writeText(t).then(function(){toast('Laporan disalin')},function(){toast('Gagal menyalin')})}catch(e){toast('Gagal menyalin')}};
   $('err-clear').onclick=function(){try{localStorage.removeItem('literasi-galat')}catch(e){}renderErr();toast('Laporan dihapus')};
   }catch(e){fault('laporan',e)}
