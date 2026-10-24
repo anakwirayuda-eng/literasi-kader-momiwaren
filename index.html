@@ -345,7 +345,7 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
   :root,:root[data-theme],:root:not([data-theme="light"]){
     --bg:#fff;--surface:#fff;--ink:#000;--muted:#333;--line:#999;--accent:#000;--accent-ink:#fff;
     --pulse-soft:#f2f2f2;--go-soft:#f2f2f2;--warn-soft:#f2f2f2;color-scheme:light}
-  .top,.nav,.hint,.toast,.say,.btn,.chip,.done-badge,#home,.story-stage,.fb:empty,.hero,.segs,.sheet,.conf{display:none!important}
+  .top,.nav,.hint,.toast,.say,.btn,.chip,.done-badge,#home,.story-stage,.fb:empty,.hero,.segs,.sheet,.conf,.metro-quick,.tes-cta,.upd{display:none!important}
   .cover{height:5cm;margin:0;border-radius:0}.cover .n{display:none}
   /* Lembar balik tetap bersih walau kuis sudah dimainkan di layar: tanpa tanda jawaban. */
   .opt.right,.opt.wrong,.opt.sel{background:#fff!important;border-color:#999!important;box-shadow:none!important}
@@ -404,22 +404,53 @@ input[type=range]{width:min(16rem,100%);accent-color:var(--pulse)}
 .tes-key .k{color:var(--go);font-weight:700}
 .tes-key .res{font-size:.92rem;color:var(--muted);font-variant-numeric:tabular-nums}
 @media print{.tes-stage{display:none!important}.tes-print .list li{break-inside:avoid}}
+/* Pintu masuk tes yang terlihat (v0.9.1): panel di beranda, status di kartu modul, tombol di layar pembuka dan layar Selesai. */
+.tes-rows{display:grid;gap:.5rem}
+.tes-r{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.4rem .6rem;padding:.5rem 0;border-top:1px solid var(--line)}
+.tes-r .nm{font-weight:700;min-width:0}
+.tes-r .nm b{display:inline-grid;place-items:center;width:1.7rem;height:1.7rem;border-radius:50%;background:var(--pulse-soft);color:var(--pulse);margin-right:.4rem;font-size:.9rem}
+.tes-r .bt{display:flex;gap:.4rem;flex-wrap:wrap}
+.tes-r .chip{font-size:.92rem;font-weight:700}
+.tes-r .chip.ok{border-color:var(--go);color:var(--go)}
+.mod-tes{font-size:.82rem;font-weight:700;color:var(--pulse)}
+.tes-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem;border:2px solid var(--pulse);background:var(--pulse-soft)}
+.tes-cta p{flex:1 1 14rem}
+.board .r .btn{min-height:40px;padding:.3rem .9rem}
+/* Kotak berupa paragraf berisi teks tebal: tetap satu paragraf (sebelumnya terpecah per bagian karena display:grid). */
+p.box{display:block}
+.upd{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 4.6rem);z-index:9;display:flex;align-items:center;gap:.6rem;background:var(--ink);color:var(--bg);padding:.4rem .5rem .4rem 1rem;border-radius:999px;box-shadow:0 6px 24px rgba(0,0,0,.25);max-width:calc(100% - 24px);font-weight:700;font-size:.95rem}
+.upd .btn{min-height:40px;padding:.3rem .9rem;border-color:var(--bg);background:var(--bg);color:var(--ink)}
+.upd-x{background:transparent;border:0;color:inherit;font-size:1.4rem;line-height:1;min-width:36px;min-height:40px}
 </style>
 
 <script>/* PENGAMAN-v1: berjalan sebelum aplikasi. Galat yang tidak tertangkap dicatat (tanpa data pribadi);
 bila aplikasi belum siap dalam 8 detik atau galat terjadi saat memuat, panel darurat cadangan ditampilkan. ?reset=1 menghapus
 simpanan luring aplikasi (bukan catatan, bukan rekaman) lalu memuat ulang. */
 (function(){var K='literasi-galat';window.__litOK=false;
-function log(m){try{var a=JSON.parse(localStorage.getItem(K)||'[]');if(!Array.isArray(a))a=[];a.push({t:new Date().toISOString(),v:'0.9.0',m:String(m).slice(0,240)});localStorage.setItem(K,JSON.stringify(a.slice(-20)))}catch(e){}}
+function log(m){try{var a=JSON.parse(localStorage.getItem(K)||'[]');if(!Array.isArray(a))a=[];a.push({t:new Date().toISOString(),v:'0.9.1',m:String(m).slice(0,240)});localStorage.setItem(K,JSON.stringify(a.slice(-20)))}catch(e){}}
 window.__litLog=log;
-function fail(){if(window.__litOK)return;var f=document.getElementById('boot-fail');if(f){f.hidden=false;f.setAttribute('data-sticky','1')}}
+function fail(){if(window.__litOK)return;var f=document.getElementById('boot-fail');if(f){f.hidden=false;f.setAttribute('data-sticky','1')}
+var n=document.getElementById('bf-note');if(n&&window.__litResetMsg){n.textContent=window.__litResetMsg;n.hidden=false}}
 window.addEventListener('error',function(e){if(e&&e.target&&e.target!==window&&!e.message)return;log((e.message||'galat')+' @'+String(e.filename||'').split('/').pop()+':'+(e.lineno||0));if(!window.__litOK)fail();else if(window.__litErr)window.__litErr()});
 window.addEventListener('unhandledrejection',function(e){var r=e&&e.reason;log('janji: '+((r&&r.message)||r))});
 setTimeout(fail,8000);
+/* Simpanan luring hanya dihapus bila aplikasi pasti bisa dimuat ulang dari server. Tanpa sinyal, salinan luring adalah
+   satu-satunya cara aplikasi terbuka, jadi tidak ada yang dihapus. Pemeriksaan memakai berkas kecil manifest.webmanifest
+   dengan alamat unik (service worker meneruskan ?cek= langsung ke jaringan), dibatasi 8 detik, dan isinya harus manifest
+   aplikasi ini (bukan halaman login wifi atau operator). Yang dihapus hanya pemasangan di alamat ini, bukan /uji/ atau lainnya. */
 if(/[?&]reset=1(&|$)/.test(location.search)){var back=function(){location.replace(location.pathname+'#beranda')};
-try{var jobs=[];if(navigator.serviceWorker&&navigator.serviceWorker.getRegistrations)jobs.push(navigator.serviceWorker.getRegistrations().then(function(rs){return Promise.all(rs.map(function(r){return r.unregister()}))}));
-if(window.caches)jobs.push(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k.indexOf('literasi-app-')===0}).map(function(k){return caches.delete(k)}))}));
-Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
+var dir=location.pathname.replace(/[^\/]*$/,''),scope=dir.replace(/[^a-z0-9]+/gi,'-').replace(/^-+|-+$/g,'')||'root';
+var wipe=function(){try{var jobs=[];if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration)jobs.push(navigator.serviceWorker.getRegistration().then(function(r){return r&&r.unregister()}));
+if(window.caches)jobs.push(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k.indexOf('literasi-app-'+scope+'-')===0||/^literasi-app-v\d/.test(k)}).map(function(k){return caches.delete(k)}))}));
+Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}};
+var keep=function(){var sw=false;try{sw=!!navigator.serviceWorker.controller}catch(e){}
+var t='Perbaiki aplikasi butuh sinyal. Tidak ada yang dihapus'+(sw?'; aplikasi tetap bisa dipakai tanpa sinyal.':'. Coba lagi saat ada sinyal.');
+try{history.replaceState(history.state,'',location.pathname+location.hash)}catch(e){}
+if(window.__litNotice)window.__litNotice(t);else{window.__litResetMsg=t;var n=document.getElementById('bf-note');if(n){n.textContent=t;n.hidden=false}}};
+try{if(navigator.onLine===false)keep();else if(!window.fetch||!navigator.serviceWorker)wipe();else{var done=0,end=function(ok){if(done)return;done=1;if(ok)wipe();else keep()};
+setTimeout(function(){end(false)},8000);
+fetch(dir+'manifest.webmanifest?cek='+new Date().getTime(),{cache:'no-store'})
+.then(function(r){return r.ok?r.text():''}).then(function(t){end(String(t).indexOf('Literasi Kesehatan Kader Momiwaren')>=0)},function(){end(false)})}}catch(e){keep()}}
 })();</script><noscript><style>#boot-fail[hidden]{display:block!important}</style></noscript>
 </head><body><header class="top">
   <div class="top-in">
@@ -448,7 +479,7 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
       <label class="switch"><input type="checkbox" id="opt-auto"> Bacakan otomatis setiap pindah layar</label>
       <label class="switch"><input type="checkbox" id="opt-sfx" checked> Bunyi saat jawaban benar</label>
       <div class="row" id="print-row" hidden><button class="btn ghost" id="print-btn">Cetak modul ini sebagai lembar balik</button></div>
-      <div class="row"><a class="btn ghost" href="?reset=1" id="repair-link">Perbaiki aplikasi</a><span class="muted">Menghapus simpanan luring yang mungkin rusak lalu memuat ulang. Catatan sesi dan rekaman suara tetap. Butuh sinyal.</span></div>
+      <div class="row"><a class="btn ghost" href="?reset=1" id="repair-link">Perbaiki aplikasi</a><span class="muted">Menghapus simpanan luring yang mungkin rusak lalu memuat ulang. Catatan sesi dan rekaman suara tetap. Butuh sinyal; tanpa sinyal tidak ada yang dihapus.</span></div>
     </div>
   </div>
 </header>
@@ -458,6 +489,7 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   <p class="bf-calls"><a class="btn danger" href="tel:112">Telepon 112</a> <a class="btn danger" href="tel:119">Telepon 119</a></p>
   <p><b>Tidak sadar dan tidak bernapas normal:</b> panggil bantuan, tekan tengah dada 5–6 cm, 100–120 kali per menit, tanpa berhenti. Anak: sepertiga tebal dada, satu tangan. Bayi: dua ibu jari melingkari dada.</p>
   <p><b>Berangkat sekarang bila:</b> perdarahan banyak, kejang, tidak sadar, sesak berat atau bibir biru, bayi tidak mau menyusu atau lemas, digigit ular, tenggelam.</p>
+  <p id="bf-note" hidden></p>
   <p class="bf-calls"><a class="btn ghost" href="">Muat ulang</a> <a class="btn ghost" href="?reset=1">Perbaiki aplikasi</a> <button class="btn ghost" type="button" onclick="this.parentNode.parentNode.hidden=true">Tutup</button></p>
 </section>
 
@@ -494,6 +526,11 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
     </div>
   </div>
   <div class="mods" id="mods"></div>
+  <div class="box tes-panel" id="tes-panel">
+    <h3>Tes awal dan tes akhir</h3>
+    <p class="muted">Setiap modul punya 5 soal. Kerjakan <b>Tes awal</b> sebelum belajar dan <b>Tes akhir</b> sesudahnya; hasilnya dibandingkan, lengkap dengan kunci jawaban dan penjelasan.</p>
+    <div class="tes-rows" id="tes-rows"></div>
+  </div>
   <div class="box status" id="status" aria-live="polite">
     <span id="st-app"><i class="dot"></i><span>Memeriksa kesiapan tanpa sinyal…</span></span>
     <span id="st-img"><i class="dot"></i><span>Memeriksa foto…</span></span>
@@ -527,7 +564,7 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
       <li>Mama merajut noken · EmaMukar · CC BY-SA 4.0</li>
     </ul>
   </details>
-  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.9.0, 24 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
+  <p class="foot">Aplikasi ini pelengkap, bukan pengganti latihan langsung dan pemeriksaan oleh bidan, perawat, atau dokter. Kader mengenali, mengingatkan, dan mengantar; yang memeriksa dan memberi obat adalah tenaga kesehatan. Prototipe versi 0.9.1, 24 Oktober 2026, disusun Tim TEP 7 ITS. Perlu ditinjau Puskesmas Momiwaren dan Dinas Kesehatan Manokwari Selatan sebelum dipakai.</p>
 </section>
 <div class="hint" id="hint" hidden><span>Geser layar ke kiri atau tekan <b>Lanjut</b>. Tekan <b>Bacakan</b> untuk mendengar isi layar.</span><button class="btn ghost" id="hint-ok">Mengerti</button></div>
 <div class="deck" data-mod="bls" data-cover="img/dermaga-sumano.webp" data-pos="center 55%" data-credit="Dermaga kecil, Kampung Sumano · Lefaan · CC BY-SA 4.0" data-n="1" data-title="Bantuan Hidup Dasar" data-desc="Menolong orang yang tiba-tiba tidak sadar dan tidak bernapas normal: periksa, panggil, tekan." hidden>
@@ -740,10 +777,14 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   </div>
 </section>
 
-<section class="slide" data-key="bls-06" hidden data-say="Tekan. Berlutut di samping. Letakkan tumit telapak tangan di tengah dada, tangan lain di atasnya, jari dikunci. Lengan lurus, bahu tegak di atas dada. Tekan sedalam lima sampai enam sentimeter, lalu biarkan dada naik penuh. Jangan berhenti lama.">
+<section class="slide" data-key="bls-06" hidden data-say="Tekan. Berlutut di samping. Letakkan tumit telapak tangan di tengah dada, tangan lain di atasnya, jari dikunci. Lengan lurus, bahu tegak di atas dada. Tekan sedalam lima sampai enam sentimeter, lalu biarkan dada naik penuh. Jangan berhenti lama. Tekan Nyalakan ketukan untuk bunyi pemandu irama.">
   <p class="eyebrow"><span class="n">Langkah 3</span> · Tekan</p>
   <h2>Tekan di tengah dada</h2>
   <div class="stats"><div class="stat"><b>5–6</b><span>cm dalamnya (dewasa dan remaja)</span></div><div class="stat"><b>100–120</b><span>tekanan per menit</span></div><div class="stat"><b>30 : 2</b><span>tekan : napas, bila terlatih</span></div></div>
+  <div class="box key metro-quick">
+    <div class="metro"><button class="btn big metro-btn" type="button">Nyalakan ketukan</button><span class="beat" aria-hidden="true"></span><span class="count metro-count" aria-live="off"></span></div>
+    <p class="muted">Bunyi pemandu <b class="bpm-now">110</b> kali per menit: taruh HP di samping, tekan dada mengikuti bunyinya. Saat memberi 2 napas, abaikan hitungannya, lalu lanjut tekan mengikuti bunyi. Ketukan berhenti bila pindah layar, layar HP mati, atau HP dipakai menelepon; kalau bisa, telepon dengan HP lain.</p>
+  </div>
   <div class="figure">
     <svg viewBox="0 0 260 230" role="img" aria-label="Tampak atas dada: titik tekan di separuh bawah tulang dada">
       <path class="fig-fill fig-ink" stroke-width="3" d="M70 20h120c22 0 34 16 36 40l8 150H26l8-150c2-24 14-40 36-40z"/>
@@ -820,10 +861,10 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
     <div class="metro">
       <div class="bpm"><span id="bpm-v">110</span> <small>per menit</small></div>
       <span class="beat" id="beat" aria-hidden="true"></span>
-      <span class="count" id="metro-count" aria-live="off"></span>
+      <span class="count metro-count" id="metro-count" aria-live="off"></span>
     </div>
     <label for="bpm">Atur kecepatan (100–120)<input id="bpm" type="range" min="100" max="120" step="2" value="110"></label>
-    <div class="row"><button class="btn" id="metro-btn">Nyalakan ketukan</button></div>
+    <div class="row"><button class="btn metro-btn" id="metro-btn">Nyalakan ketukan</button></div>
   </div>
   <div class="box trainer">
     <h3>Belum ada manekin? Ketuk lingkaran ini</h3>
@@ -958,10 +999,14 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   <p class="box tip">Tetap antar ke Puskesmas. Tidak sadar bisa karena malaria berat, kejang, atau gula darah rendah. Jangan beri minum selama belum sadar penuh.</p>
 </section>
 
-<section class="slide" data-key="bls-11" hidden data-say="Anak dan bayi. Pada anak, jantung biasanya berhenti karena kehabisan napas: tenggelam, tersedak, atau sesak. Karena itu napas buatan lebih penting. Tidak sadar dan tidak bernapas normal? Panggil bantuan dengan pengeras suara. Bila sudah dilatih: beri lima napas buatan dulu, lalu tiga puluh tekanan dan dua napas. Belum dilatih: tekan dada terus. Tekan sepertiga tebal dada: anak dengan pangkal satu tangan; bayi dengan dua ibu jari di tengah dada, jari lain melingkari punggungnya. Tidak bisa melingkari dada bayi? Pakai pangkal satu tangan. Jangan pakai dua jari. Kecepatan sama, seratus sampai seratus dua puluh per menit. Sendirian tanpa HP? Lakukan satu menit dulu, baru cari bantuan.">
+<section class="slide" data-key="bls-11" hidden data-say="Anak dan bayi. Pada anak, jantung biasanya berhenti karena kehabisan napas: tenggelam, tersedak, atau sesak. Karena itu napas buatan lebih penting. Tidak sadar dan tidak bernapas normal? Panggil bantuan dengan pengeras suara. Bila sudah dilatih: beri lima napas buatan dulu, lalu tiga puluh tekanan dan dua napas. Belum dilatih: tekan dada terus. Tekan sepertiga tebal dada: anak dengan pangkal satu tangan; bayi dengan dua ibu jari di tengah dada, jari lain melingkari punggungnya. Tidak bisa melingkari dada bayi? Pakai pangkal satu tangan. Jangan pakai dua jari. Kecepatan sama, seratus sampai seratus dua puluh per menit. Sendirian tanpa HP? Lakukan satu menit dulu, baru cari bantuan. Tekan Nyalakan ketukan untuk bunyi pemandu irama.">
   <p class="eyebrow">Keadaan khusus</p>
   <h2>Anak dan bayi</h2>
   <p class="lead">Pada anak, jantung biasanya berhenti karena <b>kehabisan napas</b>: tenggelam, tersedak, atau sesak berat. Karena itu napas buatan lebih penting daripada pada orang dewasa.</p>
+  <div class="box key metro-quick">
+    <div class="metro"><button class="btn big metro-btn" type="button">Nyalakan ketukan</button><span class="beat" aria-hidden="true"></span><span class="count metro-count" aria-live="off"></span></div>
+    <p class="muted">Bunyi pemandu <b class="bpm-now">110</b> kali per menit, sama untuk semua umur. Saat memberi napas buatan, abaikan hitungannya, lalu lanjut tekan mengikuti bunyi. Ketukan berhenti bila pindah layar, layar HP mati, atau HP dipakai menelepon; kalau bisa, telepon dengan HP lain.</p>
+  </div>
   <figure class="ill"><svg aria-describedby="cap-bls-11" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-label="Atas: anak terlentang di lantai, penolong berlutut di sampingnya dengan bahu tepat di atas dada dan lengan lurus, pangkal satu telapak tangan menekan bagian bawah tulang dada. Bawah: bayi terlentang dilihat dari atas, kedua tangan penolong melingkari dadanya dan dua ibu jari berdampingan di tengah dada tepat di bawah garis puting.">
 <style>
 .c11 .ln{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
@@ -2565,6 +2610,7 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   </div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<div class="upd" id="upd" role="status" hidden><span>Versi baru sudah siap.</span><button class="btn" id="upd-go" type="button">Muat ulang</button><button class="upd-x" id="upd-x" type="button" aria-label="Tutup pemberitahuan">×</button></div>
 <!-- Soal tes awal dan tes akhir: lima soal per modul, dipakai sama di awal dan di akhir modul.
      o = pilihan (urutan di layar diacak; urutan di sini dipakai untuk lembar cetak A, B, C), a = nomor pilihan yang benar (mulai 0),
      why = penjelasan yang muncul setelah menjawab di tes akhir, ref = data-key layar materinya. Perlu ditinjau tenaga kesehatan bersama isi modul. -->
@@ -2688,7 +2734,9 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
     var fin=mainDecks.filter(finished).length;
     el.innerHTML='<div class="r"><span>'+(st.mode==='group'?'Bintang bersama sesi ini':'Bintang kamu')+'</span><span class="badge">★ '+num(st.stars)+'</span></div>'+
       '<div class="r"><span>Modul selesai</span><span class="badge">'+fin+' dari '+mainDecks.length+'</span></div>'+
-      (cur&&tesScore(cur,'post')?'<div class="r"><span>Tes awal → tes akhir</span><span class="badge">'+tesFmt(tesScore(cur,'pre'))+' → '+tesFmt(tesScore(cur,'post'))+'</span></div>':'');
+      (cur&&tesScore(cur,'post')?'<div class="r"><span>Tes awal → tes akhir</span><span class="badge">'+tesFmt(tesScore(cur,'pre'))+' → '+tesFmt(tesScore(cur,'post'))+'</span></div>':
+       cur&&tesIdx(cur,'post')>=0?'<div class="r"><span>Tes akhir belum dikerjakan</span><button class="btn tes-go" type="button">Kerjakan tes akhir ›</button></div>':'');
+    var g=el.querySelector('.tes-go');if(g)g.onclick=function(){if(cur)go(tesIdx(cur,'post'))};
   }
 
   /* ---------- catatan sesi tanpa nama (indikator proses untuk Puskesmas) ---------- */
@@ -2778,10 +2826,11 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
       var prog=seen>=n?'<span class="ok">Semua layar dibuka</span>':(seen?'<span class="mbar"><i style="width:'+Math.round(seen/n*100)+'%"></i></span>'+seen+' dari '+n+' layar':'Belum dimulai');
       var cv=d.getAttribute('data-cover'),numeral=/^\d+$/.test(label)?esc(label):'';
       var ph=cv?'<span class="mod-ph"><img src="'+esc(cv)+'" alt="" loading="lazy" style="object-position:'+esc(d.getAttribute('data-pos')||'center')+'"><span class="n" aria-hidden="true">'+numeral+'</span></span>':'<span class="mod-ph ic">'+(ICONS[m]||'')+'</span>';
-      b.innerHTML=ph+'<span class="mod-body"><span class="mod-t"><small>'+(numeral?'Modul '+numeral:esc(label))+' · '+n+' layar</small>'+esc(d.getAttribute('data-title'))+'</span><span class="mod-d">'+esc(d.getAttribute('data-desc'))+'</span><span class="mod-p">'+prog+'</span></span>';
+      b.innerHTML=ph+'<span class="mod-body"><span class="mod-t"><small>'+(numeral?'Modul '+numeral:esc(label))+' · '+n+' layar</small>'+esc(d.getAttribute('data-title'))+'</span><span class="mod-d">'+esc(d.getAttribute('data-desc'))+'</span>'+tesCardLine(m)+'<span class="mod-p">'+prog+'</span></span>';
       b.onclick=function(){openDeck(m)};
       box.appendChild(b);
     });
+    renderTesPanel();
     var r=$('resume'),L=st.last&&deckBy[st.last]?st.last:null;
     if(L){
       var d=deckBy[L],n2=all('.slide',d).length,p=Math.min(num(st.pos[L])+1,n2);
@@ -3019,7 +3068,9 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
     var cv=d.getAttribute('data-cover'),s=d.querySelector('.slide');if(!cv||!s)return;
     var n=all('.slide',d).length,label=d.getAttribute('data-n'),isNum=/^\d+$/.test(label);
     var box=document.createElement('div');box.className='cover';
-    box.innerHTML='<img src="'+esc(cv)+'" alt="" style="object-position:'+esc(d.getAttribute('data-pos')||'center')+'"><div class="grad"></div>'+
+    /* loading=lazy: sampul modul yang belum dibuka tidak ikut diunduh saat halaman pertama dimuat (sinyal lemah);
+       salinannya tetap disimpan service worker untuk dipakai tanpa sinyal. */
+    box.innerHTML='<img src="'+esc(cv)+'" alt="" loading="lazy" style="object-position:'+esc(d.getAttribute('data-pos')||'center')+'"><div class="grad"></div>'+
       (isNum?'<span class="n" aria-hidden="true">'+esc(label)+'</span>':'')+
       '<span class="cap">'+(isNum?'Modul '+esc(label):esc(label))+' · '+n+' layar</span>'+
       '<span class="cred">'+esc(d.getAttribute('data-credit')||'')+'</span>';
@@ -3109,7 +3160,7 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   $('sos-btn').onclick=openSos;$('sos-bd').onclick=closeMap;$('sos-close').onclick=closeMap;
   }catch(e){fault('sos-btn',e)}
   /* Pintu darurat dibedakan umur, karena teknik dewasa berbeda dengan anak/bayi. Metronom tidak dinyalakan otomatis:
-     kader mulai menekan dulu; ketukan bisa dinyalakan dari layar itu bila membantu. */
+     kader mulai menekan dulu; kedua layar tujuan punya tombol "Nyalakan ketukan" bila bunyi pemandu membantu. */
   function sosGo(key){closeMap();var k=all('.slide',deckBy.bls).map(slideKey).indexOf(key);openDeck('bls',k<0?0:k)}
   try{ /* batas galat: sos-cpr */
   $('sos-cpr').onclick=function(){sosGo('bls-06')};
@@ -3363,6 +3414,29 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
     if(typeof T.row==='number'&&L[T.row]&&!L[T.row].post)L[T.row]=row;else{T.row=L.length;L.push(row)}
     persist();
   }
+  /* Pintu masuk yang terlihat: nomor layar tes, baris status di kartu modul, dan panel tes di beranda. */
+  function tesIdx(m,ph){return deckBy[m]?all('.slide',deckBy[m]).map(slideKey).indexOf(m+(ph==='post'?'-91':'-90')):-1}
+  function tesCardLine(m){
+    if(!TES[m]||tesIdx(m,'pre')<0)return '';
+    var T=st.tes&&st.tes[m]||{},pre=T.pre&&T.pre.fin,z=tesScore(m,'post');
+    return '<span class="mod-tes">Tes awal '+(pre?'✓':'belum')+' · Tes akhir '+(z?'✓ '+esc(tesFmt(z)):'belum')+'</span>';
+  }
+  function renderTesPanel(){
+    var box=$('tes-rows');if(!box)return;box.innerHTML='';
+    mainDecks.forEach(function(d){
+      var m=d.getAttribute('data-mod');if(!TES[m]||tesIdx(m,'pre')<0)return;
+      var T=st.tes&&st.tes[m]||{},pre=!!(T.pre&&T.pre.fin),z=tesScore(m,'post'),title=d.getAttribute('data-title');
+      var r=mk('div','tes-r'),nm=mk('span','nm'),bt=mk('span','bt');
+      nm.appendChild(mk('b',null,d.getAttribute('data-n')));nm.appendChild(document.createTextNode(title));
+      [['pre',pre?'Tes awal ✓':'Tes awal',pre],['post',z?'Tes akhir ✓ '+tesFmt(z):'Tes akhir',!!z]].forEach(function(p){
+        var b=mk('button','chip'+(p[2]?' ok':''),p[1]);b.type='button';
+        b.setAttribute('aria-label',(p[0]==='pre'?'Tes awal ':'Tes akhir ')+title+(p[2]?', sudah dikerjakan':''));
+        b.onclick=function(){openDeck(m,tesIdx(m,p[0]))};bt.appendChild(b);
+      });
+      r.appendChild(nm);r.appendChild(bt);box.appendChild(r);
+    });
+    $('tes-panel').hidden=!box.children.length;
+  }
   function tesShuffle(n){var a=[];for(var i=0;i<n;i++)a.push(i);for(var j=n-1;j>0;j--){var k=Math.floor(Math.random()*(j+1)),t=a[j];a[j]=a[k];a[k]=t}return a}
   function mk(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
   function markAs(o,cls,t){o.classList.add(cls);o.insertBefore(mk('span','mark',t),o.firstChild)}
@@ -3546,6 +3620,17 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
     box._reset=function(){delete st.tes[m];ord=[];tmp=[];i=-1;cheer=false;render()};
   }));
   }catch(e){fault('.tes',e)}
+  /* Tombol "Mulai tes awal" di layar pembuka setiap modul yang punya tes, supaya tes tidak terlewat. */
+  try{ /* batas galat: tes-cta */
+  decks.forEach(function(d){
+    var m=d.getAttribute('data-mod'),s=d.querySelector('.slide'),k=tesIdx(m,'pre');if(!s||k<0||!TES[m])return;
+    var c=mk('div','box tes-cta'),p=mk('p'),b=mk('button','btn','Mulai tes awal ›');
+    p.appendChild(mk('b',null,'Tes awal, 5 soal: '));p.appendChild(document.createTextNode('tebak dulu sebelum belajar. Di akhir modul ada Tes akhir, perbandingan, dan kunci jawabannya.'));
+    b.type='button';b.onclick=function(){if(cur===m){stopSpeak();go(k)}};
+    c.appendChild(p);c.appendChild(b);
+    var lead=s.querySelector('.lead');if(lead)lead.insertAdjacentElement('afterend',c);else s.appendChild(c);
+  });
+  }catch(e){fault('tes-cta',e)}
 
   /* ---------- ulangi modul ----------
      Hanya tampilan yang dikembalikan. st.done tetap, jadi bintang tidak dihitung dua kali dalam satu sesi;
@@ -3611,17 +3696,20 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   }
   /* Kunci layar menyala selama metronom atau hitung napas berjalan: kader menatap pasien, bukan layar,
      dan layar yang mati akan menghentikan keduanya. Satu kunci dipakai bersama, dilepas bila keduanya berhenti. */
-  var lockReq=false;
+  var lockReq=false,lockWarned=false;
+  /* HP tanpa kunci layar (atau ditolak): beri tahu sekali, karena layar yang mati menghentikan ketukan dan hitung napas. */
+  function lockWarn(){if(lockWarned)return;lockWarned=true;toast('Layar HP ini bisa mati sendiri, lalu ketukan atau hitungan berhenti. Sentuh layar sesekali, atau perpanjang waktu layar mati di Setelan HP.')}
   function wakeOn(){
     if(lock||lockReq)return;
-    try{if(navigator.wakeLock){lockReq=true;navigator.wakeLock.request('screen').then(function(l){lockReq=false;if(timer||ntTimer)lock=l;else l.release()}).catch(function(){lockReq=false})}}catch(e){lockReq=false}
+    try{if(navigator.wakeLock){lockReq=true;navigator.wakeLock.request('screen').then(function(l){lockReq=false;if(timer||ntTimer)lock=l;else l.release()}).catch(function(){lockReq=false;lockWarn()})}else lockWarn()}catch(e){lockReq=false;lockWarn()}
   }
   function wakeOff(){if(timer||ntTimer)return;try{if(lock){lock.release();lock=null}}catch(e){lock=null}}
-  /* Tampilan setiap ketukan: titik menyala, gambar tangan menekan dada, dan hitungan 1–30. */
+  /* Tampilan setiap ketukan: titik menyala, gambar tangan menekan dada, dan hitungan 1–30.
+     Tombol ketukan ada di layar Tekan, Anak dan bayi, dan Latihan irama; semuanya memakai satu metronom ini. */
   function show(c){
-    var b=$('beat'),f=$('cpr-fig');b.classList.add('on');if(f)f.classList.add('push');
-    setTimeout(function(){b.classList.remove('on');if(f)f.classList.remove('push')},110);
-    $('metro-count').textContent=c===30?'30 · 2 napas atau terus tekan':c+' / 30';
+    var bs=all('.beat'),f=$('cpr-fig');bs.forEach(function(b){b.classList.add('on')});if(f)f.classList.add('push');
+    setTimeout(function(){bs.forEach(function(b){b.classList.remove('on')});if(f)f.classList.remove('push')},110);
+    all('.metro-count').forEach(function(e){e.textContent=c===30?'30 · 2 napas atau terus tekan':c+' / 30'});
   }
   /* Ketukan dijadwalkan pada jam audio, sedikit di depan, supaya iramanya tetap rata
      walau timer peramban di HP murah tersendat. */
@@ -3639,23 +3727,21 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   }
   function startMetro(){
     if(timer)return;
-    mCount=0;
+    stopSpeak();mCount=0;
     if(audio()&&ac.currentTime!==undefined){nextT=ac.currentTime+.06;schedule();timer=setInterval(schedule,40)}
     else{timer=setInterval(function(){show(mCount=mCount%30+1)},60000/bpm)}
-    $('metro-btn').textContent='Matikan ketukan';wakeOn();
+    all('.metro-btn').forEach(function(b){b.textContent='Matikan ketukan'});wakeOn();
   }
   function stopMetro(){
     if(timer){clearInterval(timer);timer=null}
     marks.forEach(clearTimeout);marks=[];
-    if($('metro-btn')){$('metro-btn').textContent='Nyalakan ketukan';$('metro-count').textContent=''}
+    all('.metro-btn').forEach(function(b){b.textContent='Nyalakan ketukan'});all('.metro-count').forEach(function(e){e.textContent=''});
     wakeOff();
   }
   try{ /* batas galat: metro-btn */
-  if($('metro-btn')){
-    /* Ganti kecepatan tanpa mematikan ketukan dan tanpa meminta kunci layar berulang kali. */
-    $('bpm').oninput=function(){bpm=+this.value;$('bpm-v').textContent=bpm};
-    $('metro-btn').onclick=function(){timer?stopMetro():startMetro()};
-  }
+  /* Ganti kecepatan tanpa mematikan ketukan dan tanpa meminta kunci layar berulang kali. */
+  if($('bpm'))$('bpm').oninput=function(){bpm=+this.value;$('bpm-v').textContent=bpm;all('.bpm-now').forEach(function(e){e.textContent=bpm})};
+  all('.metro-btn').forEach(function(b){b.onclick=function(){timer?stopMetro():startMetro()}});
   }catch(e){fault('metro-btn',e)}
 
   /* ---------- latihan ketuk ---------- */
@@ -3832,22 +3918,44 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
     var h=$('hero-img');if(h){set[h.getAttribute('data-light')]=1;set[h.getAttribute('data-dark')]=1}
     return Object.keys(set).filter(Boolean);
   }
+  function imgState(){
+    var urls=imgUrls();
+    return Promise.all(urls.map(function(u){return caches.match(new URL(u,location.href).href).then(function(r){return r?1:0}).catch(function(){return 0})}))
+      .then(function(a){return {urls:urls,miss:urls.filter(function(u,k){return !a[k]})}});
+  }
+  /* Foto diunduh satu per satu lewat service worker, yang menyimpannya. Foto yang macet dilewati setelah 20 detik,
+     supaya satu foto tidak menahan yang lain di sinyal lemah. Foto yang masih terunduh (imgPend) tidak diminta lagi;
+     bila akhirnya selesai belakangan, hitungan diperbarui. Hanya satu putaran berjalan pada satu waktu (imgBusy). */
+  var imgAuto=false,imgBusy=false,imgPend={},imgLateT=null;
+  function fetchImgs(urls,onStep,done){
+    var i=0,list=urls.filter(function(u){return !imgPend[u]});imgBusy=true;
+    (function next(){
+      if(i>=list.length){imgBusy=false;return done()}
+      if(onStep)onStep(i,list.length);
+      var u=list[i++],late=false;imgPend[u]=1;
+      var p=fetch(u,{cache:'no-cache'}).catch(function(){}).then(function(){delete imgPend[u];
+        if(late){clearTimeout(imgLateT);imgLateT=setTimeout(function(){if(!imgBusy)checkImgs()},600)}});
+      Promise.race([p,new Promise(function(r){setTimeout(function(){late=true;r()},20000)})]).then(next);
+    })();
+  }
+  /* Foto yang belum tersimpan (pemasangan pertama di sinyal lemah) dilengkapi otomatis sekali per pembukaan, bila ada sinyal. */
   function checkImgs(){
-    var urls=imgUrls();if(!urls.length||!window.caches){$('st-img').hidden=true;return}
-    Promise.all(urls.map(function(u){return caches.match(new URL(u,location.href).href).then(function(r){return r?1:0}).catch(function(){return 0})})).then(function(a){
-      var n=a.reduce(function(x,y){return x+y},0);
-      setStatus('st-img',n>=urls.length,n>=urls.length?'Foto: semua '+n+' tersimpan di HP ini.':'Foto: '+n+' dari '+urls.length+' tersimpan; yang belum tersimpan tidak tampil tanpa sinyal.');
-      $('img-row').hidden=n>=urls.length;
+    if(!imgUrls().length||!window.caches){$('st-img').hidden=true;return}
+    imgState().then(function(s){
+      var total=s.urls.length,n=total-s.miss.length;
+      var auto=!!(s.miss.length&&!imgAuto&&!imgBusy&&navigator.onLine!==false&&navigator.serviceWorker&&navigator.serviceWorker.controller);
+      setStatus('st-img',n>=total,n>=total?'Foto: semua '+n+' tersimpan di HP ini.':'Foto: '+n+' dari '+total+' tersimpan; '+(auto||imgBusy?'sedang dilengkapi, biarkan terbuka sebentar.':'yang belum tersimpan tidak tampil tanpa sinyal.'));
+      $('img-row').hidden=n>=total||auto||imgBusy;
+      if(auto){imgAuto=true;fetchImgs(s.miss,null,checkImgs)}
     }).catch(function(){setStatus('st-img',null,'Foto belum bisa diperiksa.')});
   }
   try{ /* batas galat: img-retry */
   $('img-retry').onclick=function(){
-    var b=this,urls=imgUrls(),i=0;b.disabled=true;
-    (function next(){
-      if(i>=urls.length){b.disabled=false;checkImgs();return}
-      b.textContent='Menyimpan foto '+(i+1)+' dari '+urls.length+'…';
-      fetch(urls[i++],{cache:'no-cache'}).catch(function(){}).then(next);
-    })();
+    if(imgBusy)return;
+    var b=this,label='Simpan foto yang belum tersimpan';b.disabled=true;imgAuto=true;
+    imgState().then(function(s){
+      fetchImgs(s.miss,function(i,n){b.textContent='Menyimpan foto '+(i+1)+' dari '+n+'…'},function(){b.disabled=false;b.textContent=label;checkImgs()});
+    }).catch(function(){b.disabled=false;b.textContent=label});
   };
   }catch(e){fault('img-retry',e)}
   /* Suara dinilai terpisah dari teks, supaya tanda hijau teks tidak dikira suara juga siap. */
@@ -3892,6 +4000,13 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   try{ /* batas galat: controllerchange */
   try{navigator.serviceWorker.addEventListener('controllerchange',checkApp)}catch(e){}
   }catch(e){fault('controllerchange',e)}
+  /* Versi baru mengambil alih halaman yang sudah terbuka (bukan pemasangan pertama): tawarkan muat ulang.
+     Tidak otomatis, supaya sesi atau tes yang sedang berjalan tidak terputus. */
+  var hadCtrl=false;try{hadCtrl=!!navigator.serviceWorker.controller}catch(e){}
+  try{ /* batas galat: upd */
+  try{navigator.serviceWorker.addEventListener('controllerchange',function(){if(hadCtrl)$('upd').hidden=false;hadCtrl=true})}catch(e){}
+  $('upd-go').onclick=function(){location.reload()};$('upd-x').onclick=function(){$('upd').hidden=true};
+  }catch(e){fault('upd',e)}
   /* Pilihan suara: dipakai tombol Bacakan; logat Papua hanya untuk layar yang sudah direkam. */
   function applyVoice(v){
     st.voice=v==='papua'?'papua':'';
@@ -4004,7 +4119,7 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   function renderErr(){var a=errList(),p=$('st-err'),r=$('err-row');if(!p)return;p.hidden=!a.length;r.hidden=!a.length;
     p.textContent=a.length?'Tercatat '+a.length+' masalah teknis (terakhir '+String(a[a.length-1].t||'').slice(0,16).replace('T',' ')+'). Bila aplikasi terasa aneh: Pengaturan › Perbaiki aplikasi.':''}
   try{
-  $('err-copy').onclick=function(){var t='Laporan masalah Literasi Kader v'+'0.9.0'+'\n'+errList().map(function(x){return x.t+' '+x.v+' '+x.m}).join('\n');
+  $('err-copy').onclick=function(){var t='Laporan masalah Literasi Kader v'+'0.9.1'+'\n'+errList().map(function(x){return x.t+' '+x.v+' '+x.m}).join('\n');
     try{navigator.clipboard.writeText(t).then(function(){toast('Laporan disalin')},function(){toast('Gagal menyalin')})}catch(e){toast('Gagal menyalin')}};
   $('err-clear').onclick=function(){try{localStorage.removeItem('literasi-galat')}catch(e){}renderErr();toast('Laporan dihapus')};
   }catch(e){fault('laporan',e)}
@@ -4013,9 +4128,12 @@ Promise.all(jobs).then(back,back);setTimeout(back,4000)}catch(e){back()}}
   function boot(data){
     try{start(data)}catch(e){fault('mulai',e);try{showHome()}catch(_){}}
     window.__litOK=true;var bf=$('boot-fail');if(bf&&!bf.getAttribute('data-sticky'))bf.hidden=true;renderErr();
+    /* Pesan dari "Perbaiki aplikasi" yang dibatalkan karena tidak ada sinyal (bisa datang sebelum atau sesudah aplikasi siap). */
+    window.__litNotice=function(t){toast(t)};if(window.__litResetMsg){toast(window.__litResetMsg);window.__litResetMsg=null}
   }
   try{if(window.claude&&window.claude.hot&&window.claude.hot.ready)window.claude.hot.ready(boot);
   else boot(window.claude&&window.claude.hot&&window.claude.hot.data||{});}catch(e){fault('mulai',e)}
 })();
 </script>
-<script>if("serviceWorker" in navigator){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}</script></body></html>
+<script>/* Didaftarkan langsung, tidak menunggu "load" (yang menunggu semua foto): di sinyal lemah, salinan luring harus terpasang secepat mungkin. */
+if("serviceWorker" in navigator){try{navigator.serviceWorker.register("sw.js").catch(function(){})}catch(e){}}</script></body></html>

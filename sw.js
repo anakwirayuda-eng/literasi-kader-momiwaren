@@ -4,20 +4,53 @@
 // Nama cache memuat jalur pemasangan (scope), supaya dua pemasangan Literasi di satu origin
 // (misalnya /uji/ dan /resmi/) tidak saling menghapus cache.
 const SCOPE = (() => { try { return new URL(self.registration.scope).pathname.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '') || 'root'; } catch (e) { return 'root'; } })();
-const APP = 'literasi-app-' + SCOPE + '-v0.9.0';
+const APP = 'literasi-app-' + SCOPE + '-v0.9.1';
 const AUDIO = 'literasi-audio-v1';
-const CORE = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png'];
-// Foto sampul: disimpan satu per satu (yang gagal tidak membatalkan pemasangan; halaman menghitung ulang yang tersimpan).
+// Teks aplikasi (wajib). index.html diunduh sekali lalu disimpan untuk './' dan 'index.html'.
+const CORE = ['manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png'];
+// Foto sampul: tidak wajib. Yang gagal atau macet tidak menahan pemasangan; halaman menghitung ulang dan melengkapinya.
 const IMG = ['img/arfak-teluk.webp','img/senja-rouwor.webp','img/dermaga-sumano.webp','img/mama-puskesmas.webp','img/bermain-saga.webp','img/kader-benawa.webp','img/anak-arfak.webp','img/perahu-sumano.webp','img/posyandu-benawa.webp','img/noken.webp'];
+const IMG_WAIT = 15000, IMG_PHASE = 15000;
+
+const within = (p, ms) => Promise.race([p, new Promise((_, no) => setTimeout(() => no(new Error('waktu habis')), ms))]);
+// Respons hasil pengalihan tidak boleh dipakai untuk membuka halaman; disalin ulang tanpa tanda pengalihan.
+const clean = r => r.redirected ? r.blob().then(b => new Response(b, { status: r.status, statusText: r.statusText, headers: r.headers })) : r;
+// Alamat yang dipakai halaman pembuka ('./' atau 'index.html') yang mungkin sudah ada di cache peramban.
+const pageUrl = () => self.clients.matchAll({ includeUncontrolled: true, type: 'window' })
+  .then(cs => cs.some(c => /\/index\.html$/.test(new URL(c.url).pathname)) ? 'index.html' : './')
+  .catch(() => './');
+
+// Halaman: 'no-cache' artinya selalu dicek ke server (jawaban 304 murah bila tidak berubah), jadi versi baru
+// tidak pernah menyimpan index.html lama dari cache peramban (GitHub Pages memberi max-age 10 menit).
+function saveIndex(c) {
+  return pageUrl().then(u => fetch(u, { cache: 'no-cache' })).then(res => {
+    if (!res.ok) throw new Error('index.html ' + res.status);
+    return clean(res);
+  }).then(res => Promise.all([c.put('./', res.clone()), c.put('index.html', res)]));
+}
+// Foto: salin dari simpanan versi sebelumnya bila ada (tanpa unduh ulang; tetap diperbarui saat ditampilkan),
+// selain itu unduh dengan batas waktu per foto.
+function saveImgs(c) {
+  return Promise.all(IMG.map(u => caches.match(u)
+    .then(hit => hit ? c.put(u, hit) : within(fetch(u, { cache: 'no-cache' }).then(res => res.ok ? c.put(u, res) : null), IMG_WAIT))
+    .catch(() => {})));
+}
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(APP).then(c => c.addAll(CORE).then(() => Promise.all(IMG.map(u => c.add(u).catch(() => {}))))).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(APP)
+    .then(c => saveIndex(c)
+      .then(() => c.addAll(CORE.map(u => new Request(u, { cache: 'no-cache' }))))
+      .then(() => within(saveImgs(c), IMG_PHASE).catch(() => {})))
+    .then(() => self.skipWaiting()));
 });
 
 // Yang dibersihkan: versi lama pada scope ini, dan nama lama tanpa scope (literasi-app-v…) dari rilis sebelum 0.8.1.
 // Cache aplikasi lain, cache rekaman, dan cache Literasi pada scope lain dibiarkan.
+// Sebelum dibersihkan, foto yang tersimpan di versi lama selama pemasangan (oleh halaman) dipindahkan dulu, supaya tidak hilang.
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys()
+  e.waitUntil(caches.open(APP)
+    .then(c => Promise.all(IMG.map(u => c.match(u).then(h => h || caches.match(u).then(o => o && c.put(u, o))).catch(() => {}))))
+    .then(() => caches.keys())
     .then(ks => Promise.all(ks.filter(k => k !== APP && (k.startsWith('literasi-app-' + SCOPE + '-') || /^literasi-app-v\d/.test(k))).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
@@ -80,13 +113,17 @@ self.addEventListener('fetch', e => {
   if (req.method !== 'GET') return;
   let url; try { url = new URL(req.url); } catch (err) { return; }
   if (url.origin !== self.location.origin) return;
+  // Pemeriksaan sinyal "Perbaiki aplikasi" (?cek=) dan permintaan no-store langsung ke jaringan: tidak dijawab dan tidak disimpan cache.
+  if (req.cache === 'no-store' || url.searchParams.has('cek')) return;
   if (url.pathname.indexOf('/audio/') !== -1 && /\.mp3$/i.test(url.pathname)) { e.respondWith(safe(audio(req), req)); return; }
   if (/\/audio\/daftar\.json$/.test(url.pathname)) { e.respondWith(safe(manifestFirst(req), req)); return; }
 
   // Halaman dicocokkan tanpa parameter (?fbclid=… dari tautan yang dibagikan) dan selalu punya cadangan index.html.
+  // Penyegaran halaman di latar belakang selalu dicek ke server ('no-cache', jawaban 304 murah), supaya salinan lama
+  // dari cache peramban (max-age 10 menit) tidak pernah menimpa versi baru di simpanan luring.
   const nav = req.mode === 'navigate';
   const key = nav ? url.origin + url.pathname : req;
-  const net = fetch(req).then(res => {
+  const net = (nav ? fetch(url.href, { cache: 'no-cache' }).then(clean) : fetch(req)).then(res => {
     if (res && res.status === 200) {
       const copy = res.clone();
       return caches.open(APP).then(c => c.put(key, copy)).catch(() => {}).then(() => res);
